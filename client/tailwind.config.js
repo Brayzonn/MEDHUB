@@ -14,13 +14,10 @@ export default {
     },
     extend: { 
       colors:{
-        mainBackColor: '#07071C',
-        mainTextGrey: '#ACACB5',
-        primaryGreen : '#4EE39D',
-        primaryBlack: '#07071C',
-        PrimaryPurple: '#9756FF',
-        userDashPurple: '#473ECD',
-        purpleGradientBlue : '#00B3EC',          
+        purpleSubColor: '#201E78',
+        greyMainBackground: '#F4F7FC',
+        greyText : '#ABABAB',
+        blackText: '#252525',       
       },
     },
   },

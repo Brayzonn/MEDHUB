@@ -6,7 +6,7 @@ function App() {
     <Router>
       <Routes>
           <Route path="*" element={<Landing />}/>
-          <Route path='/' element={<Landing />}/>
+          <Route path='/user/dashboard' element={<Landing />}/>
       </Routes>
     </Router>
   )

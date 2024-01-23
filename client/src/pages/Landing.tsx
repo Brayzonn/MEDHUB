@@ -1,9 +1,67 @@
+import  { useState } from 'react';
+import homeIconImage from '../images/dashlogo.svg';
+import patientIcon from '../images/patient-icon.svg';
+import doctorIcon from '../images/doctor-icon.svg';
+import appointmentIcon from '../images/appointment-icon.svg';
+import SideNav from "../assets/components/SideNav";
+import UseScreenWidth from '../assets/components/useScrrenWidth';
+import NavSection from '../assets/components/navSection';
+import DashboardSection from '../assets/components/DashboardSection';
+
+
 
 
 const Landing = () => {
-  return (
-    <div>Landing</div>
-  )
+
+  const screenWidth = UseScreenWidth();
+  const [, setIsHovered] = useState(false);
+
+
+
+  //navlinks for sidenav component
+  const navLinks = [
+              { to: '/user/dashboard',    icon: homeIconImage,    text: 'Dashboard' },
+              { to: '/user/doctors',      icon: doctorIcon,       text: 'Doctors' },
+              { to: '/user/patients',     icon: patientIcon,      text: 'Patients' },
+              { to: '/user/appointments', icon: appointmentIcon,  text: 'Appointments' },
+  ];
+
+
+
+  //if not desktop screen, display error message
+  if(screenWidth < 891 ){
+
+              return (
+                <div className='relative w-full h-screen flex flex-col justify-center items-center'>
+                        
+                        <p className='text-center text-[20px] font-[550]'>Please load app on desktop</p>
+                        <div className='text-[25px]'>🙂</div>
+
+                </div>
+              )
+  }else{
+              return (
+                <div className='absolute min-h-[100vh] w-full flex flex-col 
+                                      justify-start items-start overflow-hidden
+                                                        bg-greyMainBackground'>
+
+                        <div className="relative h-full w-full overflow-x-hidden flex 
+                                                  flex-col justify-start items-start
+                                                                       text-black">              
+                                        
+                              <NavSection />
+                    
+                              <div className="relative h-screen w-full flex ">
+                                      <SideNav navLinks={navLinks} setIsHovered={setIsHovered} widthClass ={`w-[25%]`}/>
+                                      <DashboardSection />
+                              </div>
+                
+                        </div>
+                </div>
+              )
+  }
+
+
 }
 
 export default Landing
