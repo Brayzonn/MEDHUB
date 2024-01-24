@@ -1,6 +1,6 @@
 import siginillustration from '../../src/images/Privacy policy-rafiki.svg';
 import { RiEyeLine, RiEyeOffLine } from 'react-icons/ri';
-import UseScreenWidth from '../assets/components/useScrrenWidth';
+import UseScreenWidth from '../assets/components/UseScreenWidth';
 import { Link } from 'react-router-dom';
 import  { useState } from 'react';
 

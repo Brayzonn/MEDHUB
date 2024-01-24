@@ -4,7 +4,7 @@ import googleicon from '../images/googleimage.png'
 import signupillustration from '../../src/images/sigupillustration.svg';
 import { RiEyeLine, RiEyeOffLine } from 'react-icons/ri';
 import { IoIosCheckmark } from "react-icons/io";
-import UseScreenWidth from '../assets/components/useScrrenWidth';
+import UseScreenWidth from '../assets/components/UseScreenWidth';
 
 
 
