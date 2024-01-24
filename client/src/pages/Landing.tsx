@@ -5,7 +5,7 @@ import doctorIcon from '../images/doctor-icon.svg';
 import appointmentIcon from '../images/appointment-icon.svg';
 import SideNav from "../assets/components/SideNav";
 import UseScreenWidth from '../assets/components/UseScreenWidth';
-import NavSection from '../assets/components/navSection';
+import NavSection from '../assets/components/NavSection';
 import DashboardSection from '../assets/components/DashboardSection';
 
 
