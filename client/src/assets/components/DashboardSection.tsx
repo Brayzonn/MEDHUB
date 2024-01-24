@@ -102,7 +102,7 @@ const DashboardSection = () => {
                                                             </div>
                                                     </div>
 
-                                                    <FaChevronRight />
+                                                    <FaChevronRight className = 'text-[#201E78]'/>
                                             </div> 
                             </button>
                     ))}
