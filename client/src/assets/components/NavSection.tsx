@@ -12,7 +12,7 @@ const NavSection = () => {
 
   return (
         <nav className="relative w-full h-[70px] bg-white flex items-center justify-between px-[1rem] border-b border-b-[#F4F7FC]">
-                <h1 className="text-black">MEDANTA</h1>
+                <h1 className="text-black">MEDHUB</h1>
 
                 <div className="flex items-center space-x-2">
                             <img src = {userplaceholder} alt="profile-icon" className = 'w-[30px] h-[30px] border-inherit rounded-full' />
