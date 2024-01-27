@@ -4,7 +4,7 @@ import googleicon from '../images/googleimage.png'
 import signupillustration from '../../src/images/sigupillustration.svg';
 import { RiEyeLine, RiEyeOffLine } from 'react-icons/ri';
 import { IoIosCheckmark } from "react-icons/io";
-import UseScreenWidth from '../assets/components/UseScreenWidth';
+import UseScreenWidth from '../components/globalComponents/UseScreenWidth';
 
 
 
@@ -125,7 +125,6 @@ const Signup = () => {
         password: string, 
         confirmPassword: string
     }
-
     const [signupFormFieldData, updateSignupFormFieldData] = useState<SignupFormFieldDataSchema>({
         email: '',
         fullName: '',

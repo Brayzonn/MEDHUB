@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import alladmittedpatients from '../../images/allpatientlogo.png';
-import alldoctorlogo from '../../images/alldoctorlogo.png';
-import allappntmntlogo from '../../images/allappntmentlogo.png';
-import allpatientlogo from '../../images/alladmittedpatients.png';
-import userplaceholder from '../../images/userplaceholderlogo.png'
+import alladmittedpatients from '../images/allpatientlogo.png';
+import alldoctorlogo from '../images/alldoctorlogo.png';
+import allappntmntlogo from '../images/allappntmentlogo.png';
+import allpatientlogo from '../images/alladmittedpatients.png';
+import userplaceholder from '../images/userplaceholderlogo.png'
 import { FaChevronRight } from "react-icons/fa";
 
 const DashboardSection = () => {

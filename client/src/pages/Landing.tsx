@@ -3,10 +3,10 @@ import homeIconImage from '../images/dashlogo.svg';
 import patientIcon from '../images/patient-icon.svg';
 import doctorIcon from '../images/doctor-icon.svg';
 import appointmentIcon from '../images/appointment-icon.svg';
-import SideNav from "../assets/components/SideNav";
-import UseScreenWidth from '../assets/components/UseScreenWidth';
-import NavSection from '../assets/components/NavSection';
-import DashboardSection from '../assets/components/DashboardSection';
+import SideNav from "../components/SideNav";
+import UseScreenWidth from '../components/globalComponents/UseScreenWidth';
+import NavSection from '../components/NavSection';
+import DashboardSection from '../components/DashboardSection';
 
 
 
@@ -20,10 +20,10 @@ const Landing = () => {
 
   //navlinks for sidenav component
   const navLinks = [
-              { to: '/user/dashboard',    icon: homeIconImage,    text: 'Dashboard' },
-              { to: '/user/doctors',      icon: doctorIcon,       text: 'Doctors' },
-              { to: '/user/patients',     icon: patientIcon,      text: 'Patients' },
-              { to: '/user/appointments', icon: appointmentIcon,  text: 'Appointments' },
+              { to: '/admin/dashboard',    icon: homeIconImage,    text: 'Dashboard' },
+              { to: '/admin/doctors',      icon: doctorIcon,       text: 'Doctors' },
+              { to: '/admin/patients',     icon: patientIcon,      text: 'Patients' },
+              { to: '/admin/appointments', icon: appointmentIcon,  text: 'Appointments' },
   ];
 
 
