@@ -10,11 +10,6 @@ import { FaChevronRight } from "react-icons/fa";
 
 
 
-
-
-
-
-
 const AllDoctors = () => {
 
   const [allDoctorState, updateAllDoctorState] = useState<boolean>(true)
@@ -30,8 +25,18 @@ const AllDoctors = () => {
         const filtered : DataRow[]= data.filter((row) =>
             row.profile.doctorname.toLowerCase().includes(searchValue.toLowerCase())
         );
-
         setSearchResults(filtered);
+  }
+
+  const [isProfileVisible, setProfileVisibility] = useState<boolean>(false);
+
+
+  const [doctorData] = useState([
+        { header: 'ss', data: 'sggs'}
+  ])
+
+  const fetchDoctor = (doctorID:string) =>{
+
   }
 
 
@@ -72,7 +77,7 @@ const AllDoctors = () => {
           {
                 name: 'Action',
                 cell: (row) =>(
-                      <button onClick={()=> alert(row.doctorDegree)} className="w-[30px] h-[30px] flex justify-center items-center relative border bg-purpleSubColor border-purpleSubColor rounded-full">
+                      <button onClick={()=> {setProfileVisibility(true); fetchDoctor(row.profile.doctorname)}} className="w-[30px] h-[30px] flex justify-center items-center relative border bg-purpleSubColor border-purpleSubColor rounded-full">
                             <FaChevronRight className = 'text-white' />  
                       </button>
                 )
@@ -182,7 +187,7 @@ const AllDoctors = () => {
                                             :
                                             <Table columns={columns} data={searchResults} />
                                         }
-                                        < DoctorProfile />  
+                                        < DoctorProfile doctorData={doctorData} isVisible={isProfileVisible} updateVisibility={setProfileVisibility}/>  
                                 </div>
                             </> 
                             : 
