@@ -1,6 +1,10 @@
-import DropDownList from "../globalComponents/dropDownList";
 import Dropzone from 'react-dropzone';
 import { useState } from "react";
+
+import DropDownList from "../globalComponents/DropDownList";
+
+
+
 
 // interface addDoctorForm{
 //     doctorSpecialty: string,
@@ -33,7 +37,8 @@ const AddDoctor = () => {
 
     const dropdownContainer = [
         {buttonId: 'doctorSpecialty' , buttonName: 'Choose Specialty', listOptions : ['Pediatrics', 'Cardiology', 'Psychiatry', 'Internal Medicine', 'Obstetrics and Gynecology', 'Surgery', 'Anesthesiology', 'Radiology'] },
-        {buttonId: 'doctorDegree' , buttonName: ' Choose Degree', listOptions : ['MD', 'DO', 'PharmD', 'MBBS'] }  ,  
+        {buttonId: 'doctorDegree' , buttonName: ' Choose Degree', listOptions : ['MD', 'DO', 'PharmD', 'MBBS'] }  , 
+        {buttonId: 'doctorDept' , buttonName: ' Choose Department', listOptions : ['General', 'Psychiatry', 'Obstetrics', 'Gynecology'] }  ,   
     ]
 
     const [addDoctorForm, setAddDoctorForm] = useState({
@@ -44,6 +49,7 @@ const AddDoctor = () => {
         doctorName:'',
         doctorDegree: '',
         employmentType: '',
+        doctorDept: '',
     })
 
   return (
@@ -76,7 +82,7 @@ const AddDoctor = () => {
                             <input type="text" name='doctorName' 
                                     // value={addDoctorForm.doctorName}
                                     placeholder='John Doe'
-                                    className='bg-inherit px-2 border-[#e1e1e1] border-[1px] rounded-[2px] w-[250px] h-[42px] text-black text-[16px] focus:border-greyMainBackground focus:bg-greyMainBackground focus:outline-none' 
+                                    className='bg-inherit px-2 border-[#e1e1e1] border-[1px] rounded-[2px] max-w-[250px] h-[42px] text-black text-[16px] focus:border-greyMainBackground focus:bg-greyMainBackground focus:outline-none' 
                             />
                     </div>
 
@@ -85,7 +91,7 @@ const AddDoctor = () => {
                             <input type="tel" name='doctorPhone' 
                                     // value={addDoctorForm.doctorPhone}
                                     placeholder='+234 90 346 4578'
-                                    className='bg-inherit px-2 border-[#e1e1e1] border-[1px] rounded-[2px] w-[250px] h-[42px] text-black text-[16px] focus:border-greyMainBackground focus:bg-greyMainBackground focus:outline-none' 
+                                    className='bg-inherit px-2 border-[#e1e1e1] border-[1px] rounded-[2px] max-w-[250px] h-[42px] text-black text-[16px] focus:border-greyMainBackground focus:bg-greyMainBackground focus:outline-none' 
                             />
                     </div>
 
@@ -94,7 +100,7 @@ const AddDoctor = () => {
                             <input type="number" name='doctorAge' 
                                     // value={addDoctorForm.doctorAge}
                                     placeholder='40'
-                                    className='bg-inherit px-2 border-[#e1e1e1] border-[1px] rounded-[2px] w-[130px] h-[42px] text-black text-[16px] focus:border-greyMainBackground focus:bg-greyMainBackground focus:outline-none' 
+                                    className='bg-inherit px-2 border-[#e1e1e1] border-[1px] rounded-[2px] max-w-[130px] h-[42px] text-black text-[16px] focus:border-greyMainBackground focus:bg-greyMainBackground focus:outline-none' 
                             />
                     </div>
 
@@ -103,7 +109,7 @@ const AddDoctor = () => {
                             <input type="text" name=' doctorAddress' 
                                     // value={addDoctorForm.doctorAddress}
                                     placeholder='3 Fieldgreen Drive, Lagos'
-                                    className='bg-inherit px-2 border-[#e1e1e1] border-[1px] rounded-[2px] w-[250px] h-[42px] text-black text-[16px] focus:border-greyMainBackground focus:bg-greyMainBackground focus:outline-none' 
+                                    className='bg-inherit px-2 border-[#e1e1e1] border-[1px] rounded-[2px] max-w-[250px] h-[42px] text-black text-[16px] focus:border-greyMainBackground focus:bg-greyMainBackground focus:outline-none' 
                             />
                     </div>
 

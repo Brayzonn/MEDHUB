@@ -9,6 +9,7 @@ interface addDoctor {
     doctorAge: string,
     doctorDegree: string,
     employmentType: string,
+    doctorDept: string,
 }
 
 interface dropdownContainer {
@@ -36,12 +37,12 @@ const DropDownList: React.FC<dropDownProps> = ({ setSubmitFormDropdown, allDropD
                                 newStates[index] = newStates[index] === -1 ? index : -1;
                                 updateDoctorSpecialtyDropDownStates(newStates);
                             }}
-                            className="p-2 border-[#e1e1e1] border-[1px] rounded-[5px] w-[200px] min-h-[42px] text-[#6e6e6e] bg-white flex items-center justify-between"
+                            className="shadow-inner p-2 border-[#e1e1e1] border-[1px] rounded-[5px] w-[200px] min-h-[42px] text-black bg-white flex items-center justify-between"
                     >
-                            <p className="">
+                            <p className="text-[#636363]">
                                 {doctorSpecialtyDropDownStates[index] !== -1 ? (test[dropdownFeature.buttonName] === undefined ? dropdownFeature.buttonName : test[dropdownFeature.buttonName]) : (test[dropdownFeature.buttonName] === undefined ? dropdownFeature.buttonName : test[dropdownFeature.buttonName])}
                             </p>
-                            {doctorSpecialtyDropDownStates[index] !== -1 ? <FaChevronDown className="text-black" /> : <FaChevronUp className="text-black" />}
+                            {doctorSpecialtyDropDownStates[index] !== -1 ? <FaChevronUp className="text-[#636363]" /> : < FaChevronDown className="text-[#636363]" />}
                     </button>
 
                     {doctorSpecialtyDropDownStates[index] !== -1 && (

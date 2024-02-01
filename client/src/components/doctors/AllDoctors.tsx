@@ -4,8 +4,9 @@ import { TableColumn } from 'react-data-table-component';
 import DoctorProfile from "./DoctorProfile";
 import AddDoctor from "./AddDoctor";
 import Table from "../globalComponents/Table";
-import { CiSearch } from "react-icons/ci";
 
+
+import { CiSearch } from "react-icons/ci";
 import { FaChevronRight } from "react-icons/fa";
 
 
@@ -29,6 +30,7 @@ const AllDoctors = () => {
   }
 
   const [isProfileVisible, setProfileVisibility] = useState<boolean>(false);
+  const [doctorEditState, updateDoctorEditState] = useState<boolean>(false);
 
 
   const [doctorData] = useState([
@@ -77,7 +79,7 @@ const AllDoctors = () => {
           {
                 name: 'Action',
                 cell: (row) =>(
-                      <button onClick={()=> {setProfileVisibility(true); fetchDoctor(row.profile.doctorname)}} className="w-[30px] h-[30px] flex justify-center items-center relative border bg-purpleSubColor border-purpleSubColor rounded-full">
+                      <button onClick={()=> {setProfileVisibility(true); fetchDoctor(row.profile.doctorname); window.scrollTo(0, 400); }} className="w-[30px] h-[30px] flex justify-center items-center relative border bg-purpleSubColor border-purpleSubColor rounded-full">
                             <FaChevronRight className = 'text-white' />  
                       </button>
                 )
@@ -187,11 +189,11 @@ const AllDoctors = () => {
                                             :
                                             <Table columns={columns} data={searchResults} />
                                         }
-                                        < DoctorProfile doctorData={doctorData} isVisible={isProfileVisible} updateVisibility={setProfileVisibility}/>  
+                                        {< DoctorProfile doctorEditState={doctorEditState} updateDoctorEditState = {updateDoctorEditState} doctorData={doctorData} isDoctorProfileVisible={isProfileVisible} updateProfileVisibility={setProfileVisibility}/> }
                                 </div>
                             </> 
                             : 
-                            <AddDoctor />
+                                <AddDoctor />
                     }
                    
                   
