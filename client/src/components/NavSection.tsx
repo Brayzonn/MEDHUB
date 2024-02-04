@@ -6,7 +6,7 @@ const NavSection = () => {
 
 
   return (
-        <nav className="relative w-full h-[70px] bg-white flex items-center justify-between px-[2rem] border-b border-b-[#F4F7FC]">
+        <nav className="fixed top-0 left-0 z-20 w-full h-[70px] bg-white flex items-center justify-between px-[2rem] border-b border-b-[#F4F7FC]">
                 <h1 className="text-black">MEDHUB</h1>
 
                 <div className="flex items-center space-x-2">

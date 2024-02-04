@@ -5,7 +5,7 @@ import userplaceholder from '../../images/userplaceholderlogo.png'
 
 import DropDownList from "../globalComponents/DropDownList";
 import ConfirmationDialog from '../globalComponents/ConfirmationDialog';
-// import Calendar from 'react-calendar';
+import InputForm from '../globalComponents/InputForm';
 
 import { FaChevronDown } from "react-icons/fa6";
 import { MdSave } from "react-icons/md";
@@ -19,12 +19,21 @@ interface EditDoctorProps {
 
 const EditDoctor: React.FC<EditDoctorProps> = ({updateDoctorProfileForm, updateEditDoctorForm }) => {
     
+    //
     const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
     const dropdownContainer = [
-        {buttonId: 'doctorSpecialty' , buttonName: 'Choose Specialty', listOptions : ['Pediatrics', 'Cardiology', 'Psychiatry', 'Internal Medicine', 'Obstetrics and Gynecology', 'Surgery', 'Anesthesiology', 'Radiology'] },
-        {buttonId: 'doctorDegree' , buttonName: ' Choose Degree', listOptions : ['MD', 'DO', 'PharmD', 'MBBS'] }  ,  
-        {buttonId: 'doctorDept' , buttonName: ' Choose Department', listOptions : ['General', 'Psychiatry', 'Obstetrics', 'Gynecology'] }  ,   
+                {buttonId: 'doctorSpecialty' , buttonName: 'Choose Specialty', listOptions : ['Pediatrics', 'Cardiology', 'Psychiatry', 'Internal Medicine', 'Obstetrics and Gynecology', 'Surgery', 'Anesthesiology', 'Radiology'] },
+                {buttonId: 'doctorDegree' , buttonName: ' Choose Degree', listOptions : ['MD', 'DO', 'PharmD', 'MBBS'] }  ,  
+                {buttonId: 'doctorDept' , buttonName: ' Choose Department', listOptions : ['General', 'Psychiatry', 'Obstetrics', 'Gynecology'] }  ,   
     ]
+
+    const [InputFormData, updateInputFormData] = useState([
+                {labelName: 'Doctor Name ', labelSpan: '*', inputName: 'doctorName', inputType: 'text', placeholder: 'John Doe'},
+                {labelName: 'Doctor Phone Number', labelSpan: '*', inputName: 'doctorPhone', inputType: 'tel', placeholder: '+234 90 346 4578'},
+                {labelName: 'Doctor Age', labelSpan: '*',  inputName: 'doctorAge', inputType: 'number', placeholder: '40'},
+                {labelName: 'Doctor Home Address ', labelSpan: '*',  inputName: 'doctorAddress', inputType: 'text', placeholder: '3 Fieldgreen Drive, Lagos'},
+                {labelName: 'Doctor Join Date ', labelSpan: '*',  inputName: 'doctorjoindate', inputType: 'date'},
+    ])
 
 
     //dropzone for image upload
@@ -41,7 +50,7 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateDoctorProfileForm, updateE
     };
 
 
-    //edit doctor form logic
+    //edit doctor form submit logic
     const [addDoctorForm, setAddDoctorForm] = useState({
         doctorSpecialty: '',
         doctorAddress: '',
@@ -53,7 +62,10 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateDoctorProfileForm, updateE
         doctorDept: '',
     })
 
- 
+
+
+
+
   return (
     <>
         <div className='z-50 absolute top-0 left-0 w-full min-h-full flex justify-center items-center text-[#161616]'>
@@ -100,41 +112,9 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateDoctorProfileForm, updateE
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 lx:grid-cols-4 gap-[1rem]">
-                                        <div className='flex flex-col justify-end space-y-1'>
-                                                <label className='text-[14px] text-[#636363]'>Doctor Name <span>*</span></label>
-                                                <input type="text" name='doctorName' 
-                                                        // value={addDoctorForm.doctorName}
-                                                        placeholder='John Doe'
-                                                        className='bg-inherit px-2 border-[#e1e1e1] border-[1px] rounded-[2px] max-w-[250px] h-[42px] text-black text-[16px] focus:border-greyMainBackground focus:bg-greyMainBackground focus:outline-none' 
-                                                />
-                                        </div>
 
-                                        <div className='flex flex-col justify-end space-y-1'>
-                                                <label className='text-[14px] text-[#636363]'>Doctor Phone Number <span>*</span></label>
-                                                <input type="tel" name='doctorPhone' 
-                                                        // value={addDoctorForm.doctorPhone}
-                                                        placeholder='+234 90 346 4578'
-                                                        className='bg-inherit px-2 border-[#e1e1e1] border-[1px] rounded-[2px] max-w-[250px] h-[42px] text-black text-[16px] focus:border-greyMainBackground focus:bg-greyMainBackground focus:outline-none' 
-                                                />
-                                        </div>
 
-                                        <div className='flex flex-col justify-end space-y-1'>
-                                                <label className='text-[14px] text-[#636363]'>Doctor Age <span>*</span></label>
-                                                <input type="number" name='doctorAge' 
-                                                        // value={addDoctorForm.doctorAge}
-                                                        placeholder='40'
-                                                        className='bg-inherit px-2 border-[#e1e1e1] border-[1px] rounded-[2px] max-w-[130px] h-[42px] text-black text-[16px] focus:border-greyMainBackground focus:bg-greyMainBackground focus:outline-none' 
-                                                />
-                                        </div>
-
-                                        <div className='flex flex-col justify-end space-y-1'>
-                                                <label className='text-[14px] text-[#636363]'>Doctor Home Address <span>*</span></label>
-                                                <input type="text" name=' doctorAddress' 
-                                                        // value={addDoctorForm.doctorAddress}
-                                                        placeholder='3 Fieldgreen Drive, Lagos'
-                                                        className='bg-inherit px-2 border-[#e1e1e1] border-[1px] rounded-[2px] max-w-[250px] h-[42px] text-black text-[16px] focus:border-greyMainBackground focus:bg-greyMainBackground focus:outline-none' 
-                                                />
-                                        </div>
+                                        <InputForm InputFormData = {InputFormData} />
 
                                         <DropDownList allDropDownContainer = {dropdownContainer}   setSubmitFormDropdown = {setAddDoctorForm}/>
                                 </div>

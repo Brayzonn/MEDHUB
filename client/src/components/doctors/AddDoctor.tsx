@@ -2,6 +2,7 @@ import Dropzone from 'react-dropzone';
 import { useState } from "react";
 
 import DropDownList from "../globalComponents/DropDownList";
+import InputForm from '../globalComponents/InputForm';
 
 
 
@@ -22,35 +23,45 @@ import DropDownList from "../globalComponents/DropDownList";
 
 const AddDoctor = () => {
 
-    //dropzone for image upload
-    const [Idimages, setIdImages] = useState<string>('');
+        const dropdownContainer = [
+                {buttonId: 'doctorSpecialty' , buttonName: 'Choose Specialty', listOptions : ['Pediatrics', 'Cardiology', 'Psychiatry', 'Internal Medicine', 'Obstetrics and Gynecology', 'Surgery', 'Anesthesiology', 'Radiology'] },
+                {buttonId: 'doctorDegree' , buttonName: ' Choose Degree', listOptions : ['MD', 'DO', 'PharmD', 'MBBS'] }  , 
+                {buttonId: 'doctorDept' , buttonName: ' Choose Department', listOptions : ['General', 'Psychiatry', 'Obstetrics', 'Gynecology'] }  ,   
+        ]
 
-    const handleImageDrop = (acceptedFiles: File[]) => {
-            if (acceptedFiles.length > 0) {
-                    const firstAcceptedFile = acceptedFiles[0];
+        const [InputFormData, updateInputFormData] = useState([
+                {labelName: 'Doctor Name ', labelSpan: '*', inputName: 'doctorName', inputType: 'text', placeholder: 'John Doe'},
+                {labelName: 'Doctor Phone Number', labelSpan: '*', inputName: 'doctorPhone', inputType: 'tel', placeholder: '+234 90 346 4578'},
+                {labelName: 'Doctor Age', labelSpan: '*',  inputName: 'doctorAge', inputType: 'number', placeholder: '40'},
+                {labelName: 'Doctor Home Address ', labelSpan: '*',  inputName: 'doctorAddress', inputType: 'text', placeholder: '3 Fieldgreen Drive, Lagos'},
+                {labelName: 'Doctor Join Date ', labelSpan: '*',  inputName: 'doctorjoindate', inputType: 'date'},
+        ])
 
-                    const imageUrl = URL.createObjectURL(firstAcceptedFile);
-                
-                    setIdImages(imageUrl);
-            }    
-    };
+        //dropzone for image upload
+        const [Idimages, setIdImages] = useState<string>('');
 
-    const dropdownContainer = [
-        {buttonId: 'doctorSpecialty' , buttonName: 'Choose Specialty', listOptions : ['Pediatrics', 'Cardiology', 'Psychiatry', 'Internal Medicine', 'Obstetrics and Gynecology', 'Surgery', 'Anesthesiology', 'Radiology'] },
-        {buttonId: 'doctorDegree' , buttonName: ' Choose Degree', listOptions : ['MD', 'DO', 'PharmD', 'MBBS'] }  , 
-        {buttonId: 'doctorDept' , buttonName: ' Choose Department', listOptions : ['General', 'Psychiatry', 'Obstetrics', 'Gynecology'] }  ,   
-    ]
+        const handleImageDrop = (acceptedFiles: File[]) => {
+                if (acceptedFiles.length > 0) {
+                        const firstAcceptedFile = acceptedFiles[0];
 
-    const [addDoctorForm, setAddDoctorForm] = useState({
-        doctorSpecialty: '',
-        doctorAddress: '',
-        doctorPhone: '',
-        doctorAge: '',
-        doctorName:'',
-        doctorDegree: '',
-        employmentType: '',
-        doctorDept: '',
-    })
+                        const imageUrl = URL.createObjectURL(firstAcceptedFile);
+                        
+                        setIdImages(imageUrl);
+                }    
+        };
+
+
+        //add doctor form submit logic
+        const [addDoctorForm, setAddDoctorForm] = useState({
+                doctorSpecialty: '',
+                doctorAddress: '',
+                doctorPhone: '',
+                doctorAge: '',
+                doctorName:'',
+                doctorDegree: '',
+                employmentType: '',
+                doctorDept: '',
+        })
 
   return (
     <>
@@ -76,47 +87,13 @@ const AddDoctor = () => {
                     </button>}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lx:grid-cols-3 gap-[1rem]">
-                    <div className='flex flex-col justify-end space-y-1'>
-                            <label className='text-[14px] text-[#636363]'>Doctor Name <span>*</span></label>
-                            <input type="text" name='doctorName' 
-                                    // value={addDoctorForm.doctorName}
-                                    placeholder='John Doe'
-                                    className='bg-inherit px-2 border-[#e1e1e1] border-[1px] rounded-[2px] max-w-[250px] h-[42px] text-black text-[16px] focus:border-greyMainBackground focus:bg-greyMainBackground focus:outline-none' 
-                            />
-                    </div>
-
-                    <div className='flex flex-col justify-end space-y-1'>
-                            <label className='text-[14px] text-[#636363]'>Doctor Phone Number <span>*</span></label>
-                            <input type="tel" name='doctorPhone' 
-                                    // value={addDoctorForm.doctorPhone}
-                                    placeholder='+234 90 346 4578'
-                                    className='bg-inherit px-2 border-[#e1e1e1] border-[1px] rounded-[2px] max-w-[250px] h-[42px] text-black text-[16px] focus:border-greyMainBackground focus:bg-greyMainBackground focus:outline-none' 
-                            />
-                    </div>
-
-                    <div className='flex flex-col justify-end space-y-1'>
-                            <label className='text-[14px] text-[#636363]'>Doctor Age <span>*</span></label>
-                            <input type="number" name='doctorAge' 
-                                    // value={addDoctorForm.doctorAge}
-                                    placeholder='40'
-                                    className='bg-inherit px-2 border-[#e1e1e1] border-[1px] rounded-[2px] max-w-[130px] h-[42px] text-black text-[16px] focus:border-greyMainBackground focus:bg-greyMainBackground focus:outline-none' 
-                            />
-                    </div>
-
-                    <div className='flex flex-col justify-end space-y-1'>
-                            <label className='text-[14px] text-[#636363]'>Doctor Home Address <span>*</span></label>
-                            <input type="text" name=' doctorAddress' 
-                                    // value={addDoctorForm.doctorAddress}
-                                    placeholder='3 Fieldgreen Drive, Lagos'
-                                    className='bg-inherit px-2 border-[#e1e1e1] border-[1px] rounded-[2px] max-w-[250px] h-[42px] text-black text-[16px] focus:border-greyMainBackground focus:bg-greyMainBackground focus:outline-none' 
-                            />
-                    </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lx:grid-cols-4 gap-[1rem]">
+                    <InputForm InputFormData = {InputFormData} />
 
                     <DropDownList allDropDownContainer = {dropdownContainer}   setSubmitFormDropdown = {setAddDoctorForm}/>
             </div>
 
-            <button className="transition-properties w-[190px] h-[40px] bg-purpleSubColor text-white border border-purpleSubColor text-[14px] rounded-md flex items-center justify-center space-x-2 hover:bg-[#13117c]">
+            <button className="transition-properties w-[190px] h-[40px] bg-gradient-to-r from-slate-800 to-slate-900 text-white border border-white text-[14px] rounded-md flex items-center justify-center space-x-2 hover:bg-[#13117c]">
                     <p>Add Doctor</p>
                     <p className="text-[16px]">+</p>
             </button>

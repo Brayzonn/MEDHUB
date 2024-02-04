@@ -4,38 +4,38 @@ import { TbLogout2 } from "react-icons/tb";
 
 
 interface NavLinks {
-  to: string;
-  icon: string;
-  text: string;
+    to: string;
+    icon: string;
+    text: string;
 }
 
 interface SideNavProps {
-  navLinks: NavLinks[];
-  setIsHovered: React.Dispatch<React.SetStateAction<boolean>>;
-  widthClass: string;
+    navLinks: NavLinks[];
+    setIsHovered: React.Dispatch<React.SetStateAction<boolean>>;
+    widthClass: string;
 }
 
 const SideNav: React.FC<SideNavProps> = ({ navLinks, setIsHovered, widthClass }) => {
     
-  const [hoveredLink, setHoveredLink] = useState<string | null>(null);
-  const [activeLink, setActiveLink] = useState<string | null>(null);
-  const location = useLocation();
+    const [hoveredLink, setHoveredLink] = useState<string | null>(null);
+    const [activeLink, setActiveLink] = useState<string | null>(null);
+    const location = useLocation();
 
   useEffect(() => {
-    const currentPath = location.pathname;
-    setActiveLink(currentPath);
+      const currentPath = location.pathname;
+      setActiveLink(currentPath);
   }, [location]);
 
   return (
-    <div className={`relative min-h-screen ${widthClass} pt-[5rem] px-[1rem] flex flex-col justify-start items-start space-y-[2rem] bg-white border-r border-r-[#F4F7FC] lx:w-[18%]`}>
-          <div className={`relative w-full h-[50%] flex flex-col justify-start items-start space-y-[3rem] `}>
+    <div className={`relative z-10 h-screen ${widthClass} pt-[150px] px-[1rem] flex flex-col justify-start items-start bg-white border-r border-r-[#F4F7FC] lx:w-[18%]`}>
+          <div className={`relative w-full h-[80%] flex flex-col justify-start items-start space-y-[2rem] `}>
                       {navLinks.map((link, index) => (
                           <NavLink
                               key={index}
                               to={link.to}
                               className={`w-full flex space-x-3 items-center justify-start p-2 border border-white rounded-md transition-properties hover:bg-blueSubBackgroundColor hover:text-white 
-                                ${hoveredLink === link.to ? 'bg-[#1c1b8d]' : ''}
-                                ${activeLink === link.to ? 'bg-purpleSubColor text-white' : ''}`}
+                                ${hoveredLink === link.to ? 'bg-gradient-to-r from-slate-500 to-slate-800' : ''}
+                                ${activeLink === link.to ? ' bg-gradient-to-r from-slate-800 to-slate-900 text-white' : ''}`}
                               onMouseEnter={() => {
                                 setHoveredLink(link.to);
                                 setIsHovered(true);
@@ -62,12 +62,11 @@ const SideNav: React.FC<SideNavProps> = ({ navLinks, setIsHovered, widthClass })
                       ))}            
           </div>
 
-          <div className='relative w-full h-[50%] flex items-center '>
-                    <button className='w-[150px] min-h-[40px] flex justify-start items-center space-x-3 transition-properties hover:border hover:border-[#1c1b8d] hover:rounded-md hover:justify-center hover:bg-[#1c1b8d] hover:text-white '>
-                          <TbLogout2 className = 'text-[22px] font-[650]' />     
-                          <p className='text-[15px] font-[500]'>Log Out</p>
+          <div className='relative w-full flex items-end pt-4 border-t border-t-[#e8e6e6]'>
+                    <button className='w-[150px] min-h-[40px] flex justify-start items-center space-x-2 transition-properties hover:border hover:bg-gradient-to-r from-slate-500 to-slate-800 hover:rounded-md hover:justify-center hover:text-white '>
+                          <TbLogout2 className = 'text-[20px] font-[650] text-[#776666]' />     
+                          <p className='text-[15px] font-[500]'>Log out</p>
                     </button>
-
           </div>
     </div>
   );

@@ -79,7 +79,7 @@ const AllDoctors = () => {
           {
                 name: 'Action',
                 cell: (row) =>(
-                      <button onClick={()=> {setProfileVisibility(true); fetchDoctor(row.profile.doctorname); window.scrollTo(0, 400); }} className="w-[30px] h-[30px] flex justify-center items-center relative border bg-purpleSubColor border-purpleSubColor rounded-full">
+                      <button onClick={()=> {setProfileVisibility(true); fetchDoctor(row.profile.doctorname); window.scrollTo(0, 400); }} className="w-[30px] h-[30px] flex justify-center items-center relative border bg-gradient-to-r from-slate-500 to-slate-800 border-white rounded-full">
                             <FaChevronRight className = 'text-white' />  
                       </button>
                 )
@@ -140,7 +140,7 @@ const AllDoctors = () => {
 
 
   return (
-            <div className='overflow-hidden relative w-[75%] shadow-sm p-4 m-6 flex flex-col space-y-6 text-[#161616] bg-white border border-white rounded-[15px] lx:w-[82%]'>
+            <div className='overflow-hidden relative w-[75%] shadow-sm mt-[100px] mb-4 p-4 mx-6 flex flex-col space-y-6 text-[#161616] bg-white border border-white rounded-[15px] lx:w-[82%]'>
                     <h5 className='font-bold tracking-wide'>Doctors</h5>
 
                     <div className='w-full min-h-[3rem] flex items-center space-x-[4rem] border-b border-b-[#f1f1f1]'>
@@ -149,7 +149,7 @@ const AllDoctors = () => {
                                         updateAddDoctorState(false);
                                         updateAllDoctorState(true)
                                 }}
-                                className={`h-full text-capitalize font-[500] text-[14px] transition-properties  ${allDoctorState && 'border-b-purpleSubColor border-b-[2.5px]'} `}
+                                className={`h-full text-capitalize font-[500] text-[14px] transition-properties  ${allDoctorState && 'border-b-[#1e293b] border-b-[2.5px]'} `}
                           >
                               All Doctors
                           </button>
@@ -159,7 +159,7 @@ const AllDoctors = () => {
                                         updateAddDoctorState(true);
                                         updateAllDoctorState(false)
                                 }}
-                                className={`h-full text-capitalize font-[500] text-[14px] transition-properties ${addDoctorState && 'border-b-purpleSubColor border-b-[2.5px]'} `}
+                                className={`h-full text-capitalize font-[500] text-[14px] transition-properties ${addDoctorState && 'border-b-[#1e293b] border-b-[2.5px]'} `}
                           >
                               Add Doctor
                           </button>

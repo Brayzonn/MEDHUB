@@ -31,8 +31,8 @@ const DoctorProfile: React.FC<DoctorProfileProps> = ({isDoctorProfileVisible, up
 
   return (
     <>
-    {(isDoctorProfileVisible && !doctorEditState) && <div className='z-50 absolute top-0 left-0 w-full min-h-full flex justify-center items-center text-[#161616]'>
-        <div className="shadow-2xl relative px-6 py-8 w-[95%] h-[100%] bg-white border border-[#f7f7f7] rounded-[15px]">
+    {(isDoctorProfileVisible && !doctorEditState) && <div className="z-50 absolute top-0 left-0 w-full min-h-full flex justify-center items-center text-[#161616]">
+          <div className="shadow-2xl relative px-6 py-8 w-[95%] h-[100%] bg-white border border-[#f7f7f7] rounded-[15px]">
             
                   <ConfirmationDialog
                         isOpen={isConfirmationDialogOpen}
@@ -85,7 +85,7 @@ const DoctorProfile: React.FC<DoctorProfileProps> = ({isDoctorProfileVisible, up
                         </div>
 
                         <div className='w-full flex border-b border-b-[#f1f1f1] pt-8 pb-4'>
-                              <div className='w-[170px] flex justify-center items-center p-1 min-h-[40px] border border-purpleSubColor rounded-md bg-purpleSubColor text-white'>
+                              <div className='w-[170px] flex justify-center items-center p-1 min-h-[40px] border border-white rounded-md bg-gradient-to-r from-slate-500 to-slate-800 text-white'>
                                   Doctor Information
                               </div>
                         </div>

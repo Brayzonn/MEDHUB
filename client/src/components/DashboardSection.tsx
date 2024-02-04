@@ -47,7 +47,7 @@ const DashboardSection = () => {
     ]
 
   return (
-    <div className='relative pt-[2rem] px-[1rem] min-h-[10rem] w-[75%] lx:w-[82%]'>
+    <div className='relative pt-[130px] px-[1rem] min-h-[10rem] w-[75%] lx:w-[82%]'>
             <div className='w-full min-h-[200px] flex justify-evenly flex-wrap lx:justify-start'>
                     
                     {dashboardDisplayData.map((data, index) => (
@@ -64,7 +64,7 @@ const DashboardSection = () => {
                              
             </div>
 
-            <div className='relative w-full py-[1rem] min-h-[1rem] flex flex-col items-start justify-center space-y-4 '>
+            <div className='relative w-full py-[1rem] px-[1rem] min-h-[1rem] flex flex-col items-start justify-center space-y-4 '>
 
                     <p className='text-[16px] font-[600] text-black text-left'>Appointments</p>
 
