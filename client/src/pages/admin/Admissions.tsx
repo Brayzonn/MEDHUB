@@ -26,34 +26,52 @@ const Admissions = () => {
               { to: '/admin/doctors',      icon: doctorIcon,       text: 'Doctors' },
               { to: '/admin/patients',     icon: patientIcon,      text: 'Patients' },
               { to: '/admin/nurses',       icon: nurseicon,  text: 'Nurses' },
-              { to: '/admin/appointments', icon: appointmentIcon,  text: 'Appointments' },
+              { to: '/admin/staff', icon: appointmentIcon,  text: 'Staff' },
               { to: '/admin/admissions',   icon: admissionsicon,   text: 'Admissions' },
               
   ];
 
   const [allRooms, updateAllRooms] = useState([
-    {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
-    {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
-    {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
-    {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
-    {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
-    {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
-    {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
-    {roomNumber: ' 12C', roomStatus: 'available', occupantName: 'Dave Green'},
-    {roomNumber: ' 12C', roomStatus: 'available', occupantName: 'Dave Green'},
-    {roomNumber: ' 12C', roomStatus: 'available', occupantName: 'Dave Green'},
-    {roomNumber: ' 12C', roomStatus: 'available', occupantName: 'Dave Green'},
-    {roomNumber: ' 12C', roomStatus: 'available', occupantName: 'Dave Green'},
-    {roomNumber: ' 12C', roomStatus: 'available', occupantName: 'Dave Green'},
-    {roomNumber: ' 12C', roomStatus: 'available', occupantName: 'Dave Green'},
-    {roomNumber: ' 12C', roomStatus: 'available', occupantName: 'Dave Green'},
-    {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
-    {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
-    {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
-    {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
-    {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
-    {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
+              {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
+              {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
+              {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
+              {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
+              {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
+              {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
+              {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
   ])
+
+
+
+  //
+  const displaySelectedRoom = (roomId: string)=>{
+        alert(roomId)
+        updateRoomOptions(true)
+    
+  }
+
+  const [roomOptionsActive, updateRoomOptions]= useState<boolean>(false)
+
+  const [currentRoomOption, updateCurrentRoomOption ] = useState({
+        roomId: '14C',
+        occupantName: 'Grey Matters',
+        occupantId: '674',
+        roomType: 'Maternity',
+        checkInDate: '12/02/24',
+        checkOutDate: '',
+        checkedIn: false,
+  })
+
+  //check out and check in logic
+  const checkOutFunction = () =>{
+    
+  }
+
+  const checkInFunction = () =>{
+    
+  }
+
+
 
 
   //if not desktop screen, display error message
@@ -80,9 +98,9 @@ const Admissions = () => {
                                   <div className="relative h-full w-full flex ">
                                           <SideNav navLinks={navLinks} setIsHovered={setIsHovered} widthClass ={`w-[25%]`}/>
 
-                                          <AllAdmissions allRooms={allRooms}/>
+                                          <AllAdmissions showSelectedRoom ={displaySelectedRoom} allRooms={allRooms}/>
 
-                                          <RoomOptions />
+                                          <RoomOptions roomOptionsCheckOutFnc = {checkOutFunction} roomOptionsCheckInFnc={checkInFunction} RoomOptions= {currentRoomOption} updateRoomOptionsActive = {updateRoomOptions} roomOptionsActive ={roomOptionsActive}/>
                                   </div>
                 
                         </div>

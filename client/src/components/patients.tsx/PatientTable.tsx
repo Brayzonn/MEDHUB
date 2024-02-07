@@ -2,37 +2,42 @@ import DataTable, {TableColumn } from 'react-data-table-component';
 import userplaceholder from '../../images/userplaceholderlogo.png'
 
 
-  interface DataRow {
-        profile: { doctorname: string; doctorImage: string };
-        doctorDepartment: string;
-        doctorSpecialty: string;
-        doctorDegree: string;
-        doctorJoinDate: string;
-  }
-  
-  interface TableProps {
-    columns: TableColumn<DataRow>[];
-    data:  DataRow[];
-  }
+interface RowData {
+    profile: { patientname: string; patientImage: string };
+    patientID: string;
+    patientNotes: [] ;
+    patientAge: string;
+    patientBloodType: string;
+    patientHeight: string;
+    patientGenotype: string;
+    patientWeight: string;
+    patientConditions: []; 
+    patientJoindate: string;
+}
+    
+    interface TableProps {
+        columns: TableColumn<RowData>[];
+        data:  RowData[];
+    }
 
-const Table: React.FC<TableProps> = ({ columns, data }) => {
+const PatientTable: React.FC<TableProps> = ({ columns, data }) => {
 
     
-    const customColumns: TableColumn<DataRow>[] = columns.map((col) => {
-        if (col.name === 'Doctor'){
+    const customColumns: TableColumn<RowData>[] = columns.map((col) => {
+        if (col.name === 'Patient'){
             return {
                 ...col,
-                cell: (row) => {
-                    const doctorProfile = row.profile;
+                cell: (row: RowData) => {
+                    const patientProfile = row.profile;
             
                     return (
                       <div className="flex items-center">
                             <img
-                                src={doctorProfile.doctorImage ? doctorProfile.doctorImage : userplaceholder }
-                                alt={doctorProfile.doctorname}
+                                src={patientProfile.patientImage ? patientProfile.patientImage : userplaceholder }
+                                alt={patientProfile.patientname}
                                 className="w-8 h-8 rounded-full mr-2"
                             />
-                            {doctorProfile.doctorname}
+                            {patientProfile.patientname}
                       </div>
                     );
                   },
@@ -149,4 +154,4 @@ const Table: React.FC<TableProps> = ({ columns, data }) => {
   );
 };
 
-export default Table;
+export default PatientTable;
