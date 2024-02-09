@@ -3,6 +3,7 @@ import { TableColumn } from 'react-data-table-component';
 
 import AddPatient from "./AddPatient";
 import PatientTable from "./PatientTable";
+import PatientProfile from "./PatientProfile";
 
 import { CiSearch } from "react-icons/ci";
 import { FaChevronRight } from "react-icons/fa";
@@ -23,12 +24,22 @@ const AllPatients = () => {
             patientWeight: string;
             patientConditions: []; 
             patientJoindate: string;
+            patientBirthDate: string;
+            patientPhoneNumber: string;
+            patientEmail: string;
+            admissionStatus:boolean;
+            patientEMO: string;
     }
 
     const [searchResults, setSearchResults] = useState<RowData []>([])
     const [isInputActive, setInputIsActive] = useState<boolean>(false)
     const [allPatientsBorder, updateAllPatientsBorder] = useState<boolean>(true);
     const [addPatientsBorder, updateAddPatientsBorder] = useState<boolean>(false);
+    const [patientEditState, updatePatientEditState] = useState<boolean>(false);
+
+    const doctorProfileData = [
+        {header: 'Patient Name', data: 'grey dans'},
+    ]
   
  
   
@@ -56,7 +67,7 @@ const AllPatients = () => {
             },
             {
                   name: 'ID',
-                  selector: (row) => row.patientID,
+                  selector: (row) => 'PT ' + row.patientID,
             },
   
             {
@@ -65,8 +76,8 @@ const AllPatients = () => {
             },
   
             {
-                  name: 'Genotype',
-                  selector: (row) => row.patientGenotype,
+                  name: 'Admission Status',
+                  selector: (row) => row.admissionStatus,
             },
   
             {
@@ -88,15 +99,20 @@ const AllPatients = () => {
     const patientData: RowData[]  = [
         {
             profile: { patientname: 'Eze', patientImage: '' },
-            patientID: 'string',
+            patientID: '34',
             patientNotes: [] ,
-            patientAge: 'string',
+            patientAge: '64',
             patientBloodType: 'string',
             patientHeight: 'string',
             patientGenotype: 'string',
             patientWeight: 'string',
             patientConditions: [],
-            patientJoindate: 'string',
+            patientPhoneNumber: '',
+            patientJoindate: '03/2/2024',
+            patientBirthDate: '',
+            patientEmail: '',
+            admissionStatus: false,
+            patientEMO: '',
         }
         
     ];
@@ -152,6 +168,7 @@ const AllPatients = () => {
                                     :
                                     <PatientTable columns={columns} data={searchResults} />
                                 }
+                                {< PatientProfile patientEditState={patientEditState} updatePatientEditState = {updatePatientEditState} patientData={doctorProfileData} isPatientProfileVisible={isPatientProfileVisible} updatePatientProfileVisibility={setPatientProfileVisibility}/> }
                         </div>
                     </> 
                     : 

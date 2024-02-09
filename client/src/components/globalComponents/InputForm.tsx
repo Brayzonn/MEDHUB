@@ -20,7 +20,7 @@ const InputForm: React.FC<InputFormProps> = ({InputFormData}) => {
                         <label className='text-[14px] text-[#636363]'>{data.labelName} <span>{data.labelSpan}</span></label>
                         <input type={data.inputType} name={data.inputName}
                                 // value={addDoctorForm.doctorName}
-                                placeholder='John Doe'
+                                placeholder={data.placeholder}
                                 className='shadow-inner p-2 border-[#e1e1e1] border-[1px] rounded-[5px] w-[200px] min-h-[42px] text-black bg-white flex items-center justify-between' 
                         />
                 </div>

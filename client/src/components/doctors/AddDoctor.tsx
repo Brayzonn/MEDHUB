@@ -1,7 +1,7 @@
 import Dropzone from 'react-dropzone';
 import { useState } from "react";
 
-import DropDownList from "../globalComponents/DropDownList";
+import {DropDownList} from "../globalComponents/DropDownList";
 import InputForm from '../globalComponents/InputForm';
 
 

@@ -13,6 +13,11 @@ interface RowData {
     patientWeight: string;
     patientConditions: []; 
     patientJoindate: string;
+    patientBirthDate: string;
+    admissionStatus: boolean;
+    patientPhoneNumber: string;
+    patientEmail: string;
+    patientEMO: string;
 }
     
     interface TableProps {
