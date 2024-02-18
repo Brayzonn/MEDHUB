@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import userplaceholder from '../../images/userplaceholderlogo.png'
 
-import {DropDownList} from "../globalComponents/DropDownList";
+import {DropDownListNurse} from "../globalComponents/DropDownList";
 import ConfirmationDialog from '../globalComponents/ConfirmationDialog';
 import InputForm from '../globalComponents/InputForm';
 
@@ -12,27 +12,26 @@ import { MdSave } from "react-icons/md";
 import { RiDeleteBin3Line } from "react-icons/ri";
 import { CiEdit } from "react-icons/ci";
 
-interface EditDoctorProps {
-        updateDoctorProfileForm: React.Dispatch<React.SetStateAction<boolean>>,
-        updateEditDoctorForm: React.Dispatch<React.SetStateAction<boolean>>,
+interface EditNurseProps {
+        updateNurseProfileForm: React.Dispatch<React.SetStateAction<boolean>>,
+        updateEditNurseForm: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
-const EditDoctor: React.FC<EditDoctorProps> = ({updateDoctorProfileForm, updateEditDoctorForm }) => {
-    
+const EditNurse: React.FC<EditNurseProps> = ({updateNurseProfileForm, updateEditNurseForm }) => {
+ 
     //
     const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
     const dropdownContainer = [
-                {buttonId: 'doctorSpecialty' , buttonName: 'Choose Specialty', listOptions : ['Pediatrics', 'Cardiology', 'Psychiatry', 'Internal Medicine', 'Obstetrics and Gynecology', 'Surgery', 'Anesthesiology', 'Radiology'] },
-                {buttonId: 'doctorDegree' , buttonName: ' Choose Degree', listOptions : ['MD', 'DO', 'PharmD', 'MBBS'] }  ,  
-                {buttonId: 'doctorDept' , buttonName: ' Choose Department', listOptions : ['General', 'Psychiatry', 'Obstetrics', 'Gynecology'] }  ,   
+        {buttonId: 'nurseTimeRole' , buttonName: 'Choose Shift', listOptions : ['Day', 'Afternoon', 'Night'] },
+        {buttonId: 'nurseDegree' , buttonName: ' Choose Degree', listOptions : ['MD', 'DO', 'PharmD', 'MBBS'] }  , 
     ]
 
     const [InputFormData, updateInputFormData] = useState([
-                {labelName: 'Doctor Name ', labelSpan: '*', inputName: 'doctorName', inputType: 'text', placeholder: 'John Doe'},
-                {labelName: 'Doctor Phone Number', labelSpan: '*', inputName: 'doctorPhone', inputType: 'tel', placeholder: '+234 90 346 4578'},
-                {labelName: 'Doctor Age', labelSpan: '*',  inputName: 'doctorAge', inputType: 'number', placeholder: '40'},
-                {labelName: 'Doctor Home Address ', labelSpan: '*',  inputName: 'doctorAddress', inputType: 'text', placeholder: '3 Fieldgreen Drive, Lagos'},
-                {labelName: 'Doctor Join Date ', labelSpan: '*',  inputName: 'doctorjoindate', inputType: 'date'},
+        {labelName: 'Nurse Name ', labelSpan: '*', inputName: 'nurseName', inputType: 'text', placeholder: 'John Doe'},
+        {labelName: 'Nurse Phone ', labelSpan: '*', inputName: 'nursePhone', inputType: 'tel', placeholder: '+234 90 346 4578'},
+        {labelName: 'Nurse Age', labelSpan: '*',  inputName: 'nurseAge', inputType: 'number', placeholder: '40'},
+        {labelName: 'Nurse Birth Date ', labelSpan: '*',  inputName: 'nurseDateOfBirth',  inputType: 'date'},
+        {labelName: 'Nurse Join Date ', labelSpan: '*',  inputName: 'nurseJoinDate', inputType: 'date'},
     ])
 
 
@@ -50,16 +49,18 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateDoctorProfileForm, updateE
     };
 
 
-    //edit doctor form submit logic
-    const [addDoctorForm, setAddDoctorForm] = useState({
-        doctorSpecialty: '',
-        doctorAddress: '',
-        doctorPhone: '',
-        doctorAge: '',
-        doctorName:'',
-        doctorDegree: '',
-        employmentType: '',
-        doctorDept: '',
+    //edit nurse form submit logic
+    const [addNurseForm, setAddNurseForm] = useState({
+        nurseName: '',
+        nurseImage: '',
+        nurseAge: '',
+        nurseDateOfBirth: '',
+        nurseTimeRole: '',
+        nurseDegree: '',
+        nurseJoinDate: '',
+        nurseID: '',
+        nurseEmail: '',
+        nursePhone: '',
     })
 
 
@@ -77,7 +78,7 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateDoctorProfileForm, updateE
                 <div className="shadow-2xl relative px-4 py-6 w-[95%] h-[100%] bg-white border border-[#f7f7f7] rounded-[15px]">
                         <ConfirmationDialog
                                 isOpen={isConfirmationDialogOpen}
-                                title="Do you want to delete Doctor image?"
+                                title="Do you want to delete Nurse image?"
                                 message="This action is irreversable"
                                 onConfirm = {()=> {setIsConfirmationDialogOpen(false); }}
                                 onCancel  = {()=> {setIsConfirmationDialogOpen(false); }}
@@ -121,17 +122,17 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateDoctorProfileForm, updateE
 
                                         <InputForm InputFormData = {InputFormData} />
 
-                                        <DropDownList allDropDownContainer = {dropdownContainer}   setSubmitFormDropdown = {setAddDoctorForm}/>
+                                        <DropDownListNurse allNurseDropDownContainer = {dropdownContainer}   setNurseSubmitFormDropdown = {setAddNurseForm}/>
                                 </div>
                                                         
 
                                 <div className="w-full flex justify-end items-end space-x-4 py-6">
-                                        <button onClick={()=> {updateEditDoctorForm(false); updateDoctorProfileForm(true); window.scrollTo(0, 400);}} className="transition-properties w-[130px] h-[40px] bg-green-600 text-white border border-green-600 text-[14px] rounded-md flex items-center justify-center space-x-2 hover:bg-green-500">
+                                        <button onClick={()=> {updateEditNurseForm(false); updateNurseProfileForm(true); window.scrollTo(0, 400);}} className="transition-properties w-[130px] h-[40px] bg-green-600 text-white border border-green-600 text-[14px] rounded-md flex items-center justify-center space-x-2 hover:bg-green-500">
                                                 <MdSave className ='text-white text-[16px]'/>
                                                 <p>Update</p>
                                         </button>
 
-                                        <button onClick={()=>  {updateEditDoctorForm(false); updateDoctorProfileForm(true); window.scrollTo(0, 400);}} className="transition-properties w-[130px] h-[40px] bg-black text-white border border-black text-[14px] rounded-md flex items-center justify-center space-x-2 hover:border-[#121212] hover:bg-[#121212]">
+                                        <button onClick={()=>  {updateEditNurseForm(false); updateNurseProfileForm(true); window.scrollTo(0, 400);}} className="transition-properties w-[130px] h-[40px] bg-black text-white border border-black text-[14px] rounded-md flex items-center justify-center space-x-2 hover:border-[#121212] hover:bg-[#121212]">
                                                 <FaChevronDown className ='text-white text-[14px]'/>
                                                 <p>Close</p>
                                         </button>
@@ -144,4 +145,4 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateDoctorProfileForm, updateE
   )
 }
 
-export default EditDoctor
+export default EditNurse

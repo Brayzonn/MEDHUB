@@ -10,27 +10,25 @@ import appointmentIcon from '../../images/stafficon.png';
 import SideNav from '../../components/SideNav';
 import UseScreenWidth from '../../components/globalComponents/UseScreenWidth';
 import NavSection from '../../components/NavSection';
-import AllDoctors from '../../components/doctors/AllDoctors';
+import AllNurses from '../../components/nurses/AllNurses';
 
-
-const Doctors = () => {
+const Nurses = () => {
     const screenWidth = UseScreenWidth();
     const [, setIsHovered] = useState(false);
   
 
     //navlinks for sidenav component
     const navLinks = [
-        { to: '/admin/dashboard',    icon: homeIconImage,    text: 'Dashboard' },
-        { to: '/admin/doctors',      icon: doctorIcon,       text: 'Doctors' },
-        { to: '/admin/patients',     icon: patientIcon,      text: 'Patients' },
-        { to: '/admin/nurses',       icon: nurseicon,  text: 'Nurses' },
-        { to: '/admin/staff',        icon: appointmentIcon,  text: 'Staff' },
-        { to: '/admin/admissions',   icon: admissionsicon,   text: 'Admissions' },
-        
+                { to: '/admin/dashboard',    icon: homeIconImage,    text: 'Dashboard' },
+                { to: '/admin/doctors',      icon: doctorIcon,       text: 'Doctors' },
+                { to: '/admin/patients',     icon: patientIcon,      text: 'Patients' },
+                { to: '/admin/nurses',       icon: nurseicon,  text: 'Nurses' },
+                { to: '/admin/staff',        icon: appointmentIcon,  text: 'Staff' },
+                { to: '/admin/admissions',   icon: admissionsicon,   text: 'Admissions' },
+                
     ];
   
-  
-  
+
     //if not desktop screen, display error message
     if(screenWidth < 891 ){
   
@@ -55,7 +53,7 @@ const Doctors = () => {
                                 <div className="relative h-full w-full flex  ">
                                         <SideNav navLinks={navLinks} setIsHovered={setIsHovered} widthClass ={`w-[25%]`}/>
 
-                                        <AllDoctors />     
+                                        <AllNurses />     
                                 </div>
                   
                           </div>
@@ -64,4 +62,4 @@ const Doctors = () => {
     }
 }
 
-export default Doctors
+export default Nurses

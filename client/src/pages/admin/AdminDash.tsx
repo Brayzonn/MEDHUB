@@ -5,7 +5,7 @@ import nurseicon from '../../images/nurseicon.png';
 import homeIconImage from '../../images/dashlogo.svg';
 import patientIcon from '../../images/patient-icon.svg';
 import doctorIcon from '../../images/doctor-icon.svg';
-import appointmentIcon from '../../images/appointment-icon.svg';
+import appointmentIcon from '../../images/stafficon.png';
 
 import SideNav from "../../components/SideNav";
 import UseScreenWidth from '../../components/globalComponents/UseScreenWidth';
@@ -24,12 +24,13 @@ const AdminDash = () => {
 
   //navlinks for sidenav component
   const navLinks = [
-        { to: '/admin/dashboard',    icon: homeIconImage,    text: 'Dashboard' },
-        { to: '/admin/doctors',      icon: doctorIcon,       text: 'Doctors' },
-        { to: '/admin/patients',     icon: patientIcon,      text: 'Patients' },
-        { to: '/admin/nurses',       icon: nurseicon,  text: 'Nurses' },
-        { to: '/admin/appointments', icon: appointmentIcon,  text: 'Appointments' },
-        { to: '/admin/admissions',   icon: admissionsicon,   text: 'Admissions' },
+    { to: '/admin/dashboard',    icon: homeIconImage,    text: 'Dashboard' },
+    { to: '/admin/doctors',      icon: doctorIcon,       text: 'Doctors' },
+    { to: '/admin/patients',     icon: patientIcon,      text: 'Patients' },
+    { to: '/admin/nurses',       icon: nurseicon,  text: 'Nurses' },
+    { to: '/admin/staff',        icon: appointmentIcon,  text: 'Staff' },
+    { to: '/admin/admissions',   icon: admissionsicon,   text: 'Admissions' },
+    
 ];
 
 const remainingHeight: number = window.innerHeight - 70;

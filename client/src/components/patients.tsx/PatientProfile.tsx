@@ -3,16 +3,18 @@ import { useState } from "react";
 
 import ConfirmationDialog from '../globalComponents/ConfirmationDialog';
 import EditPatient from "./EditPatient";
+import AdmitPatients from "./AdmitPatients";
 
 import userplaceholder from '../../images/userplaceholderlogo.png';
 import emailIcon from '../../images/mailicon.png';
 import phoneIcon from '../../images/mobileicon.png';
 
-
+import { FaEdit } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
 import { MdEditSquare } from "react-icons/md";
 import { FaChevronDown } from "react-icons/fa6";
 import { MdLocalHospital } from "react-icons/md";
+import { FaRegTrashCan } from "react-icons/fa6";
 
 
 interface DoctorProfileListProps{
@@ -29,7 +31,22 @@ interface DoctorProfileProps {
 
 const PatientProfile: React.FC<DoctorProfileProps> = ({patientData, updatePatientProfileVisibility, updatePatientEditState, patientEditState, isPatientProfileVisible}) => {
   
-  const [confirmPatientDelete, updateConfirmPatientDelete] = useState(false);
+  const [confirmPatientDelete, updateConfirmPatientDelete] = useState<boolean>(false);
+  const [isAdmitPatientActive, updateIsAdmitPatientActive] = useState<boolean>(false);
+  const [isAddNoteActive, updateIsAddNoteActive] = useState<boolean>(false); 
+
+  const [allAvailableRooms, updateAllAvailableRooms] = useState([
+        {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
+        {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
+        {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
+        {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
+        {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
+  ])
+
+  const showSelectedRoom = (roomId: string)=>{
+        updateIsAdmitPatientActive(false)
+        updatePatientProfileVisibility(true)
+  }
 
   return (
     <>
@@ -116,7 +133,7 @@ const PatientProfile: React.FC<DoctorProfileProps> = ({patientData, updatePatien
                                             <p>Edit Profile</p>
                                         </button>
 
-                                        <button onClick={()=>{updatePatientProfileVisibility(false); window.scrollTo(0, 400);}} className="transition-properties p-1 w-[130px] min-h-[40px] bg-green-500 text-white border border-green-500 text-[14px] rounded-md flex items-center justify-center space-x-1 hover:border-green-400 hover:bg-green-400">
+                                        <button onClick={()=>{updatePatientProfileVisibility(false); updateIsAdmitPatientActive(true); window.scrollTo(0, 400);}} className="transition-properties p-1 w-[130px] min-h-[40px] bg-green-500 text-white border border-green-500 text-[14px] rounded-md flex items-center justify-center space-x-1 hover:border-green-400 hover:bg-green-400">
                                             <MdLocalHospital className = "text-white text-[13px]"/>
                                             <p>Admit Patient</p>
                                         </button>
@@ -142,13 +159,28 @@ const PatientProfile: React.FC<DoctorProfileProps> = ({patientData, updatePatien
                                                 <div className=" w-full flex justify-between items-center mb-2">
                                                         <h4 className="relative text-[13px] pb-2 text-[#bdbbbb]">Patient notes</h4>
 
-                                                        <button className="max-w-[200px] min-h-[20px] px-2 py-1 text-[12px] border border-transparent rounded-md bg-gradient-to-r from-slate-300 to-slate-400 flex justify-center items-center">
+                                                        <button onClick={()=> {updateIsAddNoteActive(true);}} className="max-w-[200px] min-h-[20px] px-2 py-1 text-[12px] border border-transparent rounded-md bg-gradient-to-r from-slate-300 to-slate-400 flex justify-center items-center">
                                                                 Add note
                                                         </button>
                                                 </div>
                                                
-                                                
-                                                {/* <div className="mb-2 w-full min-h-[100px] p-2 flex flex-col border border-[#5d5d5d] rounded-md">
+                                               {/* add note */}
+                                                {isAddNoteActive ? <div className="mb-2 w-full min-h-[100px] p-2 flex flex-col space-y-[4rem] border border-[#5d5d5d] rounded-md">
+                                                        <input type="text" className="bg-inherit outline-none text-white" placeholder="title e.g Constant Headaches " />
+                                                        <textarea className="min-h-[90px] resize-none bg-inherit outline-none text-white" placeholder="Enter Note" />
+                                                        <textarea className="min-h-[70px] resize-none bg-inherit outline-none text-white" placeholder="Drugs prescribed e.g Pracetamol, Lonart." />
+
+                                                        <div className="w-full flex justify-end items-end space-x-2">
+                                                                <button onClick={()=> {updateIsAddNoteActive(false);}} className="text-white max-w-[300px] min-h-[20px] px-2 py-1 text-[12px] border border-transparent rounded-md bg-gradient-to-r from-red-500 to-red-400 flex justify-center items-center">
+                                                                        Cancel
+                                                                </button>
+                                                                <button onClick={()=> {updateIsAddNoteActive(false);}} className="text-white max-w-[300px] min-h-[20px] px-2 py-1 text-[12px] border border-transparent rounded-md bg-gradient-to-r from-green-500 to-emerald-400 flex justify-center items-center">
+                                                                        Add
+                                                                </button>
+                                                        </div>
+                                                </div> 
+                                                :
+                                                <div className="mb-2 w-full min-h-[100px] p-2 flex flex-col border border-[#5d5d5d] rounded-md">
 
                                                         <div className="w-full flex justify-between">
                                                                 <h4 className="text-[16px] text-white font-bold">Stomach Cramps</h4> 
@@ -168,7 +200,7 @@ const PatientProfile: React.FC<DoctorProfileProps> = ({patientData, updatePatien
                                                                         <p>Malaria Drip 20mg</p>
                                                                 </div>
                                                         </div>
-                                                </div>                                                 */}
+                                                </div> }                                               
                                         </div>
                                 </div>
 
@@ -181,6 +213,7 @@ const PatientProfile: React.FC<DoctorProfileProps> = ({patientData, updatePatien
     
 
     {(isPatientProfileVisible && patientEditState) && <EditPatient updatePatientProfileForm ={updatePatientProfileVisibility} updateEditPatientForm={updatePatientEditState}/>}
+    {<AdmitPatients isAdmitPatientActive ={isAdmitPatientActive} allAvailableRooms={allAvailableRooms} showSelectedRoom={showSelectedRoom}/>}
     </>
   )
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import EditDoctor from './EditDoctor';
+import EditStaff from "./EditStaff";
 import ConfirmationDialog from '../globalComponents/ConfirmationDialog';
 
 import userplaceholder from '../../images/userplaceholderlogo.png';
@@ -13,36 +13,34 @@ import { MdEditSquare } from "react-icons/md";
 import { FaChevronDown } from "react-icons/fa6";
 
 
-interface DoctorProfileListProps{
+interface StaffProfileListProps{
     header: string ,
     data: string
 }
-interface DoctorProfileProps {
-    doctorData: DoctorProfileListProps[],
-    updateDoctorEditState: React.Dispatch<React.SetStateAction<boolean>>,
-    doctorEditState: boolean,
-    isDoctorProfileVisible: boolean,
-    updateProfileVisibility: React.Dispatch<React.SetStateAction<boolean>>,
+interface StaffProfileProps {
+    staffData: StaffProfileListProps[],
+    updateStaffEditState: React.Dispatch<React.SetStateAction<boolean>>,
+    staffEditState: boolean,
+    isStaffProfileVisible: boolean,
+    updateStaffProfileVisibility: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
-const DoctorProfile: React.FC<DoctorProfileProps> = ({isDoctorProfileVisible, updateProfileVisibility, doctorData, updateDoctorEditState, doctorEditState}) => {
-  
+const StaffProfile:React.FC<StaffProfileProps> = ({isStaffProfileVisible, updateStaffProfileVisibility, staffData, updateStaffEditState, staffEditState}) => {
   const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
 
   return (
     <>
-    {(isDoctorProfileVisible && !doctorEditState) && <div className="z-50 fixed top-0 left-0 w-full min-h-full flex justify-center items-center text-[#161616]">
+    {(isStaffProfileVisible && !staffEditState) && <div className="z-50 fixed top-0 left-0 w-full min-h-full flex justify-center items-center text-[#161616]">
           
           <div className="fixed inset-0 transition-opacity" aria-hidden="true">
                  <div className="absolute inset-0 bg-gray-600 opacity-[0.50]"></div>
           </div>
           
-          
           <div className="shadow-2xl relative px-6 py-8 w-[95%] h-[100%] bg-white border border-[#f7f7f7] rounded-[15px]">
             
                   <ConfirmationDialog
                         isOpen={isConfirmationDialogOpen}
-                        title="Do you want to delete Doctor profile?"
+                        title="Do you want to delete Staff profile?"
                         message="This action is irreversable"
                         onConfirm = {()=> {setIsConfirmationDialogOpen(false); }}
                         onCancel  = {()=> {setIsConfirmationDialogOpen(false); }}
@@ -92,12 +90,12 @@ const DoctorProfile: React.FC<DoctorProfileProps> = ({isDoctorProfileVisible, up
 
                         <div className='w-full flex border-b border-b-[#f1f1f1] pt-8 pb-4'>
                               <div className='w-[170px] flex justify-center items-center p-1 min-h-[40px] border border-white rounded-md bg-gradient-to-r from-slate-500 to-slate-800 text-white'>
-                                  Doctor Information
+                                  Nurse Information
                               </div>
                         </div>
                         
                         <div className='w-full min-h-[18rem] grid grid-cols-5 gap-[1rem]'>
-                              {doctorData.map((profile, index) =>(
+                              {staffData.map((profile, index) =>(
                                   <div key={index} className='flex flex-col space-y-3'>
                                         <p className='text-[14px] font-[500] text-[#999999]'>{profile.header}</p>
                                         <p className='text-[15px] text-[#555555] font-[500]'>{profile.data}</p>  
@@ -106,12 +104,12 @@ const DoctorProfile: React.FC<DoctorProfileProps> = ({isDoctorProfileVisible, up
                         </div>
 
                         <div className='w-full flex justify-end items-end space-x-4'>
-                                <button onClick={()=> updateProfileVisibility(false)} className="transition-properties w-[130px] h-[40px] bg-black text-white border border-black text-[14px] rounded-md flex items-center justify-center space-x-2 hover:border-[#121212] hover:bg-[#121212]">
+                                <button onClick={()=> updateStaffProfileVisibility(false)} className="transition-properties w-[130px] h-[40px] bg-black text-white border border-black text-[14px] rounded-md flex items-center justify-center space-x-2 hover:border-[#121212] hover:bg-[#121212]">
                                       <FaChevronDown className ='text-white text-[14px]'/>
                                       <p>Close</p>
                                 </button>
 
-                                <button onClick={()=>{updateDoctorEditState(true); window.scrollTo(0, 400);}} className="transition-properties w-[130px] h-[40px] text-white border bg-yellow-500 text-[14px] border-yellow-500 rounded-md flex items-center justify-center space-x-2 hover:border-yellow-400 hover:bg-yellow-400">
+                                <button onClick={()=>{updateStaffEditState(true); window.scrollTo(0, 400);}} className="transition-properties w-[130px] h-[40px] text-white border bg-yellow-500 text-[14px] border-yellow-500 rounded-md flex items-center justify-center space-x-2 hover:border-yellow-400 hover:bg-yellow-400">
                                       <MdEditSquare className = "text-white text-[14px]"/>
                                       <p>Edit Profile</p>
                                 </button>
@@ -126,9 +124,9 @@ const DoctorProfile: React.FC<DoctorProfileProps> = ({isDoctorProfileVisible, up
     </div>}
 
 
-    {(isDoctorProfileVisible && doctorEditState) && <EditDoctor updateDoctorProfileForm ={updateProfileVisibility} updateEditDoctorForm={updateDoctorEditState}/>}
+    {(isStaffProfileVisible && staffEditState) && <EditStaff updateStaffProfileForm ={updateStaffProfileVisibility} updateEditStaffForm={updateStaffEditState}/>}
     </>
   )
 }
 
-export default DoctorProfile
+export default StaffProfile
