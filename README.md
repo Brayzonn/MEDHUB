@@ -1,6 +1,6 @@
 # MEDHUB
 
-[MEDHUB](google.com)🔗 is a web application designed to streamline and enhance the management of healthcare facilities. This application provides a centralized platform for managing crucial data related to nurses, doctors, room admissions, patients, and staff. 
+[MEDHUB](#) 🔗 is a web application designed to streamline and enhance the management of healthcare facilities. This application provides a centralized platform for managing crucial data related to nurses, doctors, room admissions, patients, and staff. 
 
 ## Table of Contents
 
@@ -26,3 +26,9 @@ npm install
 
 # Run the development server
 npm run dev
+
+```
+
+## Project Structure
+
+
