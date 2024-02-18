@@ -28,7 +28,7 @@ const DashboardSection = () => {
             <div className='w-full min-h-[200px] flex justify-evenly flex-wrap lx:justify-start'>
                     
                     {dashboardDisplayData.map((data, index) => (
-                            <div key = {index} className='p-2 m-[1rem] flex items-center space-x-3 shadow-lg bg-white min-w-[240px] h-[120px] border border-white rounded-[5px] '>
+                            <div key = {index} className='p-2 m-[1rem] flex items-center space-x-3 shadow-lg bg-gradient-to-r from-slate-50 to-slate-100 min-w-[240px] h-[120px] border border-white rounded-[15px] '>
                                 
                                     <img src={data.image} alt='icon' className='h-[50px] w-[50px]'/>
 
