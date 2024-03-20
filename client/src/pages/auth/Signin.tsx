@@ -1,20 +1,80 @@
-import siginillustration from '../../src/images/Privacy policy-rafiki.svg';
-import { RiEyeLine, RiEyeOffLine } from 'react-icons/ri';
-import UseScreenWidth from '../components/globalComponents/UseScreenWidth';
-import { Link } from 'react-router-dom';
 import  { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+
+import UseScreenWidth from '../../components/globalComponents/UseScreenWidth';
+import { useGlobalContext } from '../../context/useGlobalContext';
+
+import siginillustration from '../../../src/images/Privacy policy-rafiki.svg';
+
+import { RiEyeLine, RiEyeOffLine } from 'react-icons/ri';
+
+
 
 const Signin = () => {
 
     const screenWidth = UseScreenWidth();
 
+    const navigate = useNavigate();
+
+    const {baseURL} =  useGlobalContext();
 
     const [showPassword, setShowPassword] = useState(false);
 
     const togglePasswordVisibility = () => {
-      setShowPassword(!showPassword);
+        setShowPassword(!showPassword);
     };
-  
+
+    //sign in logic
+    interface SigninFormFieldDataSchema {
+        email: string,
+        password: string, 
+    }
+    const [signinFormFieldData, updateSigninFormFieldData] = useState<SigninFormFieldDataSchema>({
+        email: '',
+        password: '', 
+    });
+
+    const submitSigninData = async () =>{
+
+        try {
+    
+            if(signinFormFieldData.email === '' || signinFormFieldData.password === ''){
+                toast.error('Complete all fields')
+            }
+
+            //make post request if field validation complete
+            else{
+                const signupApiCall = await axios.post(`${baseURL}/api/signin`, {...signinFormFieldData})
+                const signInResponseData = signupApiCall.data;
+                const signInResponseStatus: boolean =  signupApiCall.data.status;
+
+                if(signInResponseStatus === false){
+                    toast.error(signInResponseData.errorMessage)
+                }
+                else{
+                    sessionStorage.setItem('adminToken', JSON.stringify(signInResponseData.token))
+                    updateSigninFormFieldData({
+                        email: '',
+                        password: '', 
+                    })
+
+                    toast.success('Sign in successful')
+
+                    setTimeout(()=>{
+                        navigate('/user/dashboard');  
+                    }, 5000) 
+                }
+            }     
+        } catch (error) {
+                console.log(error)
+        }
+
+    }
+
+
+
 
     //if not desktop screen, display error message
     if(screenWidth < 891 ){
@@ -50,6 +110,7 @@ const Signin = () => {
                                                                             <div className='flex flex-col space-y-2'>
                                                                                     <label className='text-[15px] text-[#636363]'>Email</label>
                                                                                     <input type="email" name='email' 
+                                                                                    onChange={(e)=>{ updateSigninFormFieldData({...signinFormFieldData, email: e.target.value })}}
                                                                                     placeholder='Enter email'
                                                                                     className='bg-inherit px-2 border-[#e1e1e1] border-[1px] rounded-[5px] w-full h-[42px] text-black text-[16px] focus:border-greyMainBackground focus:bg-greyMainBackground focus:outline-none' 
                                                                                     />
@@ -79,7 +140,7 @@ const Signin = () => {
                                                                 </div>
                                                                 
 
-                                                                <button className='bg-purpleSubColor px-2 text-white border-purpleSubColor border-[1px] rounded-[5px] w-full h-[45px] transition-properties hover:bg-[#181762]'>Sign in</button>
+                                                                <button onClick={()=>submitSigninData()} className='bg-purpleSubColor px-2 text-white border-purpleSubColor border-[1px] rounded-[5px] w-full h-[45px] transition-properties hover:bg-[#181762]'>Sign in</button>
 
                                                                 <div className='py-[1rem] text-[#3c3b3b] text-[14px]'>Don't have an account? <Link className='text-black font-bold' to = '/signup'>Sign up</Link></div>
                     

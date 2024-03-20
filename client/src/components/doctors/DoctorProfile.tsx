@@ -15,17 +15,18 @@ import { FaChevronDown } from "react-icons/fa6";
 
 interface DoctorProfileListProps{
     header: string ,
-    data: string
+    data: string,
+    identifier: string,
 }
 interface DoctorProfileProps {
     doctorData: DoctorProfileListProps[],
-    updateDoctorEditState: React.Dispatch<React.SetStateAction<boolean>>,
+    updateDoctorProfile:() => void,
     doctorEditState: boolean,
     isDoctorProfileVisible: boolean,
     updateProfileVisibility: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
-const DoctorProfile: React.FC<DoctorProfileProps> = ({isDoctorProfileVisible, updateProfileVisibility, doctorData, updateDoctorEditState, doctorEditState}) => {
+const DoctorProfile: React.FC<DoctorProfileProps> = ({isDoctorProfileVisible, updateProfileVisibility, doctorData, updateDoctorProfile, doctorEditState}) => {
   
   const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
 
@@ -106,12 +107,12 @@ const DoctorProfile: React.FC<DoctorProfileProps> = ({isDoctorProfileVisible, up
                         </div>
 
                         <div className='w-full flex justify-end items-end space-x-4'>
-                                <button onClick={()=> updateProfileVisibility(false)} className="transition-properties w-[130px] h-[40px] bg-black text-white border border-black text-[14px] rounded-md flex items-center justify-center space-x-2 hover:border-[#121212] hover:bg-[#121212]">
+                                <button onClick={()=>updateProfileVisibility(false)} className="transition-properties w-[130px] h-[40px] bg-black text-white border border-black text-[14px] rounded-md flex items-center justify-center space-x-2 hover:border-[#121212] hover:bg-[#121212]">
                                       <FaChevronDown className ='text-white text-[14px]'/>
                                       <p>Close</p>
                                 </button>
 
-                                <button onClick={()=>{updateDoctorEditState(true); window.scrollTo(0, 400);}} className="transition-properties w-[130px] h-[40px] text-white border bg-yellow-500 text-[14px] border-yellow-500 rounded-md flex items-center justify-center space-x-2 hover:border-yellow-400 hover:bg-yellow-400">
+                                <button onClick={()=>{updateDoctorProfile(); window.scrollTo(0, 400);}} className="transition-properties w-[130px] h-[40px] text-white border bg-yellow-500 text-[14px] border-yellow-500 rounded-md flex items-center justify-center space-x-2 hover:border-yellow-400 hover:bg-yellow-400">
                                       <MdEditSquare className = "text-white text-[14px]"/>
                                       <p>Edit Profile</p>
                                 </button>
@@ -126,7 +127,7 @@ const DoctorProfile: React.FC<DoctorProfileProps> = ({isDoctorProfileVisible, up
     </div>}
 
 
-    {(isDoctorProfileVisible && doctorEditState) && <EditDoctor updateDoctorProfileForm ={updateProfileVisibility} updateEditDoctorForm={updateDoctorEditState}/>}
+    {(isDoctorProfileVisible && doctorEditState) && <EditDoctor updateDoctorProfileForm ={updateProfileVisibility} updateEditDoctorForm={updateDoctorProfile}/>}
     </>
   )
 }

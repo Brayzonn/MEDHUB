@@ -7,59 +7,68 @@ import patientIcon from '../../images/patient-icon.svg';
 import doctorIcon from '../../images/doctor-icon.svg';
 import appointmentIcon from '../../images/stafficon.png';
 
-import SideNav from '../../components/SideNav';
+import SideNav from "../../components/SideNav";
 import UseScreenWidth from '../../components/globalComponents/UseScreenWidth';
 import NavSection from '../../components/NavSection';
-import AllNurses from '../../components/nurses/AllNurses';
+import DashboardSection from '../../components/DashboardSection';
 
-const Nurses = () => {
+
+
+
+const AdminDash = () => {
+
     const screenWidth = UseScreenWidth();
     const [, setIsHovered] = useState(false);
-  
+
+
 
     //navlinks for sidenav component
     const navLinks = [
-                { to: '/admin/dashboard',    icon: homeIconImage,    text: 'Dashboard' },
-                { to: '/admin/doctors',      icon: doctorIcon,       text: 'Doctors' },
-                { to: '/admin/patients',     icon: patientIcon,      text: 'Patients' },
-                { to: '/admin/nurses',       icon: nurseicon,  text: 'Nurses' },
-                { to: '/admin/staff',        icon: appointmentIcon,  text: 'Staff' },
-                { to: '/admin/admissions',   icon: admissionsicon,   text: 'Admissions' },
-                
+        { to: '/user/dashboard',    icon: homeIconImage,    text: 'Dashboard' },
+        { to: '/user/doctors',      icon: doctorIcon,       text: 'Doctors' },
+        { to: '/user/patients',     icon: patientIcon,      text: 'Patients' },
+        { to: '/user/nurses',       icon: nurseicon,  text: 'Nurses' },
+        { to: '/user/staff',        icon: appointmentIcon,  text: 'Staff' },
+        { to: '/user/admissions',   icon: admissionsicon,   text: 'Admissions' }, 
     ];
-  
+
+    const remainingHeight: number = window.innerHeight - 70;
+
+
 
     //if not desktop screen, display error message
     if(screenWidth < 891 ){
-  
+
                 return (
                   <div className='relative w-full h-screen flex flex-col justify-center items-center'>
                           
                           <p className='text-center text-[20px] font-[550]'>Please load app on desktop</p>
                           <div className='text-[25px]'>🙂</div>
-  
+
                   </div>
                 )
     }else{
                 return (
-                  <div className='absolute min-h-[100vh] w-full flex flex-col bg-greyMainBackground
-                                  justify-start items-start overflow-hidden'>
-  
+                  <div className='absolute min-h-[100vh] w-full flex flex-col 
+                                        justify-start items-start overflow-hidden
+                                        bg-gradient-to-r from-slate-50 to-slate-100'>
+
                           <div className="relative h-full w-full overflow-x-hidden flex 
-                                        flex-col justify-start items-start text-black">              
+                                                    flex-col justify-start items-start
+                                                                        text-black">              
                                           
                                 <NavSection />
                       
-                                <div className="relative h-full w-full flex  ">
+                                <div className={`relative ${remainingHeight} w-full flex`}>
                                         <SideNav navLinks={navLinks} setIsHovered={setIsHovered} widthClass ={`w-[25%]`}/>
-
-                                        <AllNurses />     
+                                        <DashboardSection />
                                 </div>
                   
                           </div>
                   </div>
                 )
     }
+
 }
 
-export default Nurses
+export default AdminDash

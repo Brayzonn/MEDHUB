@@ -17,19 +17,22 @@ import { MdLocalHospital } from "react-icons/md";
 import { FaRegTrashCan } from "react-icons/fa6";
 
 
-interface DoctorProfileListProps{
+interface PatientProfileListProps{
     header: string ,
-    data: string
+    data: string | string[],
+    identifier: string,
 }
-interface DoctorProfileProps {
-    patientData: DoctorProfileListProps[],
+
+interface PatientProfileProps {
+    patientData: PatientProfileListProps[],
     updatePatientEditState: React.Dispatch<React.SetStateAction<boolean>>,
     patientEditState: boolean,
+    updatePatientProfile: () => void,
     isPatientProfileVisible: boolean,
     updatePatientProfileVisibility: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
-const PatientProfile: React.FC<DoctorProfileProps> = ({patientData, updatePatientProfileVisibility, updatePatientEditState, patientEditState, isPatientProfileVisible}) => {
+const PatientProfile: React.FC<PatientProfileProps> = ({patientData, updatePatientProfile, updatePatientProfileVisibility, updatePatientEditState, patientEditState, isPatientProfileVisible}) => {
   
   const [confirmPatientDelete, updateConfirmPatientDelete] = useState<boolean>(false);
   const [isAdmitPatientActive, updateIsAdmitPatientActive] = useState<boolean>(false);
@@ -133,7 +136,7 @@ const PatientProfile: React.FC<DoctorProfileProps> = ({patientData, updatePatien
                                             <p>Edit Profile</p>
                                         </button>
 
-                                        <button onClick={()=>{updatePatientProfileVisibility(false); updateIsAdmitPatientActive(true); window.scrollTo(0, 400);}} className="transition-properties p-1 w-[130px] min-h-[40px] bg-green-500 text-white border border-green-500 text-[14px] rounded-md flex items-center justify-center space-x-1 hover:border-green-400 hover:bg-green-400">
+                                        <button onClick={()=>{updatePatientProfile(); updateIsAdmitPatientActive(true);  window.scrollTo(0, 400);}} className="transition-properties p-1 w-[130px] min-h-[40px] bg-green-500 text-white border border-green-500 text-[14px] rounded-md flex items-center justify-center space-x-1 hover:border-green-400 hover:bg-green-400">
                                             <MdLocalHospital className = "text-white text-[13px]"/>
                                             <p>Admit Patient</p>
                                         </button>

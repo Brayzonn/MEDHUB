@@ -10,7 +10,7 @@ import appointmentIcon from '../../images/stafficon.png';
 import SideNav from '../../components/SideNav';
 import UseScreenWidth from '../../components/globalComponents/UseScreenWidth';
 import NavSection from '../../components/NavSection';
-import AllPatients from '../../components/patients.tsx/AllPatients';
+import AllPatients from '../../components/patients/AllPatients';
 
 
 
@@ -21,12 +21,12 @@ const Patients = () => {
 
    //navlinks for sidenav component
    const navLinks = [
-        { to: '/admin/dashboard',    icon: homeIconImage,    text: 'Dashboard' },
-        { to: '/admin/doctors',      icon: doctorIcon,       text: 'Doctors' },
-        { to: '/admin/patients',     icon: patientIcon,      text: 'Patients' },
-        { to: '/admin/nurses',       icon: nurseicon,  text: 'Nurses' },
-        { to: '/admin/staff',        icon: appointmentIcon,  text: 'Staff' },
-        { to: '/admin/admissions',   icon: admissionsicon,   text: 'Admissions' },
+        { to: '/user/dashboard',    icon: homeIconImage,    text: 'Dashboard' },
+        { to: '/user/doctors',      icon: doctorIcon,       text: 'Doctors' },
+        { to: '/user/patients',     icon: patientIcon,      text: 'Patients' },
+        { to: '/user/nurses',       icon: nurseicon,  text: 'Nurses' },
+        { to: '/user/staff',        icon: appointmentIcon,  text: 'Staff' },
+        { to: '/user/admissions',   icon: admissionsicon,   text: 'Admissions' },
         
     ];
 

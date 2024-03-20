@@ -19,7 +19,7 @@ const Notification: React.FC<MessageType> = ({ messages, type }) => {
   }, []);
 
   return (
-    <div className={`transitionPropertyNotif fixed top-4 max-w-[300px] ${visible ? 'right-4' : 'right-[-50vw]'}`}>
+    <div className={`z-50 transitionPropertyNotif fixed top-4 max-w-[300px] ${visible ? 'right-4' : 'right-[-50vw]'}`}>
             {messages.map((message, index) => (
                     <div
                             key={index}

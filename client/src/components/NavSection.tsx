@@ -1,8 +1,22 @@
+import { useState } from 'react';
+import jwt_decode from "jwt-decode";
+
+import {DecodedDataInterface} from '../components/DataTypes'
 import userplaceholder from '../images/userplaceholderlogo.png'
 
 const NavSection = () => {
 
+  const userInfo = sessionStorage.getItem('userToken');
+  const [decodedUserData, updatedecodedUserData] = useState<DecodedDataInterface>();
 
+
+
+  useState(()=>{
+        if(userInfo){
+            const decoded: DecodedDataInterface = jwt_decode(userInfo);
+            updatedecodedUserData(decoded)
+        }
+  }, )
 
 
   return (
@@ -14,7 +28,7 @@ const NavSection = () => {
 
                             <div className="flex flex-col items-start text-[#ABABAB] text-[15px]">
                                     <p className='text-[13px] text-black tracking-wide'>Good Morning</p>
-                                    <p className='text-[13px] font-bold text-[#161616] tracking-wide'>Sarah Johnson</p>
+                                    <p className='text-[13px] font-bold text-[#161616] tracking-wide'>{decodedUserData?.UserName ? decodedUserData.UserName : ''}</p>
                             </div>
                 </div>
         </nav>

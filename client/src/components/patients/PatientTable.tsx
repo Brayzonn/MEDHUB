@@ -1,48 +1,33 @@
 import DataTable, {TableColumn } from 'react-data-table-component';
+import {PatientProps} from '../DataTypes'
+
 import userplaceholder from '../../images/userplaceholderlogo.png'
 
 
-interface RowData {
-    profile: { patientname: string; patientImage: string };
-    patientID: string;
-    patientNotes: [] ;
-    patientAge: string;
-    patientBloodType: string;
-    patientHeight: string;
-    patientGenotype: string;
-    patientWeight: string;
-    patientConditions: []; 
-    patientJoindate: string;
-    patientBirthDate: string;
-    admissionStatus: boolean;
-    patientPhoneNumber: string;
-    patientEmail: string;
-    patientEMO: string;
-}
     
-    interface TableProps {
-        columns: TableColumn<RowData>[];
-        data:  RowData[];
-    }
+interface TableProps {
+    columns: TableColumn<PatientProps>[];
+    data:  PatientProps[];
+}
 
 const PatientTable: React.FC<TableProps> = ({ columns, data }) => {
 
     
-    const customColumns: TableColumn<RowData>[] = columns.map((col) => {
+    const customColumns: TableColumn<PatientProps>[] = columns.map((col) => {
         if (col.name === 'Patient'){
             return {
                 ...col,
-                cell: (row: RowData) => {
+                cell: (row: PatientProps) => {
                     const patientProfile = row.profile;
             
                     return (
                       <div className="flex items-center">
                             <img
                                 src={patientProfile.patientImage ? patientProfile.patientImage : userplaceholder }
-                                alt={patientProfile.patientname}
+                                alt={patientProfile.patientName}
                                 className="w-8 h-8 rounded-full mr-2"
                             />
-                            {patientProfile.patientname}
+                            {patientProfile.patientName}
                       </div>
                     );
                   },

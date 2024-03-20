@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { TableColumn } from 'react-data-table-component';
 
+import {DoctorProps} from '../DataTypes';
+import { useGlobalContext } from '../../context/useGlobalContext';
 import DoctorProfile from "./DoctorProfile";
 import AddDoctor from "./AddDoctor";
 import Table from "./Table";
@@ -13,134 +15,109 @@ import { FaChevronRight } from "react-icons/fa";
 
 const AllDoctors = () => {
 
-  const [allDoctorState, updateAllDoctorState] = useState<boolean>(true)
-  const [addDoctorState, updateAddDoctorState] = useState<boolean>(false)
-
-  const [searchResults, setSearchResults] = useState<DataRow []>([])
-  const [isInputActive, setInputIsActive] = useState<boolean>(false)
-
-  
-
-  //filter doctor data based off search parameters
-  const searchInputValue = (searchValue: string) => {
-        const filtered : DataRow[]= data.filter((row) =>
-            row.profile.doctorname.toLowerCase().includes(searchValue.toLowerCase())
-        );
-        setSearchResults(filtered);
-  }
-
-  const [isProfileVisible, setProfileVisibility] = useState<boolean>(false);
-  const [doctorEditState, updateDoctorEditState] = useState<boolean>(false);
+      const {allDoctorData} =  useGlobalContext();
+            
+      const [allDoctorState, updateAllDoctorState] = useState<boolean>(true);
+      const [addDoctorState, updateAddDoctorState] = useState<boolean>(false);
+      const [doctorEditState, updateDoctorEditState] = useState<boolean>(false);
+      const [activeDoctorProfile, updateActiveDoctorProfile] = useState<DoctorProps>()
 
 
-  const [doctorData] = useState([
-        { header: 'ss', data: 'sggs'}
-  ])
-
-  const fetchDoctor = (doctorID:string) =>{
-
-  }
+      const [searchResults, setSearchResults] = useState<DoctorProps[]>([]);
+      const [isInputActive, setInputIsActive] = useState<boolean>(false);
+      const [isProfileVisible, setProfileVisibility] = useState<boolean>(false);
 
 
-  //data for table
-  interface DataRow {
-        profile: { doctorname: string; doctorImage: string };
-        doctorDepartment: string;
-        doctorSpecialty: string;
-        doctorDegree: string;
-        doctorJoinDate: string;
-  }
 
-  const columns: TableColumn<DataRow>[] = [
-          {
-                name: 'Doctor',
-                selector: (row) => row.profile.doctorname,
-          },
-          {
-                name: 'Department',
-                selector: (row) => row.doctorDepartment,
-          },
+      //filter doctor data based off search parameters
+      const searchInputValue = (searchValue: string) => {
+            const filtered = allDoctorData.filter((row) =>
+                  row.profile.doctorName.toLowerCase().includes(searchValue.toLowerCase())
+            );
+            setSearchResults(filtered);
+      }
 
-          {
-                name: 'Specialty',
-                selector: (row) => row.doctorSpecialty,
-          },
+      //doctor information for bio display 
+      const [doctorData, updateDoctorData] = useState([
+            {header: 'Doctor Name', identifier: 'doctorName', data: ''},
+            {header: 'Doctor Department', identifier: 'doctorDepartment', data: ''},
+            {header: 'Doctor Specialty', identifier: 'doctorSpecialty', data: ''},
+            {header: 'Doctor Degree', identifier: 'doctorDegree', data: ''},
+            {header: 'Doctor Join Date', identifier: 'doctorJoinDate', data: ''},
+            {header: 'Doctor Phone', identifier: 'doctorPhone', data: ''},
+            {header: 'Doctor Address', identifier: 'doctorAddress', data: ''},
+            {header: 'Doctor ID', identifier: 'doctorID', data: ''},
+            {header: 'Employment Type', identifier: 'employmentType', data: ''},
+      ])
 
-          {
-                name: 'Degree',
-                selector: (row) => row.doctorDegree,
-          },
-
-          {
-                name: 'Join Date',
-                selector: (row) => row.doctorJoinDate,
-          },
-
-          {
-                name: 'Action',
-                cell: (row) =>(
-                      <button onClick={()=> {setProfileVisibility(true); fetchDoctor(row.profile.doctorname); window.scrollTo(0, 400); }} className="w-[30px] h-[30px] flex justify-center items-center relative border bg-gradient-to-r from-slate-500 to-slate-800 border-white rounded-full">
-                            <FaChevronRight className = 'text-white' />  
-                      </button>
-                )
-          }
-  ];
-
-
-  const data = [
-          {
-                profile: {doctorname: 'Esther Howard', doctorImage : ''},
-                doctorDepartment: 'Dental',
-                doctorSpecialty: 'Dental',
-                doctorDegree: 'MBBS, MS',
-                doctorJoinDate: '20-10-2024',
-          },
-          {
-                profile: {doctorname: 'Doctor 1', doctorImage : '' },
-                doctorDepartment: 'Department 1',
-                doctorSpecialty: 'Specialty 1',
-                doctorDegree: 'Degree 1',
-                doctorJoinDate: 'Date 1',
-          },
-
-          {
-                profile: {doctorname: 'Doctor 1', doctorImage : ''},
-                doctorDepartment: 'Department 1',
-                doctorSpecialty: 'Specialty 1',
-                doctorDegree: 'Degree 1',
-                doctorJoinDate: 'Date 1',
-          },
-
-          {
-                profile: {doctorname: 'Doctor 1', doctorImage : ''},
-                doctorDepartment: 'Department 1',
-                doctorSpecialty: 'Specialty 1',
-                doctorDegree: 'Degree 1',
-                doctorJoinDate: 'Date 1',
-          },
-
-          {
-                profile: {doctorname: 'Doctor 1', doctorImage : ''},
-                doctorDepartment: 'Department 1',
-                doctorSpecialty: 'Specialty 1',
-                doctorDegree: 'Degree 1',
-                doctorJoinDate: 'Date 1',
-          },
-
-          {
-                profile: {doctorname: 'Doctor 1', doctorImage : ''},
-                doctorDepartment: 'Department 1',
-                doctorSpecialty: 'Specialty 1',
-                doctorDegree: 'Degree 1',
-                doctorJoinDate: 'Date 1',
-          },
+      const fetchDoctor = (doctorID: string) => {
+            const filtered = allDoctorData.find((row) => row.doctorID === doctorID);
+            updateActiveDoctorProfile(filtered)
       
-  ];
+            if (filtered) {
+                  updateDoctorData((prevDoctorData) =>
+                        prevDoctorData.map((item) => ({
+                              ...item,
+                              data: (filtered[item.identifier as keyof DoctorProps] as string) || '',
+                        }))
+                  );
+            
+                  setProfileVisibility(true);
+            }
+      };
+    
+      const updateDoctorProfile = () =>{
+            if (activeDoctorProfile) {
+                  sessionStorage.setItem('activeDoctorProfile', JSON.stringify(activeDoctorProfile))
+                  updateDoctorData((prevDoctorData) =>
+                        prevDoctorData.map((item) => ({
+                              ...item,
+                              data: (activeDoctorProfile[item.identifier as keyof DoctorProps] as string) || '',
+                        }))
+                  );
+                  updateDoctorEditState(true);         
+            }            
+      }
 
+      //doctor table
+      const columns: TableColumn<DoctorProps>[] = [
+            {
+                  name: 'Doctor',
+                  selector: (row) => row.profile.doctorName,
+            },
+            {
+                  name: 'Department',
+                  selector: (row) => row.doctorDepartment,
+            },
+
+            {
+                  name: 'Specialty',
+                  selector: (row) => row.doctorSpecialty,
+            },
+
+            {
+                  name: 'Degree',
+                  selector: (row) => row.doctorDegree,
+            },
+
+            {
+                  name: 'Join Date',
+                  selector: (row) => row.doctorJoinDate,
+            },
+
+            {
+                  name: 'Action',
+                  cell: (row) =>(
+                        <button onClick={()=> {fetchDoctor(row.doctorID); window.scrollTo(0, 400); }} className="w-[30px] h-[30px] flex justify-center items-center relative border bg-gradient-to-r from-slate-500 to-slate-800 border-white rounded-full">
+                              <FaChevronRight className = 'text-white' />  
+                        </button>
+                  )
+            }
+      ];
 
 
   return (
-            <div className='overflow-hidden relative w-[75%] shadow-sm mt-[100px] mb-4 p-4 mx-6 flex flex-col space-y-6 text-[#161616] bg-white border border-white rounded-[15px] lx:w-[82%]'>
+            <div className='overflow-hidden relative w-[75%] shadow-sm mt-[100px] mb-4 py-4 px-[2rem] mx-6 flex flex-col space-y-6 text-[#161616]  bg-gradient-to-r from-slate-50 to-slate-100border border-white rounded-[15px] lx:w-[82%]'>
                     <h5 className='font-bold tracking-wide text-[14px]'>Doctors</h5>
 
                     <div className='w-full min-h-[3rem] flex items-center space-x-[4rem] border-b border-b-[#f1f1f1]'>
@@ -185,11 +162,11 @@ const AllDoctors = () => {
 
                                 <div className="min-h-[10rem] w-full flex flex-col justify-center items-center space-y-[2rem]">
                                         {!isInputActive ?
-                                            <Table columns={columns} data={data} />
+                                            <Table columns={columns} data={allDoctorData} />
                                             :
                                             <Table columns={columns} data={searchResults} />
                                         }
-                                        {< DoctorProfile doctorEditState={doctorEditState} updateDoctorEditState = {updateDoctorEditState} doctorData={doctorData} isDoctorProfileVisible={isProfileVisible} updateProfileVisibility={setProfileVisibility}/> }
+                                        {< DoctorProfile doctorEditState={doctorEditState} updateDoctorProfile = {updateDoctorProfile} doctorData={doctorData} isDoctorProfileVisible={isProfileVisible} updateProfileVisibility={setProfileVisibility}/> }
                                 </div>
                             </> 
                             : 

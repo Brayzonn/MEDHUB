@@ -13,7 +13,7 @@ interface AllAdmissionProps {
 
 const AllAdmissions: React.FC<AllAdmissionProps> = ({allRooms, showSelectedRoom}) => {
   return (
-    <div className='overflow-hidden relative w-[75%] shadow-sm mt-[100px] mb-4 p-4 mx-6 flex flex-col space-y-12 text-[#161616] bg-white border border-white rounded-[15px] lx:w-[82%]'>
+    <div className='overflow-hidden relative w-[75%] shadow-sm mt-[100px] mb-4 py-4 px-[2rem] mx-6 flex flex-col space-y-12 text-[#161616]  bg-gradient-to-r from-slate-50 to-slate-100 border border-white rounded-[15px] lx:w-[82%]'>
             
         <div className=" absolute w-full max-h-[700px] overflow-y-auto overflow-x-hidden">
             <h4 className="font-bold text-[15px] bg-gradient-to-r from-slate-700 to-slate-500 bg-clip-text text-transparent">Rooms</h4>

@@ -3,11 +3,16 @@ import userplaceholder from '../../images/userplaceholderlogo.png'
 
 
   interface DataRow {
-        profile: { doctorname: string; doctorImage: string };
+        profile: { doctorName: string; doctorImage: string };
         doctorDepartment: string;
         doctorSpecialty: string;
-        doctorDegree: string;
         doctorJoinDate: string;
+        doctorAddress: string,
+        doctorPhone: string,
+        doctorAge: string,
+        doctorDegree: string,
+        employmentType: string,
+        doctorID: string,
   }
   
   interface TableProps {
@@ -29,10 +34,10 @@ const Table: React.FC<TableProps> = ({ columns, data }) => {
                       <div className="flex items-center">
                             <img
                                 src={doctorProfile.doctorImage ? doctorProfile.doctorImage : userplaceholder }
-                                alt={doctorProfile.doctorname}
+                                alt={doctorProfile.doctorName}
                                 className="w-8 h-8 rounded-full mr-2"
                             />
-                            {doctorProfile.doctorname}
+                            {doctorProfile.doctorName}
                       </div>
                     );
                   },

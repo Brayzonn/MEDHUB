@@ -1,18 +1,10 @@
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { useState } from "react";
 
-    //add doctor dropdown
-    interface addDoctor {
-        doctorSpecialty: string,
-        doctorAddress: string,
-        doctorPhone: string,
-        doctorName: string,
-        doctorAge: string,
-        doctorDegree: string,
-        employmentType: string,
-        doctorDept: string,
-    }
+import {AddDoctorFormInterface, PatientProps, NurseFormProps, StaffFormProps} from '../DataTypes'
 
+
+    //doctor dropdown
     interface dropdownContainer {
         buttonName: string,
         buttonId: string,
@@ -21,17 +13,17 @@ import { useState } from "react";
 
     interface dropDownProps {
         allDropDownContainer: dropdownContainer[],
-        setSubmitFormDropdown: React.Dispatch<React.SetStateAction<addDoctor>>,
+        setSubmitFormDropdown: React.Dispatch<React.SetStateAction<AddDoctorFormInterface>>,
     }
 
-    const DropDownList: React.FC<dropDownProps> = ({ setSubmitFormDropdown, allDropDownContainer }) => {
+    const DropDownList: React.FC<dropDownProps> = ({setSubmitFormDropdown, allDropDownContainer }) => {
 
         const [doctorSpecialtyDropDownStates, updateDoctorSpecialtyDropDownStates] = useState<number[]>(Array(allDropDownContainer.length).fill(-1));
         const [test, uptest] = useState<{ [key: string]: string }>({});
 
         return (
             <>
-            {allDropDownContainer.map((dropdownFeature: dropdownContainer, index: number) => (
+            {allDropDownContainer.map((dropdown: dropdownContainer, index: number) => (
                 <div className="relative flex items-end space-y-1" key={index}>
                         <button
                                 onClick={() => {
@@ -42,21 +34,21 @@ import { useState } from "react";
                                 className="shadow-inner p-2 border-[#e1e1e1] border-[1px] rounded-[5px] w-[200px] min-h-[42px] text-black bg-white flex items-center justify-between"
                         >
                                 <p className="text-[#636363]">
-                                    {doctorSpecialtyDropDownStates[index] !== -1 ? (test[dropdownFeature.buttonName] === undefined ? dropdownFeature.buttonName : test[dropdownFeature.buttonName]) : (test[dropdownFeature.buttonName] === undefined ? dropdownFeature.buttonName : test[dropdownFeature.buttonName])}
+                                    {doctorSpecialtyDropDownStates[index] !== -1 ? (test[dropdown.buttonName] === undefined ? dropdown.buttonName : test[dropdown.buttonName]) : test[dropdown.buttonName]}
                                 </p>
                                 {doctorSpecialtyDropDownStates[index] !== -1 ? <FaChevronUp className="text-[#636363]" /> : < FaChevronDown className="text-[#636363]" />}
                         </button>
 
                         {doctorSpecialtyDropDownStates[index] !== -1 && (
                                 <ul className="absolute z-50 left-0 p-2 overflow-y-auto flex flex-col space-y-1 top-[100%] text-[14px] w-[200px] max-h-[550px] bg-black border border-black border-r-[#fff] rounded-[5px] text-white">
-                                        {dropdownFeature.listOptions.map((objectData: string, optionIndex: number, array: string[]) => (
+                                        {dropdown.listOptions.map((objectData: string, optionIndex: number, array: string[]) => (
                                             <li
                                                 key={optionIndex}
                                                 onClick={() => {
                                                     const newTest = { ...test };
-                                                    newTest[dropdownFeature.buttonName] = objectData;
+                                                    newTest[dropdown.buttonName] = objectData;
                                                     uptest(newTest);
-                                                    setSubmitFormDropdown((prevForm: addDoctor) => ({ ...prevForm, [dropdownFeature.buttonId]: objectData }));
+                                                    setSubmitFormDropdown((prevForm: AddDoctorFormInterface) => ({ ...prevForm, [dropdown.buttonId]: objectData }));
                                                     const newStates = [...doctorSpecialtyDropDownStates];
                                                     newStates[index] = -1;
                                                     updateDoctorSpecialtyDropDownStates(newStates);
@@ -77,47 +69,21 @@ import { useState } from "react";
 
 
 
-
-
     // add patient drop down
-    interface PatientData {
-            profile: { patientname: string; patientImage: string };
-            patientID: string;
-            patientNotes: string[] ;
-            patientAge: string;
-            patientBloodType: string;
-            patientHeight: string;
-            patientGenotype: string;
-            patientWeight: string;
-            patientConditions: string[]; 
-            patientJoindate: string;
-            patientBirthDate: string;
-            patientPhoneNumber: string;
-            patientEmail: string;
-            admissionStatus:boolean;
-            patientEMO: string;
-    }
-
-    interface dropdownContainerPatient {
-            buttonName: string,
-            buttonId: string,
-            listOptions: string[]
-    }
-
     interface dropDownPropsPatient {
-            allPatientDropDownContainer: dropdownContainerPatient[],
-            setPatientSubmitFormDropdown: React.Dispatch<React.SetStateAction<PatientData>>,
+            allPatientDropDownContainer: dropdownContainer[],
+            patientInitialValues?: PatientProps,
+            setPatientSubmitFormDropdown: React.Dispatch<React.SetStateAction<PatientProps>>,
     }
 
-
-    const DropDownListPatient: React.FC<dropDownPropsPatient> = ({ setPatientSubmitFormDropdown, allPatientDropDownContainer }) => {
+    const DropDownListPatient: React.FC<dropDownPropsPatient> = ({patientInitialValues, setPatientSubmitFormDropdown, allPatientDropDownContainer }) => {
 
         const [patientDropDownStates, updatePatientDropDownStates] = useState<number[]>(Array(allPatientDropDownContainer.length).fill(-1));
         const [test, uptest] = useState<{ [key: string]: string }>({});
 
         return (
             <>
-            {allPatientDropDownContainer.map((dropdownFeature: dropdownContainerPatient, index: number) => (
+            {allPatientDropDownContainer.map((dropdownFeature: dropdownContainer, index: number) => (
                 <div className="relative flex items-end space-y-1" key={index}>
                         <button
                                 onClick={() => {
@@ -128,7 +94,8 @@ import { useState } from "react";
                                 className="shadow-inner p-2 border-[#e1e1e1] border-[1px] rounded-[5px] w-[200px] min-h-[42px] text-black bg-white flex items-center justify-between"
                         >
                                 <p className="text-[#636363]">
-                                    {patientDropDownStates[index] !== -1 ? (test[dropdownFeature.buttonName] === undefined ? dropdownFeature.buttonName : test[dropdownFeature.buttonName]) : (test[dropdownFeature.buttonName] === undefined ? dropdownFeature.buttonName : test[dropdownFeature.buttonName])}
+                                    {patientDropDownStates[index] !== -1 ? (test[dropdownFeature.buttonName] === undefined ? dropdownFeature.buttonName : test[dropdownFeature.buttonName]) 
+                                    : patientInitialValues?.[dropdownFeature.buttonId as keyof PatientProps] as string || dropdownFeature.buttonName}
                                 </p>
                                 {patientDropDownStates[index] !== -1 ? <FaChevronUp className="text-[#636363]" /> : < FaChevronDown className="text-[#636363]" />}
                         </button>
@@ -139,13 +106,13 @@ import { useState } from "react";
                                             <li
                                                 key={optionIndex}
                                                 onClick={() => {
-                                                    const newTest = { ...test };
-                                                    newTest[dropdownFeature.buttonName] = objectData;
-                                                    uptest(newTest);
-                                                    setPatientSubmitFormDropdown((prevForm: PatientData) => ({ ...prevForm, [dropdownFeature.buttonId]: objectData }));
-                                                    const newStates = [...patientDropDownStates];
-                                                    newStates[index] = -1;
-                                                    updatePatientDropDownStates(newStates);
+                                                        const newTest = { ...test };
+                                                        newTest[dropdownFeature.buttonName] = objectData;
+                                                        uptest(newTest);
+                                                        setPatientSubmitFormDropdown((prevForm: PatientProps) => ({ ...prevForm, [dropdownFeature.buttonId]: objectData }));
+                                                        const newStates = [...patientDropDownStates];
+                                                        newStates[index] = -1;
+                                                        updatePatientDropDownStates(newStates);
                                                 }}
                                                 className={`${optionIndex !== array.length - 1 && 'border-b border-b-[#3e3e3e]'} py-1 cursor-pointer`}
                                             >
@@ -165,29 +132,9 @@ import { useState } from "react";
 
 
     // add nurse drop down
-    interface NurseData {
-        nurseName: string,
-        nurseImage: string,
-        nurseAge: string,
-        nurseDateOfBirth: string,
-        nurseTimeRole: string,
-        nurseDegree: string,
-        nurseJoinDate: string,
-        nurseID: string,
-        nurseEmail: string,
-        nursePhone: string,
-    }
-
-
-    interface dropdownContainerNurse {
-            buttonName: string,
-            buttonId: string,
-            listOptions: string[]
-    }
-
     interface dropDownPropsNurse {
-            allNurseDropDownContainer: dropdownContainerNurse[],
-            setNurseSubmitFormDropdown: React.Dispatch<React.SetStateAction<NurseData>>,
+            allNurseDropDownContainer: dropdownContainer[],
+            setNurseSubmitFormDropdown: React.Dispatch<React.SetStateAction<NurseFormProps>>,
     }
 
 
@@ -198,7 +145,7 @@ import { useState } from "react";
 
         return (
             <>
-            {allNurseDropDownContainer.map((dropdownFeature: dropdownContainerNurse, index: number) => (
+            {allNurseDropDownContainer.map((dropdownFeature: dropdownContainer, index: number) => (
                 <div className="relative flex items-end space-y-1" key={index}>
                         <button
                                 onClick={() => {
@@ -209,7 +156,7 @@ import { useState } from "react";
                                 className="shadow-inner p-2 border-[#e1e1e1] border-[1px] rounded-[5px] w-[200px] min-h-[42px] text-black bg-white flex items-center justify-between"
                         >
                                 <p className="text-[#636363]">
-                                    {nurseDropDownStates[index] !== -1 ? (test[dropdownFeature.buttonName] === undefined ? dropdownFeature.buttonName : test[dropdownFeature.buttonName]) : (test[dropdownFeature.buttonName] === undefined ? dropdownFeature.buttonName : test[dropdownFeature.buttonName])}
+                                    {nurseDropDownStates[index] !== -1 ? (test[dropdownFeature.buttonName] === undefined ? dropdownFeature.buttonName : test[dropdownFeature.buttonName]) : test[dropdownFeature.buttonName]}
                                 </p>
                                 {nurseDropDownStates[index] !== -1 ? <FaChevronUp className="text-[#636363]" /> : < FaChevronDown className="text-[#636363]" />}
                         </button>
@@ -223,7 +170,7 @@ import { useState } from "react";
                                                     const newTest = { ...test };
                                                     newTest[dropdownFeature.buttonName] = objectData;
                                                     uptest(newTest);
-                                                    setNurseSubmitFormDropdown((prevForm: NurseData) => ({ ...prevForm, [dropdownFeature.buttonId]: objectData }));
+                                                    setNurseSubmitFormDropdown((prevForm: NurseFormProps) => ({ ...prevForm, [dropdownFeature.buttonId]: objectData }));
                                                     const newStates = [...nurseDropDownStates];
                                                     newStates[index] = -1;
                                                     updateNurseDropDownStates(newStates);
@@ -245,28 +192,9 @@ import { useState } from "react";
 
 
     // add staff drop down
-    interface StaffData {
-            staffName: string,
-            staffImage: string,
-            staffAge: string,
-            staffDateOfBirth: string,
-            staffTimeRole: string,
-            staffDegree: string,
-            staffJoinDate: string,
-            staffID: string,
-            staffEmail: string,
-            staffPhone: string,
-    }
-
-    interface dropdownContainerStaff {
-            buttonName: string,
-            buttonId: string,
-            listOptions: string[]
-    }
-
     interface dropDownPropsStaff {
-            allStaffDropDownContainer: dropdownContainerStaff[],
-            setStaffSubmitFormDropdown: React.Dispatch<React.SetStateAction<StaffData>>,
+            allStaffDropDownContainer: dropdownContainer[],
+            setStaffSubmitFormDropdown: React.Dispatch<React.SetStateAction<StaffFormProps>>,
     }
 
 
@@ -277,7 +205,7 @@ import { useState } from "react";
 
         return (
             <>
-            {allStaffDropDownContainer.map((dropdownFeature: dropdownContainerStaff, index: number) => (
+            {allStaffDropDownContainer.map((dropdownFeature: dropdownContainer, index: number) => (
                 <div className="relative flex items-end space-y-1" key={index}>
                         <button
                                 onClick={() => {
@@ -288,7 +216,7 @@ import { useState } from "react";
                                 className="shadow-inner p-2 border-[#e1e1e1] border-[1px] rounded-[5px] w-[200px] min-h-[42px] text-black bg-white flex items-center justify-between"
                         >
                                 <p className="text-[#636363]">
-                                    {staffDropDownStates[index] !== -1 ? (test[dropdownFeature.buttonName] === undefined ? dropdownFeature.buttonName : test[dropdownFeature.buttonName]) : (test[dropdownFeature.buttonName] === undefined ? dropdownFeature.buttonName : test[dropdownFeature.buttonName])}
+                                    {staffDropDownStates[index] !== -1 ? (test[dropdownFeature.buttonName] === undefined ? dropdownFeature.buttonName : test[dropdownFeature.buttonName]) : test[dropdownFeature.buttonName]}
                                 </p>
                                 {staffDropDownStates[index] !== -1 ? <FaChevronUp className="text-[#636363]" /> : < FaChevronDown className="text-[#636363]" />}
                         </button>
@@ -302,7 +230,7 @@ import { useState } from "react";
                                                     const newTest = { ...test };
                                                     newTest[dropdownFeature.buttonName] = objectData;
                                                     uptest(newTest);
-                                                    setStaffSubmitFormDropdown((prevForm: StaffData) => ({ ...prevForm, [dropdownFeature.buttonId]: objectData }));
+                                                    setStaffSubmitFormDropdown((prevForm: StaffFormProps) => ({ ...prevForm, [dropdownFeature.buttonId]: objectData }));
                                                     const newStates = [...staffDropDownStates];
                                                     newStates[index] = -1;
                                                     updateStaffDropDownStates(newStates);
