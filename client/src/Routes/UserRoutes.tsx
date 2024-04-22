@@ -11,11 +11,11 @@ const UserRoutes = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-          try {
+            try {
                 await Promise.all([fetchDoctor(), fetchNurse(), fetchPatient(), fetchStaff(), fetchAdmissions()]);
-          } catch (error) {
+            } catch (error) {
                 console.error('Error fetching data:', error);
-          }
+            }
         };
         fetchData();
     }, [fetchDoctor, fetchNurse, fetchPatient, fetchStaff, fetchAdmissions]);
@@ -25,7 +25,7 @@ const UserRoutes = () => {
     useEffect(() => {
         const timeout = setTimeout(() => {
             window.sessionStorage.clear();
-        }, 1800000);
+        }, 10800000);
     
         return () => clearTimeout(timeout);
     }, []);

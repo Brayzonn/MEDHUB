@@ -5,7 +5,7 @@ import userplaceholder from '../../images/userplaceholderlogo.png'
 
 import {DropDownListStaff} from "../globalComponents/DropDownList";
 import ConfirmationDialog from '../globalComponents/ConfirmationDialog';
-import InputForm from '../globalComponents/InputForm';
+import {StaffInputForm} from '../globalComponents/InputForm';
 
 import { FaChevronDown } from "react-icons/fa6";
 import { MdSave } from "react-icons/md";
@@ -120,7 +120,7 @@ return (
                               <div className="grid grid-cols-1 md:grid-cols-2 lx:grid-cols-4 gap-[1rem]">
 
 
-                                      <InputForm InputFormData = {InputFormData} />
+                                      <StaffInputForm prevValues ={addStaffForm} InputFormData = {InputFormData} />
 
                                       <DropDownListStaff allStaffDropDownContainer = {dropdownContainer}   setStaffSubmitFormDropdown = {setAddStaffForm}/>
                               </div>

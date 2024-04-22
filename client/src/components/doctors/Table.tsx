@@ -1,33 +1,23 @@
+
+import {DoctorProps} from '../DataTypes'; 
+
 import DataTable, {TableColumn } from 'react-data-table-component';
-import userplaceholder from '../../images/userplaceholderlogo.png'
+import userplaceholder from '../../images/userplaceholderlogo.png';
 
 
-  interface DataRow {
-        profile: { doctorName: string; doctorImage: string };
-        doctorDepartment: string;
-        doctorSpecialty: string;
-        doctorJoinDate: string;
-        doctorAddress: string,
-        doctorPhone: string,
-        doctorAge: string,
-        doctorDegree: string,
-        employmentType: string,
-        doctorID: string,
-  }
-  
-  interface TableProps {
-    columns: TableColumn<DataRow>[];
-    data:  DataRow[];
-  }
+interface TableProps {
+    columns: TableColumn<DoctorProps>[];
+    data:  DoctorProps[];
+}
 
 const Table: React.FC<TableProps> = ({ columns, data }) => {
 
     
-    const customColumns: TableColumn<DataRow>[] = columns.map((col) => {
+    const customColumns: TableColumn<DoctorProps>[] = columns.map((col) => {
         if (col.name === 'Doctor'){
             return {
                 ...col,
-                cell: (row: DataRow) => {
+                cell: (row: DoctorProps) => {
                     const doctorProfile = row.profile;
             
                     return (

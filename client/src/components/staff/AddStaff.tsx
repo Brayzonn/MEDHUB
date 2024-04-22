@@ -3,7 +3,7 @@ import Dropzone from 'react-dropzone';
 import { useState } from "react";
 
 import {DropDownListStaff} from "../globalComponents/DropDownList";
-import InputForm from '../globalComponents/InputForm';
+import {StaffInputForm} from '../globalComponents/InputForm';
 
 
 
@@ -76,7 +76,7 @@ return (
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lx:grid-cols-4 gap-[1rem]">
-                  <InputForm InputFormData = {InputFormData} />
+                  <StaffInputForm prevValues ={addStaffForm} InputFormData = {InputFormData} />
 
                   <DropDownListStaff allStaffDropDownContainer = {dropdownContainer}   setStaffSubmitFormDropdown = {setAddStaffForm}/>
           </div>

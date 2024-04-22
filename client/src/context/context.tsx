@@ -52,7 +52,7 @@ const AppContext = createContext<AppContextProps>({
 // Define the provider component
 const AppProvider = ({ children }: { children: ReactNode }) => {
     //base url
-    const baseURL = 'https://'
+    const baseURL = 'http://localhost:3300'
 
     const [allDashData, updateAllDashData] = useState<DashboardDataProps []>([])
     const [allDoctorData, updateAllDoctorData] = useState<DoctorProps []>([])
@@ -73,7 +73,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     //fetch dashboard data
     const fetchDashboardData = async () => { 
         try {
-            const dashResponse = await axios.get(`${baseURL}/api/user/getdashdata`, UserAuthConfig);
+            const dashResponse = await axios.get(`${baseURL}/api/user/getdashboarddata`, UserAuthConfig);
             const dashData = dashResponse.data;
             updateAllDashData(dashData);
         } catch (error) {
@@ -85,7 +85,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     const fetchDoctor = async () => { 
         try {
             const doctorResponse = await axios.get(`${baseURL}/api/user/getalldoctors`, UserAuthConfig);
-            const doctorData = doctorResponse.data;
+            const doctorData = doctorResponse.data.payload;
             updateAllDoctorData(doctorData);
         } catch (error) {
             console.log(error)

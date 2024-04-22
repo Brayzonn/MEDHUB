@@ -9,10 +9,10 @@ import allpatientlogo from '../images/alladmittedpatients.png';
 
 const DashboardSection = () => {
 
-    const{fetchDashboardData, allDashData} = useGlobalContext();
+    const {fetchDashboardData, allDashData}  =  useGlobalContext();
     const [patientCount, updatePatientCount] = useState<number>()
-    const [doctorCount, updateDoctorCount] = useState<number>()
-    const [staffCount, updateStaffCount] = useState<number>()
+    const [doctorCount, updateDoctorCount]   =   useState<number>()
+    const [staffCount, updateStaffCount]     = useState<number>()
     const [admittedPatientsCount, updateAdmittedPatientsCount] = useState<number>()
 
     useEffect(() => {

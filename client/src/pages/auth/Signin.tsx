@@ -2,10 +2,13 @@ import  { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import {useGoogleLogin } from '@react-oauth/google';
 
 import UseScreenWidth from '../../components/globalComponents/UseScreenWidth';
 import { useGlobalContext } from '../../context/useGlobalContext';
 
+import googleicon from '../../images/googleimage.png'
+import whiteBtnLoader from '../../images/buttonloaderwhite.svg';
 import siginillustration from '../../../src/images/Privacy policy-rafiki.svg';
 
 import { RiEyeLine, RiEyeOffLine } from 'react-icons/ri';
@@ -16,17 +19,76 @@ const Signin = () => {
 
     const screenWidth = UseScreenWidth();
 
+    const userToken = sessionStorage.getItem('userToken');
+
     const navigate = useNavigate();
 
     const {baseURL} =  useGlobalContext();
 
+    const [buttonLoadingAnimation, updateButtonLoadingAnimation] = useState<boolean>(false)
     const [showPassword, setShowPassword] = useState(false);
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
 
-    //sign in logic
+    // google auth logic for sign in
+    interface AccessToken {
+        access_token: string,
+        authuser?: string,
+        expires_in: number,
+        hd?: string,
+        prompt: string,
+        scope: string,
+        token_type: string,
+    }
+    
+    const googleAuthSignin = useGoogleLogin({
+        onSuccess: (codeResponse) => {
+                googleApi(codeResponse)
+        },
+        onError: (error) => console.log('Login Failed:', error)
+    })
+
+    const googleApi = async (codeResponse: AccessToken) => {
+            try {
+                const googleApiCall = await axios.get(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${codeResponse.access_token}`, {
+                    headers: {
+                        Authorization: `Bearer ${codeResponse.access_token}`,
+                        Accept: 'application/json'
+                    }
+                })  
+
+                const userData = googleApiCall.data;
+
+                if(userData){
+                    const userValues = {
+                        email: userData.email,
+                        fullName: userData.name,
+                    }
+
+                    const sininGoogleApiCall = await axios.post(`${baseURL}/api/google/signin`, {...userValues})
+                    const signInResponseData = sininGoogleApiCall.data
+                    const signInResponseStatus: boolean =  signInResponseData.status;
+
+                    if(signInResponseStatus === false){
+                        toast.error(signInResponseData.message)
+                    }else{
+                        sessionStorage.setItem('userToken', JSON.stringify(signInResponseData.token))
+                        toast.success('Sign in successful, please wait.')
+
+                        setTimeout(()=>{
+                            navigate('/user/dashboard');  
+                        }, 2500)  
+                    }
+                }      
+            
+            } catch (error) {
+                console.log(error)
+            }          
+    } 
+
+    //manual sign in logic
     interface SigninFormFieldDataSchema {
         email: string,
         password: string, 
@@ -37,39 +99,45 @@ const Signin = () => {
     });
 
     const submitSigninData = async () =>{
-
-        try {
+        if(userToken){
+            navigate('/user/dashboard'); 
+        }else{
+            try {
+                updateButtonLoadingAnimation(true)
+                if(signinFormFieldData.email === '' || signinFormFieldData.password === ''){
+                    toast.error('Complete all fields')
+                    updateButtonLoadingAnimation(false)
+                }
     
-            if(signinFormFieldData.email === '' || signinFormFieldData.password === ''){
-                toast.error('Complete all fields')
-            }
-
-            //make post request if field validation complete
-            else{
-                const signupApiCall = await axios.post(`${baseURL}/api/signin`, {...signinFormFieldData})
-                const signInResponseData = signupApiCall.data;
-                const signInResponseStatus: boolean =  signupApiCall.data.status;
-
-                if(signInResponseStatus === false){
-                    toast.error(signInResponseData.errorMessage)
-                }
+                //make post request if field validation complete
                 else{
-                    sessionStorage.setItem('adminToken', JSON.stringify(signInResponseData.token))
-                    updateSigninFormFieldData({
-                        email: '',
-                        password: '', 
-                    })
-
-                    toast.success('Sign in successful')
-
-                    setTimeout(()=>{
-                        navigate('/user/dashboard');  
-                    }, 5000) 
-                }
-            }     
-        } catch (error) {
-                console.log(error)
+                    const signupApiCall = await axios.post(`${baseURL}/api/signin`, {...signinFormFieldData})
+                    const signInResponseData = signupApiCall.data;
+                    const signInResponseStatus: boolean =  signInResponseData.status;
+    
+                    if(signInResponseStatus === false){
+                        toast.error(signInResponseData.message)
+                    }
+                    else{
+                        sessionStorage.setItem('userToken', JSON.stringify(signInResponseData.token))
+                        updateSigninFormFieldData({
+                            email: '',
+                            password: '', 
+                        })
+    
+                        toast.success('Sign in successful')
+    
+                        setTimeout(()=>{
+                            navigate('/user/dashboard');  
+                        }, 2500) 
+                    }
+                    updateButtonLoadingAnimation(false)
+                }     
+            } catch (error) {
+                    console.log(error)
+            }
         }
+       
 
     }
 
@@ -110,9 +178,10 @@ const Signin = () => {
                                                                             <div className='flex flex-col space-y-2'>
                                                                                     <label className='text-[15px] text-[#636363]'>Email</label>
                                                                                     <input type="email" name='email' 
-                                                                                    onChange={(e)=>{ updateSigninFormFieldData({...signinFormFieldData, email: e.target.value })}}
-                                                                                    placeholder='Enter email'
-                                                                                    className='bg-inherit px-2 border-[#e1e1e1] border-[1px] rounded-[5px] w-full h-[42px] text-black text-[16px] focus:border-greyMainBackground focus:bg-greyMainBackground focus:outline-none' 
+                                                                                        value={signinFormFieldData.email}
+                                                                                        onChange={(e)=>{ updateSigninFormFieldData({...signinFormFieldData, email: e.target.value })}}
+                                                                                        placeholder='Enter email'
+                                                                                        className='bg-inherit px-2 border-[#e1e1e1] border-[1px] rounded-[5px] w-full h-[42px] text-black text-[16px] focus:border-greyMainBackground focus:bg-greyMainBackground focus:outline-none' 
                                                                                     />
                                                                             </div>
 
@@ -122,6 +191,8 @@ const Signin = () => {
                                                                                         <input
                                                                                             type={showPassword ? 'text' : 'password'}
                                                                                             name='password'
+                                                                                            value={signinFormFieldData.password}
+                                                                                            onChange={(e)=>{ updateSigninFormFieldData({...signinFormFieldData, password: e.target.value })}}
                                                                                             placeholder='Enter password'
                                                                                             className='bg-inherit px-2 border-[#e1e1e1] border-[1px] rounded-[5px] w-full h-[42px] pr-[30px] text-black text-[16px] focus:border-greyMainBackground focus:bg-greyMainBackground focus:outline-none'
                                                                                         />
@@ -140,7 +211,26 @@ const Signin = () => {
                                                                 </div>
                                                                 
 
-                                                                <button onClick={()=>submitSigninData()} className='bg-purpleSubColor px-2 text-white border-purpleSubColor border-[1px] rounded-[5px] w-full h-[45px] transition-properties hover:bg-[#181762]'>Sign in</button>
+                                                                <button onClick={()=>submitSigninData()} 
+                                                                    disabled = {buttonLoadingAnimation ? true : false} 
+                                                                    className='bg-purpleSubColor px-2 flex justify-center items-center text-white border-purpleSubColor border-[1px] rounded-[5px] w-full h-[45px] transition-properties hover:bg-[#181762]'>
+                                                                        {buttonLoadingAnimation ? 
+                                                                            <img src = {whiteBtnLoader} className='w-[30px] h-[30px]' alt='loader'/>    
+                                                                        :
+                                                                            <>
+                                                                                <p>Sign in</p>
+                                                                            </>
+                                                                        }
+                                                                </button>
+                                                                    
+                                                                <div className='py-[0.40rem] w-[80%] flex justify-center items-center'>
+                                                                        <div className='bg-[#e1e1e1] h-[1px] w-full'></div>
+                                                                </div>
+
+                                                                <button onClick={()=> !userToken ? googleAuthSignin() : navigate('/user/dashboard')} className='shadow-md bg-white border-[#e1e1e1] border-[1px] rounded-[5px] w-full min-h-[42px] flex items-center justify-center space-x-2 hover:bg-[#f1f1f1]'>
+                                                                    <img src={googleicon} alt='google-icon' className='w-[20px] h-[20px]'/>
+                                                                    <p className='text-black font-bold text-[14px]'> Sign in with Google</p>
+                                                                </button>
 
                                                                 <div className='py-[1rem] text-[#3c3b3b] text-[14px]'>Don't have an account? <Link className='text-black font-bold' to = '/signup'>Sign up</Link></div>
                     

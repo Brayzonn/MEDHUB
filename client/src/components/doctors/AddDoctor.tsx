@@ -5,38 +5,46 @@ import { toast } from 'react-toastify';
 
 import {AddDoctorFormInterface} from '../DataTypes'
 import { useGlobalContext } from '../../context/useGlobalContext';
-import {DropDownList} from "../globalComponents/DropDownList";
+import {DoctorDropDownList} from "../globalComponents/DropDownList";
 import {DoctorInputForm} from '../globalComponents/InputForm';
+
+import whiteBtnLoader from '../../images/buttonloaderwhite.svg';
 
 
 const AddDoctor = () => {
 
         const {baseURL} =  useGlobalContext();
+        const userToken = sessionStorage.getItem('userToken');
+        const [buttonLoadingAnimation, updateButtonLoadingAnimation] = useState<boolean>(false)
 
         const dropdownContainer = [
                 {buttonId: 'doctorSpecialty' , buttonName: 'Choose Specialty', listOptions : ['Pediatrics', 'Cardiology', 'Psychiatry', 'Internal Medicine', 'Obstetrics and Gynecology', 'Surgery', 'Anesthesiology', 'Radiology'] },
                 {buttonId: 'doctorDegree' , buttonName: ' Choose Degree', listOptions : ['MD', 'DO', 'PharmD', 'MBBS'] }  , 
-                {buttonId: 'doctorDept' , buttonName: ' Choose Department', listOptions : ['General', 'Psychiatry', 'Obstetrics', 'Gynecology'] }  ,   
+                {buttonId: 'doctorDepartment' , buttonName: ' Choose Department', listOptions : ['General', 'Psychiatry', 'Obstetrics', 'Gynecology'] }  ,
+                {buttonId: 'employmentType' , buttonName: ' Employment Type', listOptions : ['Full-time', 'Part-time'] }  ,      
         ]
 
         const [InputFormData] = useState([
-                {labelName: 'Doctor Name ', onChange:  (value: string) => setAddDoctorForm({...addDoctorForm, 'doctorName': value}), labelSpan: '*', inputName: 'doctorName', inputType: 'text', placeholder: 'John Doe'},
-                {labelName: 'Doctor Phone Number',  onChange:  (value: string) => setAddDoctorForm({...addDoctorForm, 'doctorPhone': value}), labelSpan: '*', inputName: 'doctorPhone', inputType: 'tel', placeholder: '+234 90 346 4578'},
-                {labelName: 'Doctor Age', value: {},  onChange:  (value: string) => setAddDoctorForm({...addDoctorForm, 'doctorAge': value}),  inputName: 'doctorAge', inputType: 'number', placeholder: '40'},
-                {labelName: 'Doctor Home Address ',   onChange:  (value: string) => setAddDoctorForm({...addDoctorForm, 'doctorAddress': value}), labelSpan: '*',  inputName: 'doctorAddress', inputType: 'text', placeholder: '3 Fieldgreen Drive, Lagos'},
-                {labelName: 'Doctor Join Date ',  onChange:  (value: string) => setAddDoctorForm({...addDoctorForm, 'doctorjoindate': value}), labelSpan: '*',  inputName: 'doctorjoindate', inputType: 'date'},
+                {labelName: 'Doctor Name ',             labelSpan: '*',  inputName: 'doctorName',       inputType: 'text',      placeholder: 'John Doe'},
+                {labelName: 'Doctor Email ',            labelSpan: '*',  inputName: 'doctorEmail',      inputType: 'text',      placeholder: 'grey@gmail.com'},
+                {labelName: 'Doctor Phone Number',      labelSpan: '*',  inputName: 'doctorPhone',      inputType: 'tel',       placeholder: '+234 90 346 4578'},
+                {labelName: 'Doctor Age',               labelSpan: '*',  inputName: 'doctorAge',        inputType: 'number',    placeholder: '40'},
+                {labelName: 'Doctor Home Address ',     labelSpan: '*',  inputName: 'doctorAddress',    inputType: 'text',      placeholder: '3 Fieldgreen Drive, Lagos'},
+                {labelName: 'Doctor Join Date ',        labelSpan: '*',  inputName: 'doctorJoinDate',   inputType: 'date'},
         ])
 
         //dropzone for image upload
-        const [Idimages, setIdImages] = useState<string>('');
+        const [Idimages, setIdImages] = useState<File>();
+        const [stringIdimages, setStringIdImages] = useState<string>('');
 
-        const handleImageDrop = (acceptedFiles: File[]) => {
-                if (acceptedFiles.length > 0) {
-                        const firstAcceptedFile = acceptedFiles[0];
-
-                        const imageUrl = URL.createObjectURL(firstAcceptedFile);
+        const handleImageDrop = (acceptedFile: File[]) => {
+                if (acceptedFile) {
+                        const stringifiedImageUrl = URL.createObjectURL(acceptedFile[0]);
+                        const imageUrl = acceptedFile[0];
                         
+                        setStringIdImages(stringifiedImageUrl)
                         setIdImages(imageUrl);
+                        setAddDoctorForm({...addDoctorForm, doctorImage:stringifiedImageUrl })
                 }    
         };
 
@@ -50,41 +58,65 @@ const AddDoctor = () => {
                 doctorName:'',
                 doctorDegree: '',
                 employmentType: '',
-                doctorDept: '',
+                doctorDepartment: '',
+                doctorEmail: '',
                 doctorImage: '',
-                doctorjoindate: '',
+                doctorJoinDate: '',
         })
 
         const submitAddDoctorForm = async () =>{
+                
                 try {
-
+                        updateButtonLoadingAnimation(true)
                         if (Object.values(addDoctorForm).some(value => value === '')) {
                                 toast.error('Please fill in all fields.')  
+                                updateButtonLoadingAnimation(false)
                         } else {
-                                const addDoctorApiCall = await axios.post(`${baseURL}/api/user/newdoctor`, {...addDoctorForm})
-                                const addDoctorErrorResponseData = addDoctorApiCall.data.errorMessage;
-                                const addDoctorResponseStatus: boolean =  addDoctorApiCall.data.status;
+                                const formData = new FormData();
+                                const {doctorImage, ...updatedDoctorForm} = addDoctorForm
+
+                                Object.entries(updatedDoctorForm).forEach(([key, value]) => {
+                                      formData.append(key, value);
+                                })
+                                if (Idimages instanceof File) {
+                                      formData.append('doctorImage', Idimages);
+                                }
+
+                                const addDoctorApiCall = await axios.post(`${baseURL}/api/user/addnewdoctor`, formData, {
+                                        headers: {
+                                                Authorization: `Bearer ${userToken}`,
+                                                'Content-Type': 'multipart/form-data',  
+                                        },
+                                });
         
+                                const addDoctorErrorResponseData = addDoctorApiCall.data.message;
+                                const addDoctorResponseStatus: boolean =  addDoctorApiCall.data.status;
+                           
+
                                 if(addDoctorResponseStatus === false){
                                         toast.error(addDoctorErrorResponseData)
+                                        updateButtonLoadingAnimation(false)
                                 }
                                 else{
                                         setAddDoctorForm({
                                                 doctorSpecialty: '',
-                                                doctorAddress: '',
+                                                doctorAddress: '',                
                                                 doctorPhone: '',
                                                 doctorAge: '',
                                                 doctorName:'',
+                                                doctorEmail: '',
                                                 doctorDegree: '',
                                                 employmentType: '',
-                                                doctorDept: '',
+                                                doctorDepartment: '',
                                                 doctorImage: '',
-                                                doctorjoindate: '',
+                                                doctorJoinDate: '',
                                         })
-        
+                                        setIdImages(undefined)
                                         toast.success('Doctor added successfully')
-                                }        
+                                }  
+                                updateButtonLoadingAnimation(false)
                         }
+                              
                         
                 } catch (error) {
                         console.log(error)
@@ -101,14 +133,14 @@ const AddDoctor = () => {
                             {({ getRootProps, getInputProps }) => (
                                 <div {...getRootProps()} className="relative max-w-[150px] min-h-[150px] flex justify-center items-center p-2 border bg-inherit border-[#e9eaeb] rounded-md">
                                         <input {...getInputProps()} />
-                                        {Idimages && <img src={Idimages} alt='Selected Image' className='transition-properties w-full h-full object-cover rounded-md' />}
+                                        {Idimages && <img src={stringIdimages} alt='Selected Image' className='transition-properties w-full h-full object-cover rounded-md' />}
                                         {!Idimages && <p className='text-[14px]'>Click/Drag and drop here to select doctor image.</p>}
                                 </div>
                             )}
                     </Dropzone>  
 
-                    {Idimages !== '' && <button 
-                        onClick={()=>setIdImages('')}
+                    {stringIdimages !== '' && <button 
+                        onClick={()=>setStringIdImages('')}
                         className="transition-properties text-[13px] font-[600] flex justify-center items-center bg-red-500 text-white w-[20px] h-[20px] border border-red-50 rounded-md"
                     >
                         X
@@ -116,14 +148,20 @@ const AddDoctor = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lx:grid-cols-4 gap-[1rem]">
-                    <DoctorInputForm prevValues = {addDoctorForm} InputFormData = {InputFormData} />
+                    <DoctorInputForm formValue = {addDoctorForm} onChangeFunc={setAddDoctorForm} prevValues = {addDoctorForm} InputFormData = {InputFormData} />
 
-                    <DropDownList allDropDownContainer = {dropdownContainer}   setSubmitFormDropdown = {setAddDoctorForm}/>
+                    <DoctorDropDownList allDropDownContainer = {dropdownContainer} doctorInitialValues = {addDoctorForm}  setSubmitFormDropdown = {setAddDoctorForm}/>
             </div>
 
-            <button onClick={()=>submitAddDoctorForm()} className="transition-properties w-[190px] h-[40px] bg-gradient-to-r from-slate-800 to-slate-900 text-white border border-white text-[14px] rounded-md flex items-center justify-center space-x-2 hover:bg-[#13117c]">
-                    <p>Add Doctor</p>
-                    <p className="text-[16px]">+</p>
+            <button disabled = {buttonLoadingAnimation ? true : false} onClick={()=>submitAddDoctorForm()} className="transition-properties w-[190px] h-[40px] bg-gradient-to-r from-slate-800 to-slate-900 text-white border border-white text-[14px] rounded-md flex items-center justify-center space-x-2 hover:bg-[#13117c]">
+                    {buttonLoadingAnimation ? 
+                        <img src = {whiteBtnLoader} className='w-[25px] h-[25px]' alt='loader'/>    
+                    :
+                        <>
+                             <p>Add Doctor</p>
+                             <p className="text-[16px]">+</p>
+                        </>
+                    }
             </button>
 
             

@@ -1,4 +1,6 @@
 import { useState } from "react";
+import axios from 'axios';
+import { toast } from 'react-toastify';
 import { TableColumn } from 'react-data-table-component';
 
 import {DoctorProps} from '../DataTypes';
@@ -8,6 +10,7 @@ import AddDoctor from "./AddDoctor";
 import Table from "./Table";
 
 
+
 import { CiSearch } from "react-icons/ci";
 import { FaChevronRight } from "react-icons/fa";
 
@@ -15,12 +18,28 @@ import { FaChevronRight } from "react-icons/fa";
 
 const AllDoctors = () => {
 
+      const userToken = sessionStorage.getItem('userToken');
       const {allDoctorData} =  useGlobalContext();
-            
+
+      const [buttonLoadingAnimation, updateButtonLoadingAnimation] = useState<boolean>(false)
       const [allDoctorState, updateAllDoctorState] = useState<boolean>(true);
       const [addDoctorState, updateAddDoctorState] = useState<boolean>(false);
-      const [doctorEditState, updateDoctorEditState] = useState<boolean>(false);
-      const [activeDoctorProfile, updateActiveDoctorProfile] = useState<DoctorProps>()
+      const [doctorEditState, updateEditDoctorState] = useState<boolean>(false);
+      const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
+
+      const [activeDoctorProfile, updateActiveDoctorProfile] = useState<DoctorProps>({
+            profile: { doctorName: '', doctorImage: '' },
+            doctorDepartment: '',
+            doctorEmail: '',
+            doctorSpecialty: '',
+            doctorJoinDate: '',
+            doctorAddress: '',
+            doctorPhone: '',
+            doctorAge: '',
+            doctorDegree: '',
+            employmentType: '',
+            doctorID: '',
+      })
 
 
       const [searchResults, setSearchResults] = useState<DoctorProps[]>([]);
@@ -39,7 +58,6 @@ const AllDoctors = () => {
 
       //doctor information for bio display 
       const [doctorData, updateDoctorData] = useState([
-            {header: 'Doctor Name', identifier: 'doctorName', data: ''},
             {header: 'Doctor Department', identifier: 'doctorDepartment', data: ''},
             {header: 'Doctor Specialty', identifier: 'doctorSpecialty', data: ''},
             {header: 'Doctor Degree', identifier: 'doctorDegree', data: ''},
@@ -50,11 +68,27 @@ const AllDoctors = () => {
             {header: 'Employment Type', identifier: 'employmentType', data: ''},
       ])
 
+      //fetch selected doctor data from table and display doctor bio
       const fetchDoctor = (doctorID: string) => {
             const filtered = allDoctorData.find((row) => row.doctorID === doctorID);
-            updateActiveDoctorProfile(filtered)
-      
+  
             if (filtered) {
+                  updateActiveDoctorProfile({
+                        profile: { ...filtered.profile },
+                        doctorDepartment: filtered.doctorDepartment,
+                        doctorEmail: filtered.doctorEmail,
+                        doctorSpecialty: filtered.doctorSpecialty,
+                        doctorJoinDate: filtered.doctorJoinDate,
+                        doctorAddress: filtered.doctorAddress,
+                        doctorPhone: filtered.doctorPhone,
+                        doctorAge: filtered.doctorAge,
+                        doctorDegree: filtered.doctorDegree,
+                        employmentType: filtered.employmentType,
+                        doctorID: filtered.doctorID,
+                  });
+
+                  sessionStorage.setItem('activeDoctorProfile', JSON.stringify(filtered))
+
                   updateDoctorData((prevDoctorData) =>
                         prevDoctorData.map((item) => ({
                               ...item,
@@ -64,19 +98,37 @@ const AllDoctors = () => {
             
                   setProfileVisibility(true);
             }
-      };
-    
-      const updateDoctorProfile = () =>{
-            if (activeDoctorProfile) {
-                  sessionStorage.setItem('activeDoctorProfile', JSON.stringify(activeDoctorProfile))
-                  updateDoctorData((prevDoctorData) =>
-                        prevDoctorData.map((item) => ({
-                              ...item,
-                              data: (activeDoctorProfile[item.identifier as keyof DoctorProps] as string) || '',
-                        }))
-                  );
-                  updateDoctorEditState(true);         
-            }            
+      }; 
+
+      const deleteDoctorFunction = async (doctorID: string) =>{
+            try {
+                  updateButtonLoadingAnimation(true)
+                  const deleteDoctorApiCall = await axios.delete(`/api/user/deletedoctor/${doctorID}`,
+                  {
+                        headers: {
+                              Authorization: `Bearer ${userToken}`,
+                        },
+
+                        data: {
+                              doctorID
+                        },
+                  });
+
+                  const deleteDoctorErrorResponseData = deleteDoctorApiCall.data.errorMessage;
+                  const deleteDoctorResponseStatus: boolean =  deleteDoctorApiCall.data.status;
+
+                  if(deleteDoctorResponseStatus === false){
+                          toast.error(deleteDoctorErrorResponseData)
+                  }
+                  else{
+                          toast.success('Doctor deleted successfully')
+                  }        
+                  updateButtonLoadingAnimation(false)
+                  setIsConfirmationDialogOpen(false)
+            } catch (error) {
+                  console.log(error)  
+            } 
+            
       }
 
       //doctor table
@@ -163,10 +215,10 @@ const AllDoctors = () => {
                                 <div className="min-h-[10rem] w-full flex flex-col justify-center items-center space-y-[2rem]">
                                         {!isInputActive ?
                                             <Table columns={columns} data={allDoctorData} />
-                                            :
+                                                :   
                                             <Table columns={columns} data={searchResults} />
                                         }
-                                        {< DoctorProfile doctorEditState={doctorEditState} updateDoctorProfile = {updateDoctorProfile} doctorData={doctorData} isDoctorProfileVisible={isProfileVisible} updateProfileVisibility={setProfileVisibility}/> }
+                                        < DoctorProfile  buttonLoadingAnimation = {buttonLoadingAnimation} updateButtonLoadingAnimation={updateButtonLoadingAnimation} deleteDoctorFunction = {deleteDoctorFunction} setIsConfirmationDialogOpen ={setIsConfirmationDialogOpen} isConfirmationDialogOpen ={isConfirmationDialogOpen} updateEditDoctorState ={updateEditDoctorState} activeDoctor = {activeDoctorProfile} doctorEditState={doctorEditState} updateDoctorProfileState = {setProfileVisibility} doctorData={doctorData} isDoctorProfileVisible={isProfileVisible} updateProfileVisibility={setProfileVisibility}/> 
                                 </div>
                             </> 
                             : 

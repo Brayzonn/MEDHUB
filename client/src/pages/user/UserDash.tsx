@@ -20,8 +20,6 @@ const AdminDash = () => {
     const screenWidth = UseScreenWidth();
     const [, setIsHovered] = useState(false);
 
-
-
     //navlinks for sidenav component
     const navLinks = [
         { to: '/user/dashboard',    icon: homeIconImage,    text: 'Dashboard' },

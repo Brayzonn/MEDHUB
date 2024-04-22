@@ -1,20 +1,24 @@
 import { useState } from 'react';
 import jwt_decode from "jwt-decode";
 
-import {DecodedDataInterface} from '../components/DataTypes'
+import {DecodedDataInterface, DecodedJwt} from '../components/DataTypes'
 import userplaceholder from '../images/userplaceholderlogo.png'
 
 const NavSection = () => {
 
   const userInfo = sessionStorage.getItem('userToken');
-  const [decodedUserData, updatedecodedUserData] = useState<DecodedDataInterface>();
-
-
+  const [decodedUserData, setDecodedUserData] = useState<DecodedDataInterface>();
 
   useState(()=>{
         if(userInfo){
-            const decoded: DecodedDataInterface = jwt_decode(userInfo);
-            updatedecodedUserData(decoded)
+            try {
+                  const decoded: DecodedJwt = jwt_decode(userInfo);
+                  const data: DecodedDataInterface  = decoded.id;
+
+                  setDecodedUserData(data);
+            } catch (error) {
+                  console.error('Error decoding JWT token:', error);
+            }
         }
   }, )
 
@@ -28,7 +32,7 @@ const NavSection = () => {
 
                             <div className="flex flex-col items-start text-[#ABABAB] text-[15px]">
                                     <p className='text-[13px] text-black tracking-wide'>Good Morning</p>
-                                    <p className='text-[13px] font-bold text-[#161616] tracking-wide'>{decodedUserData?.UserName ? decodedUserData.UserName : ''}</p>
+                                    <p className='text-[13px] font-bold text-[#161616] tracking-wide'>{decodedUserData?.userName ? decodedUserData.userName : ''}</p>
                             </div>
                 </div>
         </nav>

@@ -11,12 +11,13 @@ import {AddDoctorFormInterface, PatientProps, NurseFormProps, StaffFormProps} fr
         listOptions: string[]
     }
 
-    interface dropDownProps {
+    interface DoctordropDownProps {
         allDropDownContainer: dropdownContainer[],
+        doctorInitialValues?: AddDoctorFormInterface,
         setSubmitFormDropdown: React.Dispatch<React.SetStateAction<AddDoctorFormInterface>>,
     }
 
-    const DropDownList: React.FC<dropDownProps> = ({setSubmitFormDropdown, allDropDownContainer }) => {
+    const DoctorDropDownList: React.FC<DoctordropDownProps> = ({setSubmitFormDropdown, doctorInitialValues, allDropDownContainer }) => {
 
         const [doctorSpecialtyDropDownStates, updateDoctorSpecialtyDropDownStates] = useState<number[]>(Array(allDropDownContainer.length).fill(-1));
         const [test, uptest] = useState<{ [key: string]: string }>({});
@@ -34,7 +35,11 @@ import {AddDoctorFormInterface, PatientProps, NurseFormProps, StaffFormProps} fr
                                 className="shadow-inner p-2 border-[#e1e1e1] border-[1px] rounded-[5px] w-[200px] min-h-[42px] text-black bg-white flex items-center justify-between"
                         >
                                 <p className="text-[#636363]">
-                                    {doctorSpecialtyDropDownStates[index] !== -1 ? (test[dropdown.buttonName] === undefined ? dropdown.buttonName : test[dropdown.buttonName]) : test[dropdown.buttonName]}
+                                    {doctorSpecialtyDropDownStates[index] !== -1 ? 
+                                        (test[dropdown.buttonName] === undefined ? dropdown.buttonName : test[dropdown.buttonName]) 
+                                    :
+                                        doctorInitialValues?.[dropdown.buttonId as keyof AddDoctorFormInterface] as string || dropdown.buttonName     
+                                    }
                                 </p>
                                 {doctorSpecialtyDropDownStates[index] !== -1 ? <FaChevronUp className="text-[#636363]" /> : < FaChevronDown className="text-[#636363]" />}
                         </button>
@@ -248,4 +253,4 @@ import {AddDoctorFormInterface, PatientProps, NurseFormProps, StaffFormProps} fr
         );
     };
 
-export {DropDownListPatient, DropDownList, DropDownListNurse, DropDownListStaff} 
+export {DropDownListPatient, DoctorDropDownList, DropDownListNurse, DropDownListStaff} 

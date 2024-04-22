@@ -3,9 +3,12 @@ import  { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-
-import googleicon from '../../images/googleimage.png'
+import whiteBtnLoader from '../../images/buttonloaderwhite.svg';
+import {useGoogleLogin } from '@react-oauth/google';
+import googleicon from '../../images/googleimage.png';
 import signupillustration from '../../../src/images/sigupillustration.svg';
+
+
 import UseScreenWidth from '../../components/globalComponents/UseScreenWidth';
 import { checkPasswordStrength } from '../../components/globalComponents/SignUpPasswordValidator';
 import { useGlobalContext } from '../../context/useGlobalContext';
@@ -20,11 +23,14 @@ const Signup = () => {
 
     const screenWidth = UseScreenWidth();
 
+    const userToken = sessionStorage.getItem('userToken')
+
     const navigate = useNavigate();
 
     const {baseURL} =  useGlobalContext();
+    const [buttonLoadingAnimation, updateButtonLoadingAnimation] = useState<boolean>(false)
 
-    //password input field data
+
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [showPasswordtwo, setShowPasswordtwo] = useState<boolean>(false);
     const [passwordActive, updatePasswordActive] = useState<boolean>(false);
@@ -41,13 +47,68 @@ const Signup = () => {
         checkPasswordStrength(passwordValue, updateAllPasswordRequirements)
     }
 
-    //google auth for sign up
-    const googleAuth = () => {
-        window.open(`${process.env.recc}/auth/google/callback`, "_self")
+    // google auth logic for sign in
+    interface AccessToken {
+        access_token: string,
+        authuser?: string,
+        expires_in: number,
+        hd?: string,
+        prompt: string,
+        scope: string,
+        token_type: string,
     }
+    
+    const googleAuthSignin = useGoogleLogin({
+        onSuccess: (codeResponse) => {
+                googleApi(codeResponse)
+        },
+        onError: (error) => console.log('Login Failed:', error)
+    })
+
+    const googleApi = async (codeResponse: AccessToken) => {
+
+            try {
+                const googleApiCall = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${codeResponse.access_token}`, {
+                    headers: {
+                        Authorization: `Bearer ${codeResponse.access_token}`,
+                        Accept: 'application/json'
+                    }
+                })  
+
+                const userData = googleApiCall.data;
+
+                if(userData){
+                    const userValues = {
+                        email: userData.email,
+                        fullName: userData.name,
+                    }
+
+                    const sininGoogleApiCall = await axios.post(`${baseURL}/api/google/signin`, {...userValues})
+                    const signInResponseData = sininGoogleApiCall.data
+                    const signInResponseStatus: boolean =  signInResponseData.status;
+
+                    if(signInResponseStatus === false){
+                        toast.error(signInResponseData.message)
+                    }else{
+                        sessionStorage.setItem('userToken', JSON.stringify(signInResponseData.token))
+                        toast.success('Sign in successful, please wait.')
+
+                        setTimeout(()=>{
+                            navigate('/user/dashboard');  
+                        }, 2500)  
+                    }
 
 
-    //sign up logic
+                }  
+            
+            } catch (error) {
+                console.log(error)
+            }           
+    } 
+
+
+
+    //manual sign up logic
     interface SignupFormFieldDataSchema {
         email: string,
         fullName: string,
@@ -62,53 +123,69 @@ const Signup = () => {
     });
 
     const submitSignupData = async () =>{
-
-        try {
-            const isAllRequirementsMet = (requirements: AllPasswordRequirements[]): boolean => {
-                return requirements.every((requirement) => requirement.status === true);
-            };
-
-            const areAllRequirementsMet = isAllRequirementsMet(allPasswordRequirements);
+        if(userToken){
+            navigate('/user/dashboard'); 
+        }else{
+            try {
+                updateButtonLoadingAnimation(true)
+                const checkPassword = (requirements: AllPasswordRequirements[]): boolean => {
+                    return requirements.every((requirement) => requirement.status === true);
+                };
     
-            if(signupFormFieldData.email === '' || signupFormFieldData.fullName === '' || signupFormFieldData.password === '' || signupFormFieldData.confirmPassword === ''){
-                toast.error('Complete all fields')
-            }
-    
-            else if(!areAllRequirementsMet){
-                toast.error('Incorrect password pattern')
-            }
-    
-            else if(signupFormFieldData.password !== signupFormFieldData.confirmPassword){
-                toast.error('Passwords do not match')
-            }
-    
-            //make post request if field validation complete
-            else{
-                const signupApiCall = await axios.post(`${baseURL}/api/signin`, {...signupFormFieldData})
-                const signInResponseData = signupApiCall.data.errorMessage;
-                const signInResponseStatus: boolean =  signupApiCall.data.status;
-
-                if(signInResponseStatus === false){
-                    toast.error(signInResponseData)
+                const areAllPasswordRequirementsMet = checkPassword(allPasswordRequirements);
+        
+                if(signupFormFieldData.email === '' || signupFormFieldData.fullName === '' || signupFormFieldData.password === '' || signupFormFieldData.confirmPassword === ''){
+                    updateButtonLoadingAnimation(false)
+                    toast.error('Complete all fields')
                 }
+        
+                else if(!areAllPasswordRequirementsMet){
+                    updateButtonLoadingAnimation(false)
+                    toast.error('Incorrect password pattern')
+                }
+        
+                else if(signupFormFieldData.password !== signupFormFieldData.confirmPassword){
+                    updateButtonLoadingAnimation(false)
+                    return toast.error('Passwords do not match')
+                }
+        
+                //make post request if field validation complete
                 else{
-                    updateSignupFormFieldData({
-                        email: '',
-                        fullName: '',
-                        password: '', 
-                        confirmPassword: ''
-                    })
-
-                    toast.success('Sign up successful')
-
-                    setTimeout(()=>{
-                        navigate('/signin');  
-                    }, 5000) 
-                }
-            }     
-        } catch (error) {
-                console.log(error)
+                    const signupApiCall = await axios.post(`${baseURL}/api/signup`, {...signupFormFieldData})
+                    const signUpResponseData = signupApiCall.data;
+                    const signUpResponseStatus: boolean =  signUpResponseData.status;
+    
+                    if(signUpResponseStatus === false){
+                        toast.error(signUpResponseData.message)
+                        updateSignupFormFieldData({
+                            email: '',
+                            fullName: '',
+                            password: '', 
+                            confirmPassword: ''
+                        })
+                    }
+                    else{
+                        updateSignupFormFieldData({
+                            email: '',
+                            fullName: '',
+                            password: '', 
+                            confirmPassword: ''
+                        })
+    
+                        toast.success('Sign up successful, please wait.')
+    
+                        setTimeout(()=>{
+                            navigate('/signin');  
+                        }, 2500) 
+                    }
+                    updateButtonLoadingAnimation(false)
+                }   
+            } catch (error) {
+                    console.log(error)
+            }
         }
+
+
 
     }
 
@@ -157,12 +234,15 @@ const Signup = () => {
                                             </div>
 
                                             <div className=" flex flex-col justify-center items-center space-y-2 w-[400px] min-h-[420px] pb-3 px-6">
+                                                        
                                                         <h5 className='text-[20px] pt-[1rem] font-[550] tracking-wide'>Create your account</h5>
                                                         <p className='text-[14.40px] pb-[1.3rem] text-[#3c3b3b]'>Enter the fields below to get started</p>
-                                                        <button onClick={()=>googleAuth} className='shadow-md bg-white border-[#e1e1e1] border-[1px] rounded-[5px] w-full min-h-[42px] flex items-center justify-center space-x-2 hover:bg-[#f1f1f1]'>
+                                                        
+                                                        <button onClick={()=> !userToken ? googleAuthSignin() : navigate('/user/dashboard')} className='shadow-md bg-white border-[#e1e1e1] border-[1px] rounded-[5px] w-full min-h-[42px] flex items-center justify-center space-x-2 hover:bg-[#f1f1f1]'>
                                                                 <img src={googleicon} alt='google-icon' className='w-[20px] h-[20px]'/>
                                                                 <p className='text-black font-bold text-[14px]'> Sign in with Google</p>
                                                         </button>
+
 
                                                         <div className="flex w-full items-center my-4">
                                                                 <div className="flex-1 w-full h-[1px] bg-gray-300"></div>
@@ -178,6 +258,7 @@ const Signup = () => {
                                                                             <label className='text-[15px] text-[#636363]'>Full name*</label>
                                                                             <input type="text" name='fullName' 
                                                                                     placeholder='Enter name'
+                                                                                    value={signupFormFieldData.fullName}
                                                                                     onChange={(e)=>{ updateSignupFormFieldData({...signupFormFieldData, fullName: e.target.value })}}
                                                                                     className='bg-inherit px-2 border-[#e1e1e1] border-[1px] rounded-[5px] w-full h-[42px] text-black text-[16px] focus:border-greyMainBackground focus:bg-greyMainBackground focus:outline-none' 
                                                                             />
@@ -187,6 +268,7 @@ const Signup = () => {
                                                                             <label className='text-[15px] text-[#636363]'>Email*</label>
                                                                             <input type="email" name='email' 
                                                                                     placeholder='Enter email'
+                                                                                    value={signupFormFieldData.email}
                                                                                     onChange={(e)=>{ updateSignupFormFieldData({...signupFormFieldData, email: e.target.value })}}
                                                                                     className='bg-inherit px-2 border-[#e1e1e1] border-[1px] rounded-[5px] w-full h-[42px] text-black text-[16px] focus:border-greyMainBackground focus:bg-greyMainBackground focus:outline-none' 
                                                                             />
@@ -196,12 +278,12 @@ const Signup = () => {
                                                                             <label className='text-[15px] text-[#636363]'>Password*</label>
                                                                             <div className='relative'>
                                                                                 <input
+                                                                                    value={signupFormFieldData.password}
                                                                                     type={showPassword ? 'text' : 'password'}
                                                                                     name='password'
                                                                                     placeholder='Enter password'
                                                                                     onBlur={()=>updatePasswordActive(false)}
-                                                                                    onFocus={()=>updatePasswordActive(true)}
-                                                                                    onChange={(e)=>{ updateSignupFormFieldData({...signupFormFieldData, password: e.target.value }); passwordCheck(e.target.value, )}}
+                                                                                    onChange={(e)=>{updatePasswordActive(true); updateSignupFormFieldData({...signupFormFieldData, password: e.target.value }); passwordCheck(e.target.value, )}}
                                                                                     className='bg-inherit px-2 border-[#e1e1e1] border-[1px] rounded-[5px] w-full h-[42px] pr-[30px] text-black text-[16px] focus:border-greyMainBackground focus:bg-greyMainBackground focus:outline-none'
                                                                                 />
                                                                                 <div
@@ -217,6 +299,7 @@ const Signup = () => {
                                                                             <label className='text-[15px] text-[#636363]'>Confirm password*</label>
                                                                             <div className='relative'>
                                                                                 <input
+                                                                                    value={signupFormFieldData.confirmPassword}
                                                                                     type={showPasswordtwo ? 'text' : 'password'}
                                                                                     name='password2'
                                                                                     placeholder='Enter password'
@@ -252,7 +335,17 @@ const Signup = () => {
                                                         <div className='py-[1rem]'></div>
                                                         
 
-                                                        <button onClick={()=> submitSignupData()} className='bg-purpleSubColor px-2 text-white border-purpleSubColor border-[1px] rounded-[5px] w-full h-[45px] transition-properties hover:bg-[#181762]'>Sign up</button>
+                                                        <button disabled = {buttonLoadingAnimation ? true : false} 
+                                                                onClick={()=> submitSignupData()} 
+                                                                className='bg-purpleSubColor flex justify-center items-center px-2 text-white border-purpleSubColor border-[1px] rounded-[5px] w-full h-[45px] transition-properties hover:bg-[#181762]'>
+                                                                {buttonLoadingAnimation ? 
+                                                                        <img src = {whiteBtnLoader} className='w-[30px] h-[30px]' alt='loader'/>    
+                                                                    :
+                                                                        <>
+                                                                            <p>Sign up</p>
+                                                                        </>
+                                                                }
+                                                        </button>
 
                                                         <div className='py-[1rem] text-[#3c3b3b] text-[14px]'>Have an account? <Link className='text-black font-bold' to = '/signin'>Sign in</Link></div>
             

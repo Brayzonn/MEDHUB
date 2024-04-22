@@ -2,7 +2,7 @@ import Dropzone from 'react-dropzone';
 import { useState } from "react";
 
 import {DropDownListNurse} from "../globalComponents/DropDownList";
-import InputForm from '../globalComponents/InputForm';
+import {NurseInputForm} from '../globalComponents/InputForm';
 
 
 
@@ -73,7 +73,7 @@ return (
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lx:grid-cols-4 gap-[1rem]">
-                  <InputForm InputFormData = {InputFormData} />
+                  <NurseInputForm prevValues={addNurseForm} InputFormData = {InputFormData} />
 
                   <DropDownListNurse allNurseDropDownContainer = {dropdownContainer}   setNurseSubmitFormDropdown = {setAddNurseForm}/>
           </div>

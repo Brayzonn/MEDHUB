@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 import ConfirmationDialog from '../globalComponents/ConfirmationDialog';
 import EditPatient from "./EditPatient";
 import AdmitPatients from "./AdmitPatients";
+import { useGlobalContext } from '../../context/useGlobalContext';
 
 import userplaceholder from '../../images/userplaceholderlogo.png';
 import emailIcon from '../../images/mailicon.png';
@@ -33,6 +34,16 @@ interface PatientProfileProps {
 }
 
 const PatientProfile: React.FC<PatientProfileProps> = ({patientData, updatePatientProfile, updatePatientProfileVisibility, updatePatientEditState, patientEditState, isPatientProfileVisible}) => {
+
+  const {allPatientData} = useGlobalContext();
+
+  const activePatientProfileString = sessionStorage.getItem('activePatientProfile');
+
+  useEffect(()=>{
+        if (activePatientProfileString) {
+           const parsedActivePatientProfile = JSON.parse(activePatientProfileString);
+        }        
+  }, [activePatientProfileString]);
   
   const [confirmPatientDelete, updateConfirmPatientDelete] = useState<boolean>(false);
   const [isAdmitPatientActive, updateIsAdmitPatientActive] = useState<boolean>(false);
@@ -77,7 +88,7 @@ const PatientProfile: React.FC<PatientProfileProps> = ({patientData, updatePatie
                                     <img src={userplaceholder} alt="profile" className="w-[120px] h-[120px] border border-inherit rounded-full" />
                                     
                                     <div className='flex flex-col space-y-2'>
-                                            <h3 className='text-[24px] font-bold text-black'>John Doe</h3>
+                                <h3 className='text-[24px] font-bold text-black'>{}</h3>
                                             <div className='flex items-center flex-wrap w-full'>
                                                 <div className='flex items-center space-x-2 mr-[25px] mb-2'>
                                                         <img src={emailIcon} alt='emailIcon' className='w-[20px] h-[20px]' />

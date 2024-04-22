@@ -15,7 +15,13 @@ export interface InputFormProps{
 export interface DecodedDataInterface {
         UserId: string, 
         role: string, 
-        UserName:string,
+        userName:string,
+}
+
+export interface DecodedJwt{
+        exp : number,
+        iat : number,
+        id: DecodedDataInterface
 }
 
 //dashboard data props
@@ -32,18 +38,20 @@ export interface AddDoctorFormInterface {
         doctorSpecialty: string,
         doctorAddress: string,
         doctorPhone: string,
+        doctorEmail: string,
         doctorAge: string,
         doctorName: string,
         doctorDegree: string,
         employmentType: string,
-        doctorDept: string,
+        doctorDepartment: string,
         doctorImage: string,
-        doctorjoindate: string,
+        doctorJoinDate: string,
 }
 
 export interface DoctorProps {
         profile: { doctorName: string; doctorImage: string };
         doctorDepartment: string;
+        doctorEmail: string,
         doctorSpecialty: string;
         doctorJoinDate: string;
         doctorAddress: string,
@@ -58,6 +66,7 @@ export interface DoctorProps {
 export interface AdmissionProps {
         buttonAction?: ()=> void,
         roomNumber: string,
+        checkinDate: string,
         roomStatus: string,
         occupantName: string,
 }
@@ -110,7 +119,7 @@ export interface PatientProps {
 
 //staff
 export interface StaffProps {
-        profile: { staffName: string; staffImage: string };
+        profile: { staffName: string, staffImage: string },
         staffAge: string,
         staffDateOfBirth: string,
         staffTimeRole: string,

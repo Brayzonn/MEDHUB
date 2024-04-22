@@ -4,66 +4,85 @@ import { TableColumn } from 'react-data-table-component';
 import AddPatient from "./AddPatient";
 import PatientTable from "./PatientTable";
 import PatientProfile from "./PatientProfile";
+import {PatientProps} from '../DataTypes'
+import { useGlobalContext } from '../../context/useGlobalContext';
 
 import { CiSearch } from "react-icons/ci";
 import { FaChevronRight } from "react-icons/fa";
 
 const AllPatients = () => {
 
+    const {allPatientData} = useGlobalContext();
 
-
-    //data for patient table
-    interface RowData {
-            profile: { patientname: string; patientImage: string };
-            patientID: string;
-            patientNotes: [] ;
-            patientAge: string;
-            patientBloodType: string;
-            patientHeight: string;
-            patientGenotype: string;
-            patientWeight: string;
-            patientConditions: []; 
-            patientJoindate: string;
-            patientBirthDate: string;
-            patientPhoneNumber: string;
-            patientEmail: string;
-            admissionStatus:boolean;
-            patientEMO: string;
-    }
-
-    const [searchResults, setSearchResults] = useState<RowData []>([])
+    const [searchResults, setSearchResults] = useState<PatientProps []>([])
     const [isInputActive, setInputIsActive] = useState<boolean>(false)
     const [allPatientsBorder, updateAllPatientsBorder] = useState<boolean>(true);
     const [addPatientsBorder, updateAddPatientsBorder] = useState<boolean>(false);
     const [patientEditState, updatePatientEditState] = useState<boolean>(false);
+    const [activePatientProfile, updateActivePatientProfile] = useState<PatientProps>();
 
-    const doctorProfileData = [
-        {header: 'Patient Name', data: 'grey dans'},
-    ]
-  
+    const [patientProfileData, updatePatientProfileData] = useState([
+        {header: 'Patient Name', identifier: 'patientName', data: ''},
+        {header: 'Patient ID', identifier: 'patientID', data: ''},
+        {header: 'Patient Notes', identifier: 'patientNotes', data: ''},
+        {header: 'Patient Age', identifier: 'patientAge', data: ''},
+        {header: 'Blood Type', identifier: 'patientBloodType', data: ''},
+        {header: 'Patient Height', identifier: 'patientHeight', data: ''},
+        {header: 'Patient Genotype', identifier: 'patientGenotype', data: ''},
+        {header: 'Patient Weight', identifier: 'patientWeight', data: ''},
+        {header: 'Patient Conditions', identifier: 'patientConditions', data: ''},
+        {header: 'Join Date', identifier: 'patientJoindate', data: ''},
+        {header: 'Patient Phone', identifier: 'patientPhoneNumber', data: ''},
+        {header: 'Patient Email', identifier: 'patientEmail', data: ''},
+        {header: 'Patient EMO', identifier: 'patientEMO', data: ''},  
+    ])
  
-  
     //filter patient data based off search parameters
     const searchInputValue = (searchValue: string) => {
-          const filtered : RowData[]= patientData.filter((row: RowData) =>
-              row.profile.patientname.toLowerCase().includes(searchValue.toLowerCase())
-          );
-          setSearchResults(filtered);
+        const filtered : PatientProps[]= allPatientData.filter((row: PatientProps) =>
+            row.profile.patientName.toLowerCase().includes(searchValue.toLowerCase())
+        );
+        setSearchResults(filtered);
     }
   
     const [isPatientProfileVisible, setPatientProfileVisibility] = useState<boolean>(false);
 
   
-    const fetchPatient = (patientID:string) =>{
+    const fetchPatient = (patientID:string) => {
+        const filtered = allPatientData.find((data) => data.patientID === patientID);
+        updateActivePatientProfile(filtered)
   
+        if (filtered) {
+            updatePatientProfileData((prevPatientData) =>
+                prevPatientData.map((item) => ({
+                        ...item,
+                        data: (filtered[item.identifier as keyof PatientProps] as string) || '',
+                }))
+            );
+        
+            setPatientProfileVisibility(true);
+        }
+    }
+
+    const EditPatientProfile = () =>{
+
+        if (activePatientProfile) {
+            sessionStorage.setItem('activePatientProfile', JSON.stringify(activePatientProfile));
+            updatePatientProfileData((prevPatientData) =>
+                prevPatientData.map((item) => ({
+                        ...item,
+                        data: (activePatientProfile[item.identifier as keyof PatientProps] as string) || '',
+                }))
+            );
+            setPatientProfileVisibility(false);         
+        }  
+
     }
   
-  
-  
-    const columns: TableColumn<RowData>[] = [
+    const columns: TableColumn<PatientProps>[] = [
             {
                   name: 'Patient',
-                  selector: (row) => row.profile.patientname,
+                  selector: (row) => row.profile.patientName,
             },
             {
                   name: 'ID',
@@ -88,35 +107,13 @@ const AllPatients = () => {
             {
                   name: 'Action',
                   cell: (row) =>(
-                        <button onClick={()=> {setPatientProfileVisibility(true); fetchPatient(row.profile.patientname); window.scrollTo(0, 400); }} className="w-[30px] h-[30px] flex justify-center items-center relative border bg-gradient-to-r from-slate-500 to-slate-800 border-white rounded-full">
+                        <button onClick={()=> {fetchPatient(row.profile.patientName); window.scrollTo(0, 400); }} className="w-[30px] h-[30px] flex justify-center items-center relative border bg-gradient-to-r from-slate-500 to-slate-800 border-white rounded-full">
                               <FaChevronRight className = 'text-white' />  
                         </button>
                   )
             }
     ];
   
-  
-    const patientData: RowData[]  = [
-        {
-            profile: { patientname: 'Eze', patientImage: '' },
-            patientID: '34',
-            patientNotes: [] ,
-            patientAge: '64',
-            patientBloodType: 'string',
-            patientHeight: 'string',
-            patientGenotype: 'string',
-            patientWeight: 'string',
-            patientConditions: [],
-            patientPhoneNumber: '',
-            patientJoindate: '03/2/2024',
-            patientBirthDate: '',
-            patientEmail: '',
-            admissionStatus: false,
-            patientEMO: '',
-        }
-        
-    ];
-
 
   return (
     <div className='overflow-hidden relative w-[75%] shadow-sm mt-[100px] mb-4 py-4 px-[2rem] mx-6 flex flex-col space-y-6 text-[#161616]  bg-gradient-to-r from-slate-50 to-slate-100 border border-white rounded-[15px] lx:w-[82%]'>
@@ -164,11 +161,11 @@ const AllPatients = () => {
 
                         <div className="min-h-[10rem] w-full flex flex-col justify-center items-center space-y-[2rem]">
                                 {!isInputActive ?
-                                    <PatientTable columns={columns} data={patientData} />
+                                    <PatientTable columns={columns} data={allPatientData} />
                                     :
                                     <PatientTable columns={columns} data={searchResults} />
                                 }
-                                {< PatientProfile patientEditState={patientEditState} updatePatientEditState = {updatePatientEditState} patientData={doctorProfileData} isPatientProfileVisible={isPatientProfileVisible} updatePatientProfileVisibility={setPatientProfileVisibility}/> }
+                                {< PatientProfile updatePatientProfile={EditPatientProfile} patientEditState={patientEditState} updatePatientEditState = {updatePatientEditState} patientData={patientProfileData} isPatientProfileVisible={isPatientProfileVisible} updatePatientProfileVisibility={setPatientProfileVisibility}/> }
                         </div>
                     </> 
                     : 
