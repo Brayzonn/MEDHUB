@@ -24,14 +24,14 @@ const AddDoctor = () => {
                 {buttonId: 'employmentType' , buttonName: ' Employment Type', listOptions : ['Full-time', 'Part-time'] }  ,      
         ]
 
-        const [InputFormData] = useState([
+        const InputFormData = [
                 {labelName: 'Doctor Name ',             labelSpan: '*',  inputName: 'doctorName',       inputType: 'text',      placeholder: 'John Doe'},
                 {labelName: 'Doctor Email ',            labelSpan: '*',  inputName: 'doctorEmail',      inputType: 'text',      placeholder: 'grey@gmail.com'},
                 {labelName: 'Doctor Phone Number',      labelSpan: '*',  inputName: 'doctorPhone',      inputType: 'tel',       placeholder: '+234 90 346 4578'},
                 {labelName: 'Doctor Age',               labelSpan: '*',  inputName: 'doctorAge',        inputType: 'number',    placeholder: '40'},
                 {labelName: 'Doctor Home Address ',     labelSpan: '*',  inputName: 'doctorAddress',    inputType: 'text',      placeholder: '3 Fieldgreen Drive, Lagos'},
                 {labelName: 'Doctor Join Date ',        labelSpan: '*',  inputName: 'doctorJoinDate',   inputType: 'date'},
-        ])
+        ]
 
         //dropzone for image upload
         const [Idimages, setIdImages] = useState<File>();
@@ -65,10 +65,10 @@ const AddDoctor = () => {
         })
 
         const submitAddDoctorForm = async () =>{
-                
+                       
                 try {
-                        updateButtonLoadingAnimation(true)
-                        if (Object.values(addDoctorForm).some(value => value === '')) {
+                        // updateButtonLoadingAnimation(true)
+                        if (Object.values(addDoctorForm).some(value => value === 'd')) {
                                 toast.error('Please fill in all fields.')  
                                 updateButtonLoadingAnimation(false)
                         } else {
@@ -78,48 +78,82 @@ const AddDoctor = () => {
                                 Object.entries(updatedDoctorForm).forEach(([key, value]) => {
                                       formData.append(key, value);
                                 })
+
                                 if (Idimages instanceof File) {
                                       formData.append('doctorImage', Idimages);
                                 }
 
+                                if (!userToken || !baseURL) {
+                                      toast.error('Authorization token or base URL is missing');
+                                      return;
+                                }
+              
                                 const addDoctorApiCall = await axios.post(`${baseURL}/api/user/addnewdoctor`, formData, {
                                         headers: {
                                                 Authorization: `Bearer ${userToken}`,
                                                 'Content-Type': 'multipart/form-data',  
                                         },
                                 });
-        
-                                const addDoctorErrorResponseData = addDoctorApiCall.data.message;
-                                const addDoctorResponseStatus: boolean =  addDoctorApiCall.data.status;
-                           
+                              
+                                console.log(addDoctorApiCall)
 
-                                if(addDoctorResponseStatus === false){
-                                        toast.error(addDoctorErrorResponseData)
+                                const addDoctorResponseMessage: string =  addDoctorApiCall.data.message;
+            
+                                if(addDoctorApiCall.status === 204){
+                                        // setAddDoctorForm({
+                                        //         doctorSpecialty: '',
+                                        //         doctorAddress: '',                
+                                        //         doctorPhone: '',
+                                        //         doctorAge: '',
+                                        //         doctorName:'',
+                                        //         doctorEmail: '',
+                                        //         doctorDegree: '',
+                                        //         employmentType: '',
+                                        //         doctorDepartment: '',
+                                        //         doctorImage: '',
+                                        //         doctorJoinDate: '',
+                                        // })
+                                        console.log('a')
                                         updateButtonLoadingAnimation(false)
-                                }
-                                else{
-                                        setAddDoctorForm({
-                                                doctorSpecialty: '',
-                                                doctorAddress: '',                
-                                                doctorPhone: '',
-                                                doctorAge: '',
-                                                doctorName:'',
-                                                doctorEmail: '',
-                                                doctorDegree: '',
-                                                employmentType: '',
-                                                doctorDepartment: '',
-                                                doctorImage: '',
-                                                doctorJoinDate: '',
-                                        })
-                                        setIdImages(undefined)
-                                        toast.success('Doctor added successfully')
+                                        // setIdImages(undefined)
+                                        toast.error(addDoctorResponseMessage) 
+                                } else if(addDoctorApiCall.status === 200){
+                                        // setAddDoctorForm({
+                                        //         doctorSpecialty: '',
+                                        //         doctorAddress: '',                
+                                        //         doctorPhone: '',
+                                        //         doctorAge: '',
+                                        //         doctorName:'',
+                                        //         doctorEmail: '',
+                                        //         doctorDegree: '',
+                                        //         employmentType: '',
+                                        //         doctorDepartment: '',
+                                        //         doctorImage: '',
+                                        //         doctorJoinDate: '',
+                                        // })
+                                        console.log('b')
+                                        updateButtonLoadingAnimation(false)
+                                        // setIdImages(undefined)
+                                        toast.error(addDoctorResponseMessage)      
                                 }  
-                                updateButtonLoadingAnimation(false)
                         }
                               
                         
-                } catch (error) {
-                        console.log(error)
+                } catch (error) {  
+                        if (axios.isAxiosError(error)) {
+                                if (error.response && error.response.data && error.response.data.message) {
+                                        toast.error(`Error: ${error.response.data.message}`);
+                                        console.error('Unexpected error:', error);
+                                } else {
+                                        toast.error('Something went wrong');
+                                        console.error('Unexpected error2:', error);
+                                }
+                                updateButtonLoadingAnimation(false);
+                        } else {
+                                console.error('Unexpected error:', error);
+                                toast.error('An unexpected error occurred');
+                                updateButtonLoadingAnimation(false);
+                        }
                 }
         }
 
@@ -140,7 +174,7 @@ const AddDoctor = () => {
                     </Dropzone>  
 
                     {stringIdimages !== '' && <button 
-                        onClick={()=>setStringIdImages('')}
+                        onClick={()=>{setStringIdImages(''); setIdImages(undefined)}}
                         className="transition-properties text-[13px] font-[600] flex justify-center items-center bg-red-500 text-white w-[20px] h-[20px] border border-red-50 rounded-md"
                     >
                         X

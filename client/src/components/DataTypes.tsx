@@ -62,6 +62,27 @@ export interface DoctorProps {
         doctorID: string,
 }
 
+interface DoctorProfileListProps{
+        header: string ,
+        data: string,
+        identifier: string,
+}
+
+export interface DoctorProfileProps {
+        doctorData: DoctorProfileListProps[],
+        updateDoctorProfileState:React.Dispatch<React.SetStateAction<boolean>>,
+        setIsConfirmationDialogOpen: React.Dispatch<React.SetStateAction<boolean>>,
+        isConfirmationDialogOpen: boolean,
+        deleteDoctorFunction: (doctorID: string) => void,
+        doctorEditState: boolean,
+        updateEditDoctorState:React.Dispatch<React.SetStateAction<boolean>>
+        activeDoctor: DoctorProps,
+        updateButtonLoadingAnimation: React.Dispatch<React.SetStateAction<boolean>>,
+        buttonLoadingAnimation: boolean,
+        isDoctorProfileVisible: boolean,
+        updateProfileVisibility: React.Dispatch<React.SetStateAction<boolean>>,
+}
+
 //admissions
 export interface AdmissionProps {
         buttonAction?: ()=> void,

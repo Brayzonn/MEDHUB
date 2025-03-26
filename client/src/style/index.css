@@ -1,8 +1,21 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@import "tailwindcss";
 
+@theme {
+ 
+    --breakpoint-ssm: 305px;
+    --breakpoint-st: 370px;
+    --breakpoint-sm: 558px;
+    --breakpoint-mi: 700px;
+    --breakpoint-md: 891px;
+    --breakpoint-lg: 976px;
+    --breakpoint-lx: 1175px;
+    --breakpoint-xl: 1440px;
 
+    --color-purpleSubColor: #201E78;
+    --color-greyMainBackground: #F4F7FC;
+    --color-greyText: #ABABAB;
+    --color-blackText: #252525;
+}
 
 .colored-img {
       filter: brightness(0) invert(1);

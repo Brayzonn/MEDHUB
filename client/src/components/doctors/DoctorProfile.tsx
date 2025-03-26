@@ -1,5 +1,5 @@
 
-import {DoctorProps} from '../DataTypes';
+import {DoctorProfileProps} from '../DataTypes';
 import EditDoctor from './EditDoctor';
 import ConfirmationDialog from '../globalComponents/ConfirmationDialog';
 
@@ -15,31 +15,11 @@ import { FaChevronDown } from "react-icons/fa6";
 // import { useState } from 'react';
 
 
-interface DoctorProfileListProps{
-    header: string ,
-    data: string,
-    identifier: string,
-}
-interface DoctorProfileProps {
-    doctorData: DoctorProfileListProps[],
-    updateDoctorProfileState:React.Dispatch<React.SetStateAction<boolean>>,
-    setIsConfirmationDialogOpen: React.Dispatch<React.SetStateAction<boolean>>,
-    isConfirmationDialogOpen: boolean,
-    deleteDoctorFunction: (doctorID: string) => void,
-    doctorEditState: boolean,
-    updateEditDoctorState:React.Dispatch<React.SetStateAction<boolean>>
-    activeDoctor: DoctorProps,
-    updateButtonLoadingAnimation: React.Dispatch<React.SetStateAction<boolean>>,
-    buttonLoadingAnimation: boolean,
-    isDoctorProfileVisible: boolean,
-    updateProfileVisibility: React.Dispatch<React.SetStateAction<boolean>>,
-}
-
 const DoctorProfile: React.FC<DoctorProfileProps> = ({activeDoctor, updateEditDoctorState, buttonLoadingAnimation, setIsConfirmationDialogOpen, deleteDoctorFunction, isConfirmationDialogOpen, isDoctorProfileVisible, updateProfileVisibility, doctorData, doctorEditState}) => {
   
   const editDoctorProfileFunc = () =>{
         updateProfileVisibility(false);
-        updateEditDoctorState(true);   
+        updateEditDoctorState(true);  
   }
 
   return (
@@ -64,7 +44,7 @@ const DoctorProfile: React.FC<DoctorProfileProps> = ({activeDoctor, updateEditDo
 
                   <div className="w-full min-h-full flex flex-col space-y-[1rem]">
                         <div className="w-full flex space-x-6 ">
-                                <img src={activeDoctor.profile.doctorName? activeDoctor.profile.doctorName : userplaceholder} alt="profile" className="w-[120px] h-[120px] border border-inherit rounded-full" />
+                                <img src={activeDoctor.profile.doctorImage? activeDoctor.profile.doctorImage : userplaceholder} alt="profile" className="w-[120px] h-[120px] border border-inherit rounded-full" />
 
                                 <div className='flex flex-col space-y-2'> 
                                         <div className='flex items-center space-x-1'>
@@ -72,7 +52,7 @@ const DoctorProfile: React.FC<DoctorProfileProps> = ({activeDoctor, updateEditDo
                                                 <p className='text-[20px] text-[#555555]'>({activeDoctor.doctorSpecialty})</p>
                                         </div>
 
-                                        <div className='flex items-center flex-wrap max-w-[500px]'>
+                                        <div className='flex items-center max-w-[700px]'>
                                                 <div className='flex items-center space-x-2 mr-[25px] mb-2'>
                                                         <img src={emailIcon} alt='emailIcon' className='w-[20px] h-[20px]' />
                                                         <a href={`mailto: ${activeDoctor.doctorEmail}`}  className='text-[#555555] text-[14px]'>{activeDoctor.doctorEmail}</a>
@@ -109,7 +89,7 @@ const DoctorProfile: React.FC<DoctorProfileProps> = ({activeDoctor, updateEditDo
                               </div>
                         </div>
                         
-                        <div className='w-full min-h-[18rem] grid grid-cols-5 gap-[1rem]'>
+                        <div className='w-full min-h-[10rem] grid grid-cols-5 gap-[1rem]'>
                               {doctorData.map((profile, index) =>(
                                   <div key={index} className='flex flex-col space-y-3'>
                                         <p className='text-[14px] font-[500] text-[#999999]'>{profile.header}</p>

@@ -10,7 +10,6 @@ import AddDoctor from "./AddDoctor";
 import Table from "./Table";
 
 
-
 import { CiSearch } from "react-icons/ci";
 import { FaChevronRight } from "react-icons/fa";
 
@@ -19,7 +18,7 @@ import { FaChevronRight } from "react-icons/fa";
 const AllDoctors = () => {
 
       const userToken = sessionStorage.getItem('userToken');
-      const {allDoctorData} =  useGlobalContext();
+      const {allDoctorData, baseURL} =  useGlobalContext();
 
       const [buttonLoadingAnimation, updateButtonLoadingAnimation] = useState<boolean>(false)
       const [allDoctorState, updateAllDoctorState] = useState<boolean>(true);
@@ -103,7 +102,7 @@ const AllDoctors = () => {
       const deleteDoctorFunction = async (doctorID: string) =>{
             try {
                   updateButtonLoadingAnimation(true)
-                  const deleteDoctorApiCall = await axios.delete(`/api/user/deletedoctor/${doctorID}`,
+                  const deleteDoctorApiCall = await axios.delete(`${baseURL}/api/user/deletedoctor`,
                   {
                         headers: {
                               Authorization: `Bearer ${userToken}`,
@@ -114,22 +113,52 @@ const AllDoctors = () => {
                         },
                   });
 
-                  const deleteDoctorErrorResponseData = deleteDoctorApiCall.data.errorMessage;
-                  const deleteDoctorResponseStatus: boolean =  deleteDoctorApiCall.data.status;
+                  const deleteDoctorErrorResponseData = deleteDoctorApiCall.data.message;
 
-                  if(deleteDoctorResponseStatus === false){
-                          toast.error(deleteDoctorErrorResponseData)
-                  }
-                  else{
-                          toast.success('Doctor deleted successfully')
-                  }        
+                  if(deleteDoctorApiCall.status === 200){
+                        toast.success(deleteDoctorErrorResponseData)
+                  } else if(deleteDoctorApiCall.status === 404){                  
+                        toast.error(deleteDoctorErrorResponseData)
+                  }else if(deleteDoctorApiCall.status === 500){                  
+                        toast.error(deleteDoctorErrorResponseData)
+                  }   
+                      
                   updateButtonLoadingAnimation(false)
                   setIsConfirmationDialogOpen(false)
+                  setProfileVisibility(false)
             } catch (error) {
-                  console.log(error)  
-            } 
+                  if (axios.isAxiosError(error)) {
+                        if (error.response && error.response.data && error.response.data.message) {
+                              toast.error(`Error: ${error.response.data.message}`);
+                        } else {
+                              toast.error('Something went wrong');
+                        }
+                        updateButtonLoadingAnimation(false);
+                  } else {
+                        console.error('Unexpected error:', error);
+                        toast.error('An unexpected error occurred');
+                        updateButtonLoadingAnimation(false);
+                  }
+                }
+                
             
       }
+
+      //clear Active Doctor Profile when user leaves page
+      window.addEventListener('beforeunload', () => {
+            sessionStorage.removeItem('activeDoctorProfile');
+      });
+        
+      window.addEventListener('popstate', () => {
+            sessionStorage.removeItem('activeDoctorProfile');
+      });
+        
+      document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                sessionStorage.removeItem('activeDoctorProfile');
+            }
+      });
+        
 
       //doctor table
       const columns: TableColumn<DoctorProps>[] = [
@@ -196,33 +225,33 @@ const AllDoctors = () => {
 
                     {allDoctorState ? 
                             <>  
-                                <div className='relative w-full flex justify-between items-center'>
-                                        <p className='text-[14px] font-bold'>All Doctors</p>
+                              <div className='relative w-full flex justify-between items-center'>
+                                    <p className='text-[14px] font-bold'>All Doctors</p>
 
-                                        <div className="relative w-[300px] h-[45px]">
-                                            <CiSearch className="absolute left-2 top-1/2 transform -translate-y-1/2" />
-                                            <input 
-                                                type='text'
-                                                name='searchdoctors'
-                                                onBlur={()=> setInputIsActive(false) }
-                                                onChange={(e)=> {searchInputValue(e.target.value); setInputIsActive(true)}}
-                                                placeholder='Search'
-                                                className='pl-8 bg-[#f3f3f8] px-2 border-white border-[1px] rounded-[5px] w-[300px] h-[45px] text-black text-[16px] focus:border-greyMainBackground focus:bg-greyMainBackground focus:outline-none'
-                                            />
-                                        </div>
-                                </div>
+                                    <div className="relative w-[300px] h-[45px]">
+                                          <CiSearch className="absolute left-2 top-1/2 transform -translate-y-1/2" />
+                                          <input 
+                                          type='text'
+                                          name='searchdoctors'
+                                          onBlur={()=> setInputIsActive(false) }
+                                          onChange={(e)=> {searchInputValue(e.target.value); setInputIsActive(true)}}
+                                          placeholder='Search'
+                                          className='pl-8 bg-[#f3f3f8] px-2 border-white border-[1px] rounded-[5px] w-[300px] h-[45px] text-black text-[16px] focus:border-greyMainBackground focus:bg-white focus:outline-none'
+                                          />
+                                    </div>
+                              </div>
 
-                                <div className="min-h-[10rem] w-full flex flex-col justify-center items-center space-y-[2rem]">
-                                        {!isInputActive ?
-                                            <Table columns={columns} data={allDoctorData} />
-                                                :   
-                                            <Table columns={columns} data={searchResults} />
-                                        }
-                                        < DoctorProfile  buttonLoadingAnimation = {buttonLoadingAnimation} updateButtonLoadingAnimation={updateButtonLoadingAnimation} deleteDoctorFunction = {deleteDoctorFunction} setIsConfirmationDialogOpen ={setIsConfirmationDialogOpen} isConfirmationDialogOpen ={isConfirmationDialogOpen} updateEditDoctorState ={updateEditDoctorState} activeDoctor = {activeDoctorProfile} doctorEditState={doctorEditState} updateDoctorProfileState = {setProfileVisibility} doctorData={doctorData} isDoctorProfileVisible={isProfileVisible} updateProfileVisibility={setProfileVisibility}/> 
-                                </div>
+                              <div className="min-h-[10rem] w-full flex flex-col justify-center items-center space-y-[2rem]">
+                                    {!isInputActive ?
+                                          <Table columns={columns} data={allDoctorData} />
+                                          :   
+                                          <Table columns={columns} data={searchResults} />
+                                    }
+                                    < DoctorProfile  buttonLoadingAnimation = {buttonLoadingAnimation} updateButtonLoadingAnimation={updateButtonLoadingAnimation} deleteDoctorFunction = {deleteDoctorFunction} setIsConfirmationDialogOpen ={setIsConfirmationDialogOpen} isConfirmationDialogOpen ={isConfirmationDialogOpen} updateEditDoctorState ={updateEditDoctorState} activeDoctor = {activeDoctorProfile} doctorEditState={doctorEditState} updateDoctorProfileState = {setProfileVisibility} doctorData={doctorData} isDoctorProfileVisible={isProfileVisible} updateProfileVisibility={setProfileVisibility}/> 
+                              </div>
                             </> 
-                            : 
-                                <AddDoctor />
+                              : 
+                            <AddDoctor />
                     }
                    
                   

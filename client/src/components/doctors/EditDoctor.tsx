@@ -2,20 +2,17 @@ import Dropzone from 'react-dropzone';
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import { toast } from 'react-toastify';
-
-import {AddDoctorFormInterface, InputFormProps} from '../DataTypes';
+import {AddDoctorFormInterface} from '../DataTypes';
 import {DoctorDropDownList} from "../globalComponents/DropDownList";
 import ConfirmationDialog from '../globalComponents/ConfirmationDialog';
 import {DoctorInputForm} from '../globalComponents/InputForm';
 import { useGlobalContext } from '../../context/useGlobalContext';
 
 import whiteBtnLoader from '../../images/buttonloaderwhite.svg';
-import userplaceholder from '../../images/userplaceholderlogo.png';
-
 import { FaChevronDown } from "react-icons/fa6";
 import { MdSave } from "react-icons/md";
 import { RiDeleteBin3Line } from "react-icons/ri";
-import { CiEdit } from "react-icons/ci";
+
 
 interface EditDoctorProps {
     updateDoctorProfileState: React.Dispatch<React.SetStateAction<boolean>>,
@@ -26,53 +23,61 @@ interface EditDoctorProps {
 const EditDoctor: React.FC<EditDoctorProps> = ({updateDoctorProfileState, updateEditDoctorState, updateProfileVisibility }) => {
     
     const activeDoctorProfile = sessionStorage.getItem('activeDoctorProfile');
+    const userToken = sessionStorage.getItem('userToken');
 
     const {baseURL} =  useGlobalContext();
 
-    const [buttonLoadingAnimation, updateButtonLoadingAnimation] = useState<boolean>(false)
+    const [buttonLoadingAnimation, updateButtonLoadingAnimation] = useState<boolean>(false);
     const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
 
-    const [parsedActiveDoctorProfile, updateParsedActiveDoctorProfile] = useState<AddDoctorFormInterface>()
-
-    const activeDoctorProfileSpoof: AddDoctorFormInterface = {
-        doctorSpecialty: '',
-        doctorAddress: '',
-        doctorPhone: '',
-        doctorAge: '',
-        doctorName:'',
-        doctorDegree: '',
-        employmentType: '',
-        doctorDepartment: '',
-        doctorEmail: '',
-        doctorImage: '',
-        doctorJoinDate: '',
-    }
+    const [parsedDoctorID, updateParsedDoctorID] = useState<string>('');
 
     const dropdownContainer = [
         {buttonId: 'doctorSpecialty' , buttonName: 'Choose Specialty', listOptions : ['Pediatrics', 'Cardiology', 'Psychiatry', 'Internal Medicine', 'Obstetrics and Gynecology', 'Surgery', 'Anesthesiology', 'Radiology'] },
         {buttonId: 'doctorDegree' , buttonName: ' Choose Degree', listOptions : ['MD', 'DO', 'PharmD', 'MBBS'] }  ,  
-        {buttonId: 'doctorDept' , buttonName: ' Choose Department', listOptions : ['General', 'Psychiatry', 'Obstetrics', 'Gynecology'] }  ,   
+        {buttonId: 'employmentType' , buttonName: ' Employment Type', listOptions : ['Full-time', 'Part-time'] }  ,      
+        {buttonId: 'doctorDepartment' , buttonName: ' Choose Department', listOptions : ['General', 'Psychiatry', 'Obstetrics', 'Gynecology'] }  ,   
     ]
 
-    const [InputFormData, updateInputFormData] = useState([
+    const InputFormData = [
         {labelName: 'Doctor Name ', labelSpan: '*', inputValue: '', inputName: 'doctorName', inputType: 'text', placeholder: 'John Doe'},
         {labelName: 'Doctor Phone Number', labelSpan: '*',  inputValue: '', inputName: 'doctorPhone', inputType: 'tel', placeholder: '+234 90 346 4578'},
+        {labelName: 'Doctor Email ',      labelSpan: '*',  inputName: 'doctorEmail',      inputType: 'text',      placeholder: 'grey@gmail.com'},
         {labelName: 'Doctor Age', labelSpan: '*',  inputValue: '',  inputName: 'doctorAge', inputType: 'number', placeholder: '40'},
         {labelName: 'Doctor Home Address ', labelSpan: '*',  inputValue: '',  inputName: 'doctorAddress', inputType: 'text', placeholder: '3 Fieldgreen Drive, Lagos'},
-        {labelName: 'Doctor Join Date ', labelSpan: '*',  inputValue: '',  inputName: 'doctorjoindate', inputType: 'date'},
-    ])
+        {labelName: 'Doctor Join Date ', labelSpan: '*',  inputValue: '',  inputName: 'doctorJoinDate', inputType: 'date'},
+    ]
 
+    //get the active doctor profile from storage and perform component value updates
     useEffect(()=>{
         if(activeDoctorProfile){
             const activeDoctorProfileToObject = JSON.parse(activeDoctorProfile)
-            updateParsedActiveDoctorProfile(activeDoctorProfileToObject)
-            
-            updateInputFormData((prevData)=>
-                    prevData.map((item) => ({
-                        ...item,
-                        inputValue: (activeDoctorProfileToObject[item.inputName as keyof InputFormProps] as string) || '',
-                    }))
-            )    
+            updateParsedDoctorID(activeDoctorProfileToObject.doctorID)
+
+            setIdImages(activeDoctorProfileToObject.profile.doctorImage)
+            setUpdateDoctorForm((prevDoctorForm) => {
+                let updatedDoctorForm = { ...prevDoctorForm };
+                dropdownContainer.forEach((dropdown) => {
+                        if (activeDoctorProfileToObject.hasOwnProperty(dropdown.buttonId)) {
+                                updatedDoctorForm = {
+                                        ...updatedDoctorForm,
+                                        [dropdown.buttonId]: activeDoctorProfileToObject[dropdown.buttonId],
+                                };
+                        }
+                });
+                InputFormData.forEach((dropdown) => {
+                        if (activeDoctorProfileToObject.hasOwnProperty(dropdown.inputName)) {
+                                updatedDoctorForm = {
+                                        ...updatedDoctorForm,
+                                        doctorName: activeDoctorProfileToObject.profile.doctorName,
+                                        doctorImage: activeDoctorProfileToObject.profile.doctorImage,
+                                        [dropdown.inputName]: activeDoctorProfileToObject[dropdown.inputName],
+                                };
+                        }
+                });
+                return updatedDoctorForm;
+            });  
+
         }
     }, [activeDoctorProfile])
 
@@ -90,53 +95,66 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateDoctorProfileState, update
                 setUpdateDoctorForm({...updateDoctorForm, doctorImage:imageUrl })
         }    
     };
+
     //edit doctor form submit logic
     const [updateDoctorForm, setUpdateDoctorForm] = useState<AddDoctorFormInterface>({
-        doctorSpecialty: '',
-        doctorAddress: '',
-        doctorPhone: '',
-        doctorAge: '',
-        doctorName:'',
-        doctorDegree: '',
-        employmentType: '',
-        doctorDepartment: '',
-        doctorEmail: '',
-        doctorImage: '',
-        doctorJoinDate: '',
+                doctorSpecialty: '',
+                doctorAddress: '',
+                doctorPhone: '',
+                doctorAge: '',
+                doctorName:'',
+                doctorDegree: '',
+                employmentType: '',
+                doctorDepartment: '',
+                doctorEmail: '',
+                doctorImage: '',
+                doctorJoinDate: '',
     })
 
     const submitUpdateDoctorForm = async () =>{
         try {
                 updateButtonLoadingAnimation(true)
-                const updateDoctorApiCall = await axios.post(`${baseURL}/api/user/updatedoctor`, {...updateDoctorForm})
-                const updateDoctorResponseData = updateDoctorApiCall.data.errorMessage;
-                const updateDoctorResponseStatus: boolean =  updateDoctorApiCall.data.status;
+                 
+                const formData = new FormData();
+                formData.append('doctorID', parsedDoctorID)
+                Object.entries(updateDoctorForm).forEach(([key, value]) => {
+                        formData.append(key, value);
+                })
 
-                if(updateDoctorResponseStatus === false){
-                        toast.error(updateDoctorResponseData)
-                }
-                else{
-                        setUpdateDoctorForm({
-                                doctorSpecialty: '',
-                                doctorAddress: '',
-                                doctorPhone: '',
-                                doctorAge: '',
-                                doctorName:'',
-                                doctorDegree: '',
-                                employmentType: '',
-                                doctorDepartment: '',
-                                doctorEmail: '',
-                                doctorImage: '',
-                                doctorJoinDate: '',
-                        })
+                const updateDoctorApiCall = await axios.post(`${baseURL}/api/user/updatedoctorprofile`, formData, {
+                        headers: {
+                                Authorization: `Bearer ${userToken}`,
+                                'Content-Type': 'multipart/form-data',  
+                        },
+                });
 
-                        toast.success('Doctor Profile Updated Successfully')
+                const updateDoctorResponseData = updateDoctorApiCall.data.message;
+                
+                if(updateDoctorApiCall.status === 204){
+                        toast.error('Profile not updated')
                         updateEditDoctorState(false)
                         updateDoctorProfileState(true)
+                        updateButtonLoadingAnimation(false)
+                } else if(updateDoctorApiCall.status === 200){                  
+                        toast.success(updateDoctorResponseData)
+                        updateEditDoctorState(false)
+                        updateButtonLoadingAnimation(false)
+                        updateDoctorProfileState(true) 
                 }  
-                updateButtonLoadingAnimation(false)  
+
             } catch (error) {
-                        console.log(error)
+                if (axios.isAxiosError(error)) {
+                        if (error.response && error.response.data && error.response.data.message) {
+                                toast.error(`Error: ${error.response.data.message}`);
+                        } else {
+                                toast.error('Something went wrong');
+                        }
+                        updateButtonLoadingAnimation(false);
+                } else {
+                        console.error('Unexpected error:', error);
+                        toast.error('An unexpected error occurred');
+                        updateButtonLoadingAnimation(false);
+                }
             }
     }
       
@@ -164,27 +182,21 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateDoctorProfileState, update
                                 <div className="relative w-full min-h-[1rem] flex items-center space-x-1">
                                         <Dropzone onDrop={handleImageDrop} accept="image/jpeg, image/png, image/jpg, image/webp" >
                                                 {({ getRootProps, getInputProps }) => (
-                                                        <div {...getRootProps()} className="relative max-w-[150px] min-h-[150px]  flex justify-center items-center p-2 border border-white  rounded-full">
+                                                        <div {...getRootProps()} className="relative max-w-[120px] min-h-[100px] flex justify-center items-center p-2 border border-[#e9e9e9] rounded-sm">
                                                                 <input {...getInputProps()} />
-                                                                <img src={Idimages !== '' ? Idimages : userplaceholder} alt='Selected Image' className='transition-properties w-full h-full object-cover rounded-md' />
+                                                                {!Idimages && <p className='text-[14px]'>Click/Drag and drop here to select doctor image.</p>}
+                                                                {Idimages &&  <img src={Idimages} alt='Doctor Image' className='transition-properties w-full h-full object-cover rounded-md' />}
                                                         </div>
                                                 )}
                                         </Dropzone>  
 
-                                        {Idimages == '' && 
-                                                <div className='flex flex-col space-y-1'>
+                                        {Idimages != '' && 
+                                                <div className='flex flex-col space-y-1 pl-[1rem]'>
                                                         <button 
-                                                                onClick={()=>{setIdImages(''); setIsConfirmationDialogOpen(true)}}
+                                                                onClick={()=>{setIdImages('')}}
                                                                 className="transition-properties w-[23px] h-[23px] bg-red-600 text-white border border-red-600 text-[14px] rounded-md flex items-center justify-center space-x-2 hover:bg-red-400"
                                                         >
                                                                 <RiDeleteBin3Line className ="text-white"/>  
-                                                        </button>
-
-                                                        <button 
-                                                                onClick={()=>setIdImages('')}
-                                                                className="transition-properties w-[23px] h-[23px] bg-black text-white border border-black text-[14px] rounded-md flex items-center justify-center space-x-2 hover:bg-[#191919]"
-                                                        >
-                                                                <CiEdit className ="text-white"/>  
                                                         </button>
                                                 </div>
 
@@ -192,9 +204,9 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateDoctorProfileState, update
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 lx:grid-cols-4 gap-[1rem]">
-                                        <DoctorInputForm prevValues = {updateDoctorForm} onChangeFunc ={setUpdateDoctorForm} InputFormData = {InputFormData} />
+                                        <DoctorInputForm prevValues = {updateDoctorForm}  formValue = {updateDoctorForm} onChangeFunc ={setUpdateDoctorForm} InputFormData = {InputFormData} />
 
-                                        <DoctorDropDownList doctorInitialValues={parsedActiveDoctorProfile ?? activeDoctorProfileSpoof} allDropDownContainer = {dropdownContainer}   setSubmitFormDropdown = {setUpdateDoctorForm}/>
+                                        <DoctorDropDownList doctorInitialValues={updateDoctorForm} allDropDownContainer = {dropdownContainer}   setSubmitFormDropdown = {setUpdateDoctorForm}/>
                                 </div>
                                                         
 
