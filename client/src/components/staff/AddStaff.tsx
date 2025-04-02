@@ -13,7 +13,7 @@ const AddStaff = () => {
         {buttonId: 'staffTimeRole' , buttonName: 'Choose Role', listOptions : ['Day', 'Afternoon', 'Night'] },
     ]
 
-    const [InputFormData, updateInputFormData] = useState([
+    const [InputFormData] = useState([
         {labelName: 'Staff Name ', labelSpan: '*', inputName: 'staffName', inputType: 'text', placeholder: 'John Doe'},
         {labelName: 'Staff Email ', labelSpan: '*', inputName: 'staffEmail', inputType: 'email', placeholder: 'grey@gmail.com'},
         {labelName: 'Staff Address ', labelSpan: '*', inputName: 'staffAddress', inputType: 'text', placeholder: '5 Adetokumbo, Wuse'},

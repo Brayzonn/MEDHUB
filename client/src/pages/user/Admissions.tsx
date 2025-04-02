@@ -31,7 +31,7 @@ const Admissions = () => {
     
 ];
 
-  const [allRooms, updateAllRooms] = useState([
+  const [allRooms,] = useState([
               {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
               {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
               {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
@@ -52,7 +52,7 @@ const Admissions = () => {
 
   const [roomOptionsActive, updateRoomOptions]= useState<boolean>(false)
 
-  const [currentRoomOption, updateCurrentRoomOption ] = useState({
+  const [currentRoomOption,  ] = useState({
         roomId: '14C',
         occupantName: 'Grey Matters',
         occupantId: '674',

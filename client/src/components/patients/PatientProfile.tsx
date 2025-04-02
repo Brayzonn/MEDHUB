@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import ConfirmationDialog from '../globalComponents/ConfirmationDialog';
 import EditPatient from "./EditPatient";
 import AdmitPatients from "./AdmitPatients";
-import { useGlobalContext } from '../../context/useGlobalContext';
+// import { useGlobalContext } from '../../context/useGlobalContext';
 
 import userplaceholder from '../../images/userplaceholderlogo.png';
 import emailIcon from '../../images/mailicon.png';
@@ -35,13 +35,14 @@ interface PatientProfileProps {
 
 const PatientProfile: React.FC<PatientProfileProps> = ({patientData, updatePatientProfile, updatePatientProfileVisibility, updatePatientEditState, patientEditState, isPatientProfileVisible}) => {
 
-  const {allPatientData} = useGlobalContext();
+//   const {allPatientData} = useGlobalContext();
 
   const activePatientProfileString = sessionStorage.getItem('activePatientProfile');
 
   useEffect(()=>{
         if (activePatientProfileString) {
            const parsedActivePatientProfile = JSON.parse(activePatientProfileString);
+           console.log(parsedActivePatientProfile)
         }        
   }, [activePatientProfileString]);
   
@@ -49,7 +50,7 @@ const PatientProfile: React.FC<PatientProfileProps> = ({patientData, updatePatie
   const [isAdmitPatientActive, updateIsAdmitPatientActive] = useState<boolean>(false);
   const [isAddNoteActive, updateIsAddNoteActive] = useState<boolean>(false); 
 
-  const [allAvailableRooms, updateAllAvailableRooms] = useState([
+  const [allAvailableRooms, ] = useState([
         {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
         {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
         {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
@@ -60,6 +61,7 @@ const PatientProfile: React.FC<PatientProfileProps> = ({patientData, updatePatie
   const showSelectedRoom = (roomId: string)=>{
         updateIsAdmitPatientActive(false)
         updatePatientProfileVisibility(true)
+        console.log(roomId)
   }
 
   return (

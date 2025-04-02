@@ -1,3 +1,4 @@
+import { useGlobalContext } from '../../context/useGlobalContext';
 
 import {DoctorProfileProps} from '../DataTypes';
 import EditDoctor from './EditDoctor';
@@ -12,14 +13,20 @@ import whiteBtnLoader from '../../images/buttonloaderwhite.svg';
 import { FaTrash } from "react-icons/fa";
 import { MdEditSquare } from "react-icons/md";
 import { FaChevronDown } from "react-icons/fa6";
-// import { useState } from 'react';
 
 
-const DoctorProfile: React.FC<DoctorProfileProps> = ({activeDoctor, updateEditDoctorState, buttonLoadingAnimation, setIsConfirmationDialogOpen, deleteDoctorFunction, isConfirmationDialogOpen, isDoctorProfileVisible, updateProfileVisibility, doctorData, doctorEditState}) => {
-  
+const DoctorProfile: React.FC<DoctorProfileProps> = ({updateNewDoctorProfile, activeDoctor, updateEditDoctorState, buttonLoadingAnimation, setIsConfirmationDialogOpen, deleteDoctorFunction, isConfirmationDialogOpen, isDoctorProfileVisible, updateProfileVisibility, doctorData, doctorEditState}) => {
+        
+
+  const {fetchDoctor, baseURL} =  useGlobalContext();
+
   const editDoctorProfileFunc = () =>{
         updateProfileVisibility(false);
         updateEditDoctorState(true);  
+  }
+
+  const callUpdatedAllDoctorData = () =>{
+        fetchDoctor()
   }
 
   return (
@@ -44,7 +51,7 @@ const DoctorProfile: React.FC<DoctorProfileProps> = ({activeDoctor, updateEditDo
 
                   <div className="w-full min-h-full flex flex-col space-y-[1rem]">
                         <div className="w-full flex space-x-6 ">
-                                <img src={activeDoctor.profile.doctorImage? activeDoctor.profile.doctorImage : userplaceholder} alt="profile" className="w-[120px] h-[120px] border border-inherit rounded-full" />
+                                <img src={activeDoctor.profile.doctorImage ? `${baseURL}/images/${activeDoctor.profile.doctorImage}` : userplaceholder} alt="profile" className="w-[120px] h-[120px] border border-inherit rounded-full" />
 
                                 <div className='flex flex-col space-y-2'> 
                                         <div className='flex items-center space-x-1'>
@@ -99,7 +106,7 @@ const DoctorProfile: React.FC<DoctorProfileProps> = ({activeDoctor, updateEditDo
                         </div>
 
                         <div className='w-full flex justify-end items-end space-x-4'>
-                                <button onClick={()=>{sessionStorage.removeItem('activeDoctorProfile'); updateProfileVisibility(false);}} className="transition-properties w-[130px] h-[40px] bg-black text-white border border-black text-[14px] rounded-md flex items-center justify-center space-x-2 hover:border-[#121212] hover:bg-[#121212]">
+                                <button onClick={()=>{sessionStorage.removeItem('activeDoctorProfile'); callUpdatedAllDoctorData(); updateProfileVisibility(false);}} className="transition-properties w-[130px] h-[40px] bg-black text-white border border-black text-[14px] rounded-md flex items-center justify-center space-x-2 hover:border-[#121212] hover:bg-[#121212]">
                                         <FaChevronDown className ='text-white text-[14px]'/>
                                         <p>Close</p>
                                 </button>
@@ -125,7 +132,7 @@ const DoctorProfile: React.FC<DoctorProfileProps> = ({activeDoctor, updateEditDo
     </div>}
 
 
-    {(doctorEditState) && <EditDoctor updateProfileVisibility = {updateProfileVisibility}  updateDoctorProfileState ={updateProfileVisibility} updateEditDoctorState={updateEditDoctorState}/>}
+    {(doctorEditState) && <EditDoctor updateNewDoctorProfile = {updateNewDoctorProfile} updateProfileVisibility = {updateProfileVisibility}  updateDoctorProfileState ={updateProfileVisibility} updateEditDoctorState={updateEditDoctorState}/>}
     </>
   )
 }

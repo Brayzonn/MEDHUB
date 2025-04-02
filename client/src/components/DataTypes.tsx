@@ -33,7 +33,7 @@ export interface DashboardDataProps {
         staffCount: number,
 } 
 
-//doctor object props
+//doctor object props----------------------------
 export interface AddDoctorFormInterface {
         doctorSpecialty: string,
         doctorAddress: string,
@@ -62,6 +62,13 @@ export interface DoctorProps {
         doctorID: string,
 }
 
+export interface EditDoctorProps {
+        updateDoctorProfileState: React.Dispatch<React.SetStateAction<boolean>>,
+        updateEditDoctorState: React.Dispatch<React.SetStateAction<boolean>>,
+        updateProfileVisibility: React.Dispatch<React.SetStateAction<boolean>>,
+        updateNewDoctorProfile: (doctorID: string)=> void
+}
+
 interface DoctorProfileListProps{
         header: string ,
         data: string,
@@ -74,6 +81,7 @@ export interface DoctorProfileProps {
         setIsConfirmationDialogOpen: React.Dispatch<React.SetStateAction<boolean>>,
         isConfirmationDialogOpen: boolean,
         deleteDoctorFunction: (doctorID: string) => void,
+        updateNewDoctorProfile: (doctorID: string) => void,
         doctorEditState: boolean,
         updateEditDoctorState:React.Dispatch<React.SetStateAction<boolean>>
         activeDoctor: DoctorProps,
@@ -82,6 +90,8 @@ export interface DoctorProfileProps {
         isDoctorProfileVisible: boolean,
         updateProfileVisibility: React.Dispatch<React.SetStateAction<boolean>>,
 }
+//----------------------------
+
 
 //admissions
 export interface AdmissionProps {

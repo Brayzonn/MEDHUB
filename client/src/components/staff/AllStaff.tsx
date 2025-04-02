@@ -36,7 +36,7 @@ const AllStaff = () => {
     ])
   
     const fetchStaff = (staffID:string) =>{
-  
+            console.log(staffID)
     }
   
   

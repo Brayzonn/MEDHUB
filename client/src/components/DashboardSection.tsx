@@ -16,14 +16,12 @@ const DashboardSection = () => {
     const [admittedPatientsCount, updateAdmittedPatientsCount] = useState<number>()
 
     useEffect(() => {
-
         if (allDashData && allDashData.length > 0) {
                 updatePatientCount(allDashData[0].patientCount);
                 updateDoctorCount(allDashData[0].doctorCount)
                 updateStaffCount(allDashData[0].staffCount)
                 updateAdmittedPatientsCount(allDashData[0].admittedPatientsCount)
-        }
-            
+        }          
     }, [fetchDashboardData]);
 
     interface dahshboarddataSchema  {

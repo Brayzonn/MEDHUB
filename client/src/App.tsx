@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import AppContextExports from './context/context';
 import UserDash from './pages/user/UserDash';
 import Signin from './pages/auth/Signin';
 import Signup from './pages/auth/Signup';
@@ -17,12 +16,8 @@ import UserRoutes from './Routes/UserRoutes';
 
 function App() {
 
-  const { AppProvider } = AppContextExports;
-
   return (
-   
-        <AppProvider>
-             <Router>
+            <Router>
                   <Routes>
                         <Route path="*" element={<Signin />}/>
                         
@@ -39,13 +34,10 @@ function App() {
                               <Route path = '/user/admissions' element = {< Admissions />} /> 
                         </Route>
                   </Routes>
-              </Router>
 
-              <ToastContainer />
-        </AppProvider>
-
-        
-  )
+                  <ToastContainer />
+            </Router>     
+)
 }
 
 export default App

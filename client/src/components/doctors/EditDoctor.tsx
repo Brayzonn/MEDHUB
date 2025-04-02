@@ -1,8 +1,10 @@
 import Dropzone from 'react-dropzone';
 import { useEffect, useState } from "react";
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 import { toast } from 'react-toastify';
-import {AddDoctorFormInterface} from '../DataTypes';
+import {AddDoctorFormInterface, EditDoctorProps} from '../DataTypes';
 import {DoctorDropDownList} from "../globalComponents/DropDownList";
 import ConfirmationDialog from '../globalComponents/ConfirmationDialog';
 import {DoctorInputForm} from '../globalComponents/InputForm';
@@ -14,17 +16,13 @@ import { MdSave } from "react-icons/md";
 import { RiDeleteBin3Line } from "react-icons/ri";
 
 
-interface EditDoctorProps {
-    updateDoctorProfileState: React.Dispatch<React.SetStateAction<boolean>>,
-    updateEditDoctorState: React.Dispatch<React.SetStateAction<boolean>>,
-    updateProfileVisibility: React.Dispatch<React.SetStateAction<boolean>>,
-}
 
-const EditDoctor: React.FC<EditDoctorProps> = ({updateDoctorProfileState, updateEditDoctorState, updateProfileVisibility }) => {
+
+const EditDoctor: React.FC<EditDoctorProps> = ({updateNewDoctorProfile, updateDoctorProfileState, updateEditDoctorState, updateProfileVisibility }) => {
     
     const activeDoctorProfile = sessionStorage.getItem('activeDoctorProfile');
     const userToken = sessionStorage.getItem('userToken');
-
+    const navigate = useNavigate();
     const {baseURL} =  useGlobalContext();
 
     const [buttonLoadingAnimation, updateButtonLoadingAnimation] = useState<boolean>(false);
@@ -54,7 +52,7 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateDoctorProfileState, update
             const activeDoctorProfileToObject = JSON.parse(activeDoctorProfile)
             updateParsedDoctorID(activeDoctorProfileToObject.doctorID)
 
-            setIdImages(activeDoctorProfileToObject.profile.doctorImage)
+            setIdImages(`${baseURL}/images/${activeDoctorProfileToObject.profile.doctorImage}`)
             setUpdateDoctorForm((prevDoctorForm) => {
                 let updatedDoctorForm = { ...prevDoctorForm };
                 dropdownContainer.forEach((dropdown) => {
@@ -135,7 +133,8 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateDoctorProfileState, update
                         updateEditDoctorState(false)
                         updateDoctorProfileState(true)
                         updateButtonLoadingAnimation(false)
-                } else if(updateDoctorApiCall.status === 200){                  
+                } else if(updateDoctorApiCall.status === 200){   
+                        updateNewDoctorProfile(parsedDoctorID);               
                         toast.success(updateDoctorResponseData)
                         updateEditDoctorState(false)
                         updateButtonLoadingAnimation(false)
@@ -147,12 +146,15 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateDoctorProfileState, update
                         if (error.response && error.response.data && error.response.data.message) {
                                 toast.error(`Error: ${error.response.data.message}`);
                         } else {
-                                toast.error('Something went wrong');
+                                toast.error('Unnavailable request, please try again');
                         }
+
+                        navigate(0);
                         updateButtonLoadingAnimation(false);
                 } else {
                         console.error('Unexpected error:', error);
                         toast.error('An unexpected error occurred');
+                        navigate(0);
                         updateButtonLoadingAnimation(false);
                 }
             }

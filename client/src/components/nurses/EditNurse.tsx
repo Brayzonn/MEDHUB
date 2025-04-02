@@ -26,7 +26,7 @@ const EditNurse: React.FC<EditNurseProps> = ({updateNurseProfileForm, updateEdit
         {buttonId: 'nurseDegree' , buttonName: ' Choose Degree', listOptions : ['MD', 'DO', 'PharmD', 'MBBS'] }  , 
     ]
 
-    const [InputFormData, updateInputFormData] = useState([
+    const [InputFormData,] = useState([
         {labelName: 'Nurse Name ', labelSpan: '*', inputName: 'nurseName', inputType: 'text', placeholder: 'John Doe'},
         {labelName: 'Nurse Phone ', labelSpan: '*', inputName: 'nursePhone', inputType: 'tel', placeholder: '+234 90 346 4578'},
         {labelName: 'Nurse Age', labelSpan: '*',  inputName: 'nurseAge', inputType: 'number', placeholder: '40'},

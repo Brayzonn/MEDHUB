@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { TableColumn } from 'react-data-table-component';
@@ -14,11 +14,10 @@ import { CiSearch } from "react-icons/ci";
 import { FaChevronRight } from "react-icons/fa";
 
 
-
 const AllDoctors = () => {
 
       const userToken = sessionStorage.getItem('userToken');
-      const {allDoctorData, baseURL} =  useGlobalContext();
+      const {allDoctorData, fetchDoctor, baseURL} =  useGlobalContext();
 
       const [buttonLoadingAnimation, updateButtonLoadingAnimation] = useState<boolean>(false)
       const [allDoctorState, updateAllDoctorState] = useState<boolean>(true);
@@ -45,7 +44,9 @@ const AllDoctors = () => {
       const [isInputActive, setInputIsActive] = useState<boolean>(false);
       const [isProfileVisible, setProfileVisibility] = useState<boolean>(false);
 
-
+      useEffect(()=>{
+            fetchDoctor() 
+      }, [])
 
       //filter doctor data based off search parameters
       const searchInputValue = (searchValue: string) => {
@@ -54,7 +55,7 @@ const AllDoctors = () => {
             );
             setSearchResults(filtered);
       }
-
+      
       //doctor information for bio display 
       const [doctorData, updateDoctorData] = useState([
             {header: 'Doctor Department', identifier: 'doctorDepartment', data: ''},
@@ -68,7 +69,7 @@ const AllDoctors = () => {
       ])
 
       //fetch selected doctor data from table and display doctor bio
-      const fetchDoctor = (doctorID: string) => {
+      const fetchActiveDoctor = (doctorID: string) => {
             const filtered = allDoctorData.find((row) => row.doctorID === doctorID);
   
             if (filtered) {
@@ -98,6 +99,39 @@ const AllDoctors = () => {
                   setProfileVisibility(true);
             }
       }; 
+
+      const fetchUpdatedActiveDoctorData = async (doctorID: string) => {   
+            const updatedDoctors = await fetchDoctor()
+            
+            const filtered = updatedDoctors.find((row) => row.doctorID === doctorID);
+
+            if (filtered) {
+                  updateActiveDoctorProfile({
+                        profile: { ...filtered.profile },
+                        doctorDepartment: filtered.doctorDepartment,
+                        doctorEmail: filtered.doctorEmail,
+                        doctorSpecialty: filtered.doctorSpecialty,
+                        doctorJoinDate: filtered.doctorJoinDate,
+                        doctorAddress: filtered.doctorAddress,
+                        doctorPhone: filtered.doctorPhone,
+                        doctorAge: filtered.doctorAge,
+                        doctorDegree: filtered.doctorDegree,
+                        employmentType: filtered.employmentType,
+                        doctorID: filtered.doctorID,
+                  });
+
+                  sessionStorage.setItem('activeDoctorProfile', JSON.stringify(filtered))
+
+                  updateDoctorData((prevDoctorData) =>
+                        prevDoctorData.map((item) => ({
+                              ...item,
+                              data: (filtered[item.identifier as keyof DoctorProps] as string) || '',
+                        }))
+                  );
+            
+                  setProfileVisibility(true);
+            } 
+      }
 
       const deleteDoctorFunction = async (doctorID: string) =>{
             try {
@@ -189,7 +223,7 @@ const AllDoctors = () => {
             {
                   name: 'Action',
                   cell: (row) =>(
-                        <button onClick={()=> {fetchDoctor(row.doctorID); window.scrollTo(0, 400); }} className="w-[30px] h-[30px] flex justify-center items-center relative border bg-gradient-to-r from-slate-500 to-slate-800 border-white rounded-full">
+                        <button onClick={()=> {fetchActiveDoctor(row.doctorID); window.scrollTo(0, 400); }} className="w-[30px] h-[30px] flex justify-center items-center relative border bg-gradient-to-r from-slate-500 to-slate-800 border-white rounded-full">
                               <FaChevronRight className = 'text-white' />  
                         </button>
                   )
@@ -247,7 +281,7 @@ const AllDoctors = () => {
                                           :   
                                           <Table columns={columns} data={searchResults} />
                                     }
-                                    < DoctorProfile  buttonLoadingAnimation = {buttonLoadingAnimation} updateButtonLoadingAnimation={updateButtonLoadingAnimation} deleteDoctorFunction = {deleteDoctorFunction} setIsConfirmationDialogOpen ={setIsConfirmationDialogOpen} isConfirmationDialogOpen ={isConfirmationDialogOpen} updateEditDoctorState ={updateEditDoctorState} activeDoctor = {activeDoctorProfile} doctorEditState={doctorEditState} updateDoctorProfileState = {setProfileVisibility} doctorData={doctorData} isDoctorProfileVisible={isProfileVisible} updateProfileVisibility={setProfileVisibility}/> 
+                                    < DoctorProfile updateNewDoctorProfile = {fetchUpdatedActiveDoctorData}  buttonLoadingAnimation = {buttonLoadingAnimation} updateButtonLoadingAnimation={updateButtonLoadingAnimation} deleteDoctorFunction = {deleteDoctorFunction} setIsConfirmationDialogOpen ={setIsConfirmationDialogOpen} isConfirmationDialogOpen ={isConfirmationDialogOpen} updateEditDoctorState ={updateEditDoctorState} activeDoctor = {activeDoctorProfile} doctorEditState={doctorEditState} updateDoctorProfileState = {setProfileVisibility} doctorData={doctorData} isDoctorProfileVisible={isProfileVisible} updateProfileVisibility={setProfileVisibility}/> 
                               </div>
                             </> 
                               : 

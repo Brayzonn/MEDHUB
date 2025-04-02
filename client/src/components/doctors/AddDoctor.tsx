@@ -67,7 +67,7 @@ const AddDoctor = () => {
         const submitAddDoctorForm = async () =>{
                        
                 try {
-                        // updateButtonLoadingAnimation(true)
+                        updateButtonLoadingAnimation(true)
                         if (Object.values(addDoctorForm).some(value => value === 'd')) {
                                 toast.error('Please fill in all fields.')  
                                 updateButtonLoadingAnimation(false)
@@ -87,54 +87,34 @@ const AddDoctor = () => {
                                       toast.error('Authorization token or base URL is missing');
                                       return;
                                 }
-              
+                                
+                                console.log('test')
                                 const addDoctorApiCall = await axios.post(`${baseURL}/api/user/addnewdoctor`, formData, {
                                         headers: {
                                                 Authorization: `Bearer ${userToken}`,
                                                 'Content-Type': 'multipart/form-data',  
                                         },
                                 });
-                              
-                                console.log(addDoctorApiCall)
-
+                        
                                 const addDoctorResponseMessage: string =  addDoctorApiCall.data.message;
-            
-                                if(addDoctorApiCall.status === 204){
-                                        // setAddDoctorForm({
-                                        //         doctorSpecialty: '',
-                                        //         doctorAddress: '',                
-                                        //         doctorPhone: '',
-                                        //         doctorAge: '',
-                                        //         doctorName:'',
-                                        //         doctorEmail: '',
-                                        //         doctorDegree: '',
-                                        //         employmentType: '',
-                                        //         doctorDepartment: '',
-                                        //         doctorImage: '',
-                                        //         doctorJoinDate: '',
-                                        // })
-                                        console.log('a')
+                                
+                                if(addDoctorApiCall.status === 201){                                
                                         updateButtonLoadingAnimation(false)
-                                        // setIdImages(undefined)
-                                        toast.error(addDoctorResponseMessage) 
-                                } else if(addDoctorApiCall.status === 200){
-                                        // setAddDoctorForm({
-                                        //         doctorSpecialty: '',
-                                        //         doctorAddress: '',                
-                                        //         doctorPhone: '',
-                                        //         doctorAge: '',
-                                        //         doctorName:'',
-                                        //         doctorEmail: '',
-                                        //         doctorDegree: '',
-                                        //         employmentType: '',
-                                        //         doctorDepartment: '',
-                                        //         doctorImage: '',
-                                        //         doctorJoinDate: '',
-                                        // })
-                                        console.log('b')
-                                        updateButtonLoadingAnimation(false)
-                                        // setIdImages(undefined)
-                                        toast.error(addDoctorResponseMessage)      
+                                        setIdImages(undefined)
+                                        setAddDoctorForm({
+                                                doctorSpecialty: '',
+                                                doctorAddress: '',                
+                                                doctorPhone: '',
+                                                doctorAge: '',
+                                                doctorName:'',
+                                                doctorEmail: '',
+                                                doctorDegree: '',
+                                                employmentType: '',
+                                                doctorDepartment: '',
+                                                doctorImage: '',
+                                                doctorJoinDate: '',
+                                        })
+                                        toast.success(addDoctorResponseMessage)      
                                 }  
                         }
                               

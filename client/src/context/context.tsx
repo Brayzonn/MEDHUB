@@ -20,7 +20,7 @@ interface AppContextProps {
       allAdmissionsData: AdmissionProps[];
       updateAllAdmissionsData: Dispatch<SetStateAction<AdmissionProps[]>>;
 
-      fetchDoctor: () => Promise<void>;
+      fetchDoctor: () => Promise<DoctorProps[]>;
       fetchNurse: () => Promise<void>;
       fetchPatient: () => Promise<void>;
       fetchStaff: () => Promise<void>;
@@ -42,7 +42,7 @@ const AppContext = createContext<AppContextProps>({
       allDashData : [],
       fetchDashboardData:  async () => {},
       updateAllAdmissionsData: () => {},
-      fetchDoctor: async () => {},
+      fetchDoctor: async () => [],
       fetchNurse: async () => {},
       fetchPatient: async () => {},
       fetchStaff: async () => {},
@@ -64,15 +64,14 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     // Get the token from sessionStorage
     const userToken = sessionStorage.getItem('userToken');
 
-    const UserAuthConfig = {
-          headers: {
-              Authorization: `Bearer ${userToken}`,
-          },
-    };
-
     //fetch dashboard data
     const fetchDashboardData = async () => { 
         try {
+            const UserAuthConfig = {
+                headers: {
+                    Authorization: `Bearer ${userToken}`,
+                },
+            };
             const dashResponse = await axios.get(`${baseURL}/api/user/getdashboarddata`, UserAuthConfig);
             const dashData = dashResponse.data;
             updateAllDashData(dashData);
@@ -84,17 +83,29 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     //fetch doctor data
     const fetchDoctor = async () => { 
         try {
-            const doctorResponse = await axios.get(`${baseURL}/api/user/getalldoctors`, UserAuthConfig);
+            const authConfig = {
+                headers: {
+                    Authorization: `Bearer ${sessionStorage.getItem('userToken')}`, 
+                },
+            };
+            const doctorResponse = await axios.get(`${baseURL}/api/user/getalldoctors`, authConfig);
             const doctorData = doctorResponse.data.payload;
             updateAllDoctorData(doctorData);
+            return doctorData;
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }  
-    }
+    };
+    
 
     //fetch nurse data
     const fetchNurse = async () => { 
         try {
+            const UserAuthConfig = {
+                headers: {
+                    Authorization: `Bearer ${userToken}`,
+                },
+            };
             const nurseResponse = await axios.get(`${baseURL}/api/user/getallnurses`, UserAuthConfig);
             const nurseData = nurseResponse.data;
             updateAllNurseData(nurseData);
@@ -106,6 +117,11 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     //fetch patient data
     const fetchPatient = async () => { 
         try {
+            const UserAuthConfig = {
+                headers: {
+                    Authorization: `Bearer ${userToken}`,
+                },
+            };
             const patientResponse = await axios.get(`${baseURL}/api/user/getallpatients`, UserAuthConfig);
             const patientData = patientResponse.data;
             updateAllPatientData(patientData);
@@ -117,6 +133,11 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     //fetch staff data
     const fetchStaff = async () => { 
         try {
+            const UserAuthConfig = {
+                headers: {
+                    Authorization: `Bearer ${userToken}`,
+                },
+            };
             const staffResponse = await axios.get(`${baseURL}/api/user/getallstaffs`, UserAuthConfig);
             const staffData = staffResponse.data;
             updateAllStaffData(staffData);
@@ -128,6 +149,11 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     //fetch admission data
     const fetchAdmissions = async () => { 
         try {
+            const UserAuthConfig = {
+                headers: {
+                    Authorization: `Bearer ${userToken}`,
+                },
+            };
             const admissionResponse = await axios.get(`${baseURL}/api/user/getalladmissions`, UserAuthConfig);
             const admissionData = admissionResponse.data;
             updateAllAdmissionsData(admissionData);
