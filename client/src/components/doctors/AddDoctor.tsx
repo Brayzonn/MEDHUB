@@ -13,10 +13,14 @@ import whiteBtnLoader from '../../images/buttonloaderwhite.svg';
 
 const AddDoctor = () => {
 
-        const {baseURL} =  useGlobalContext();
+        //global variables
+        const {baseURL, fetchDoctor} =  useGlobalContext();
         const userToken = sessionStorage.getItem('userToken');
-        const [buttonLoadingAnimation, updateButtonLoadingAnimation] = useState<boolean>(false)
+        
 
+        //component variables
+        const [buttonLoadingAnimation, updateButtonLoadingAnimation] = useState<boolean>(false)
+        
         const dropdownContainer = [
                 {buttonId: 'doctorSpecialty' , buttonName: 'Choose Specialty', listOptions : ['Pediatrics', 'Cardiology', 'Psychiatry', 'Internal Medicine', 'Obstetrics and Gynecology', 'Surgery', 'Anesthesiology', 'Radiology'] },
                 {buttonId: 'doctorDegree' , buttonName: ' Choose Degree', listOptions : ['MD', 'DO', 'PharmD', 'MBBS'] }  , 
@@ -64,6 +68,10 @@ const AddDoctor = () => {
                 doctorJoinDate: '',
         })
 
+        const callUpdatedAllDoctorData = () =>{
+                fetchDoctor()
+        }
+        
         const submitAddDoctorForm = async () =>{
                        
                 try {
@@ -88,7 +96,6 @@ const AddDoctor = () => {
                                       return;
                                 }
                                 
-                                console.log('test')
                                 const addDoctorApiCall = await axios.post(`${baseURL}/api/user/addnewdoctor`, formData, {
                                         headers: {
                                                 Authorization: `Bearer ${userToken}`,
@@ -115,6 +122,7 @@ const AddDoctor = () => {
                                                 doctorJoinDate: '',
                                         })
                                         toast.success(addDoctorResponseMessage)      
+                                        callUpdatedAllDoctorData()
                                 }  
                         }
                               

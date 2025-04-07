@@ -1,6 +1,11 @@
+import {TableColumn } from 'react-data-table-component';
+
 //global props
-//.....
-//Input form props
+export interface TableProps {
+        columns: TableColumn<DoctorProps>[];
+        data:  DoctorProps[];
+}
+
 export interface InputFormProps{
         labelName:  string,
         labelSpan?: string,
@@ -11,7 +16,6 @@ export interface InputFormProps{
         placeholder?: string,
 }
 
-//user token data props
 export interface DecodedDataInterface {
         UserId: string, 
         role: string, 
@@ -60,6 +64,7 @@ export interface DoctorProps {
         doctorDegree: string,
         employmentType: string,
         doctorID: string,
+        updatedAt?: string | Date;
 }
 
 export interface EditDoctorProps {

@@ -51,7 +51,18 @@ const DoctorProfile: React.FC<DoctorProfileProps> = ({updateNewDoctorProfile, ac
 
                   <div className="w-full min-h-full flex flex-col space-y-[1rem]">
                         <div className="w-full flex space-x-6 ">
-                                <img src={activeDoctor.profile.doctorImage ? `${baseURL}/images/${activeDoctor.profile.doctorImage}` : userplaceholder} alt="profile" className="w-[120px] h-[120px] border border-inherit rounded-full" />
+                                <img 
+                                src={
+                                activeDoctor.profile.doctorImage 
+                                ? `${baseURL}/images/${activeDoctor.profile.doctorImage}?v=${new Date(activeDoctor.updatedAt || Date.now()).getTime()}`
+                                : userplaceholder
+                                } 
+                                alt="profile" 
+                                className="w-[120px] h-[120px] border border-inherit rounded-full" 
+                                />
+
+
+
 
                                 <div className='flex flex-col space-y-2'> 
                                         <div className='flex items-center space-x-1'>

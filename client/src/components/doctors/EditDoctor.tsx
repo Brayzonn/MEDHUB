@@ -20,14 +20,17 @@ import { RiDeleteBin3Line } from "react-icons/ri";
 
 const EditDoctor: React.FC<EditDoctorProps> = ({updateNewDoctorProfile, updateDoctorProfileState, updateEditDoctorState, updateProfileVisibility }) => {
     
+    //global variables
     const activeDoctorProfile = sessionStorage.getItem('activeDoctorProfile');
     const userToken = sessionStorage.getItem('userToken');
     const navigate = useNavigate();
     const {baseURL} =  useGlobalContext();
 
+    //component variables
     const [buttonLoadingAnimation, updateButtonLoadingAnimation] = useState<boolean>(false);
     const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
 
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [parsedDoctorID, updateParsedDoctorID] = useState<string>('');
 
     const dropdownContainer = [
@@ -52,7 +55,9 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateNewDoctorProfile, updateDo
             const activeDoctorProfileToObject = JSON.parse(activeDoctorProfile)
             updateParsedDoctorID(activeDoctorProfileToObject.doctorID)
 
-            setIdImages(`${baseURL}/images/${activeDoctorProfileToObject.profile.doctorImage}`)
+            setIdImages(
+                `${baseURL}/images/${activeDoctorProfileToObject.profile.doctorImage}?v=${new Date(activeDoctorProfileToObject.updatedAt || Date.now()).getTime()}`
+            );              
             setUpdateDoctorForm((prevDoctorForm) => {
                 let updatedDoctorForm = { ...prevDoctorForm };
                 dropdownContainer.forEach((dropdown) => {
@@ -86,11 +91,8 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateNewDoctorProfile, updateDo
     const handleImageDrop = (acceptedFiles: File[]) => {
         if (acceptedFiles.length > 0) {
                 const firstAcceptedFile = acceptedFiles[0];
-
-                const imageUrl = URL.createObjectURL(firstAcceptedFile);
-        
-                setIdImages(imageUrl);
-                setUpdateDoctorForm({...updateDoctorForm, doctorImage:imageUrl })
+                setSelectedFile(firstAcceptedFile);
+                setIdImages(URL.createObjectURL(firstAcceptedFile)); 
         }    
     };
 
@@ -115,9 +117,17 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateNewDoctorProfile, updateDo
                  
                 const formData = new FormData();
                 formData.append('doctorID', parsedDoctorID)
+
+                
+                // Append the image file
+                if (selectedFile) {
+                        formData.append("doctorImage", selectedFile);
+                }
+
+                // Append other form fields
                 Object.entries(updateDoctorForm).forEach(([key, value]) => {
                         formData.append(key, value);
-                })
+                });
 
                 const updateDoctorApiCall = await axios.post(`${baseURL}/api/user/updatedoctorprofile`, formData, {
                         headers: {
@@ -134,7 +144,7 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateNewDoctorProfile, updateDo
                         updateDoctorProfileState(true)
                         updateButtonLoadingAnimation(false)
                 } else if(updateDoctorApiCall.status === 200){   
-                        updateNewDoctorProfile(parsedDoctorID);               
+                        updateNewDoctorProfile(parsedDoctorID);            
                         toast.success(updateDoctorResponseData)
                         updateEditDoctorState(false)
                         updateButtonLoadingAnimation(false)

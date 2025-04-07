@@ -1,17 +1,13 @@
-import { useGlobalContext } from '../../context/useGlobalContext';
-import {DoctorProps} from '../DataTypes'; 
-
 import DataTable, {TableColumn } from 'react-data-table-component';
+
+import { useGlobalContext } from '../../context/useGlobalContext';
+import {DoctorProps, TableProps} from '../DataTypes'; 
+
 import userplaceholder from '../../images/userplaceholderlogo.png';
 
 
-interface TableProps {
-    columns: TableColumn<DoctorProps>[];
-    data:  DoctorProps[];
-}
-
 const Table: React.FC<TableProps> = ({ columns, data }) => {
-
+    //global variables
     const {baseURL} =  useGlobalContext();
     
     const customColumns: TableColumn<DoctorProps>[] = columns.map((col) => {
@@ -21,9 +17,10 @@ const Table: React.FC<TableProps> = ({ columns, data }) => {
                 cell: (row: DoctorProps) => {
                     const doctorProfile = row.profile;
                     const imagePath = doctorProfile.doctorImage 
-                    ? `${baseURL}/images/${doctorProfile.doctorImage}` 
-                    : userplaceholder; 
-            
+                    ? `${baseURL}/images/${doctorProfile.doctorImage}?v=${new Date(row.updatedAt || Date.now()).getTime()}
+                    ` 
+                    : userplaceholder;
+
                     return (
                       <div className="flex items-center">
                             <img

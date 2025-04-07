@@ -9,21 +9,24 @@ import DoctorProfile from "./DoctorProfile";
 import AddDoctor from "./AddDoctor";
 import Table from "./Table";
 
-
 import { CiSearch } from "react-icons/ci";
 import { FaChevronRight } from "react-icons/fa";
 
 
 const AllDoctors = () => {
 
+      //global variables
       const userToken = sessionStorage.getItem('userToken');
       const {allDoctorData, fetchDoctor, baseURL} =  useGlobalContext();
 
+      //component variables
       const [buttonLoadingAnimation, updateButtonLoadingAnimation] = useState<boolean>(false)
       const [allDoctorState, updateAllDoctorState] = useState<boolean>(true);
       const [addDoctorState, updateAddDoctorState] = useState<boolean>(false);
       const [doctorEditState, updateEditDoctorState] = useState<boolean>(false);
       const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
+
+
 
       const [activeDoctorProfile, updateActiveDoctorProfile] = useState<DoctorProps>({
             profile: { doctorName: '', doctorImage: '' },
@@ -100,9 +103,10 @@ const AllDoctors = () => {
             }
       }; 
 
+      //fetch new selected doctor details on data update
       const fetchUpdatedActiveDoctorData = async (doctorID: string) => {   
             const updatedDoctors = await fetchDoctor()
-            
+
             const filtered = updatedDoctors.find((row) => row.doctorID === doctorID);
 
             if (filtered) {
@@ -133,6 +137,7 @@ const AllDoctors = () => {
             } 
       }
 
+      //delete doctor function
       const deleteDoctorFunction = async (doctorID: string) =>{
             try {
                   updateButtonLoadingAnimation(true)
@@ -286,7 +291,7 @@ const AllDoctors = () => {
                             </> 
                               : 
                             <AddDoctor />
-                    }
+                  }
                    
                   
             </div>
