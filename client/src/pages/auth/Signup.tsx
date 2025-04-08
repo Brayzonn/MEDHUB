@@ -17,20 +17,15 @@ import { RiEyeLine, RiEyeOffLine } from 'react-icons/ri';
 import { IoIosCheckmark } from "react-icons/io";
 
 
-
-
 const Signup = () => {
 
     const screenWidth = UseScreenWidth();
-
     const userToken = sessionStorage.getItem('userToken')
-
     const navigate = useNavigate();
-
     const {baseURL} =  useGlobalContext();
+
+
     const [buttonLoadingAnimation, updateButtonLoadingAnimation] = useState<boolean>(false)
-
-
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [showPasswordtwo, setShowPasswordtwo] = useState<boolean>(false);
     const [passwordActive, updatePasswordActive] = useState<boolean>(false);
@@ -102,7 +97,18 @@ const Signup = () => {
                 }  
             
             } catch (error) {
-                console.log(error)
+                if (axios.isAxiosError(error)) {
+                    if (error.response && error.response.data && error.response.data.message) {
+                          toast.error(`Error: ${error.response.data.message}`);
+                    } else {
+                          toast.error('Something went wrong');
+                    }
+                    updateButtonLoadingAnimation(false);
+                } else {
+                        console.error('Unexpected error:', error);
+                        toast.error('An unexpected error occurred');
+                        updateButtonLoadingAnimation(false);
+                }
             }           
     } 
 
@@ -181,7 +187,18 @@ const Signup = () => {
                     updateButtonLoadingAnimation(false)
                 }   
             } catch (error) {
-                    console.log(error)
+                if (axios.isAxiosError(error)) {
+                    if (error.response && error.response.data && error.response.data.message) {
+                          toast.error(`Error: ${error.response.data.message}`);
+                    } else {
+                          toast.error('Something went wrong');
+                    }
+                    updateButtonLoadingAnimation(false);
+                } else {
+                        console.error('Unexpected error:', error);
+                        toast.error('An unexpected error occurred');
+                        updateButtonLoadingAnimation(false);
+                }
             }
         }
 

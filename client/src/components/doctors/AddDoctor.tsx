@@ -14,7 +14,7 @@ import whiteBtnLoader from '../../images/buttonloaderwhite.svg';
 const AddDoctor = () => {
 
         //global variables
-        const {baseURL, fetchDoctor} =  useGlobalContext();
+        const {baseURL, fetchDashboardData, fetchDoctor} =  useGlobalContext();
         const userToken = sessionStorage.getItem('userToken');
         
 
@@ -122,6 +122,7 @@ const AddDoctor = () => {
                                                 doctorJoinDate: '',
                                         })
                                         toast.success(addDoctorResponseMessage)      
+                                        fetchDashboardData()
                                         callUpdatedAllDoctorData()
                                 }  
                         }

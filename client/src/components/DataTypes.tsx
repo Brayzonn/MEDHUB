@@ -1,6 +1,17 @@
 import {TableColumn } from 'react-data-table-component';
 
 //global props
+// google auth logic for sign in
+export interface AccessToken {
+        access_token: string,
+        authuser?: string,
+        expires_in: number,
+        hd?: string,
+        prompt: string,
+        scope: string,
+        token_type: string,
+}
+
 export interface TableProps {
         columns: TableColumn<DoctorProps>[];
         data:  DoctorProps[];
@@ -32,10 +43,16 @@ export interface DecodedJwt{
 export interface DashboardDataProps {
         patientCount: number,
         doctorCount: number,
-        nurseCount: number,
-        admittedPatientsCount: number,
-        staffCount: number,
+        nurseCount?: number,
+        admissionsCount: number,
+        staffCount?: number,
 } 
+
+export interface dahshboarddataSchema  {
+        image : string,
+        number: number,
+        tag:string
+}
 
 //doctor object props----------------------------
 export interface AddDoctorFormInterface {

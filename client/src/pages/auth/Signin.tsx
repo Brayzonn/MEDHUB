@@ -6,6 +6,7 @@ import {useGoogleLogin } from '@react-oauth/google';
 
 import UseScreenWidth from '../../components/globalComponents/UseScreenWidth';
 import { useGlobalContext } from '../../context/useGlobalContext';
+import { AccessToken } from '../../components/DataTypes';
 
 import googleicon from '../../images/googleimage.png'
 import whiteBtnLoader from '../../images/buttonloaderwhite.svg';
@@ -18,11 +19,8 @@ import { RiEyeLine, RiEyeOffLine } from 'react-icons/ri';
 const Signin = () => {
 
     const screenWidth = UseScreenWidth();
-
     const userToken = sessionStorage.getItem('userToken');
-
     const navigate = useNavigate();
-
     const {baseURL} =  useGlobalContext();
 
     const [buttonLoadingAnimation, updateButtonLoadingAnimation] = useState<boolean>(false)
@@ -32,17 +30,8 @@ const Signin = () => {
         setShowPassword(!showPassword);
     };
 
-    // google auth logic for sign in
-    interface AccessToken {
-        access_token: string,
-        authuser?: string,
-        expires_in: number,
-        hd?: string,
-        prompt: string,
-        scope: string,
-        token_type: string,
-    }
-    
+
+    //google auth logic
     const googleAuthSignin = useGoogleLogin({
         onSuccess: (codeResponse) => {
                 googleApi(codeResponse)
@@ -84,7 +73,18 @@ const Signin = () => {
                 }      
             
             } catch (error) {
-                console.log(error)
+                if (axios.isAxiosError(error)) {
+                    if (error.response && error.response.data && error.response.data.message) {
+                          toast.error(`Error: ${error.response.data.message}`);
+                    } else {
+                          toast.error('Something went wrong');
+                    }
+                    updateButtonLoadingAnimation(false);
+                } else {
+                        console.error('Unexpected error:', error);
+                        toast.error('An unexpected error occurred');
+                        updateButtonLoadingAnimation(false);
+                }
             }          
     } 
 
@@ -109,7 +109,6 @@ const Signin = () => {
                     updateButtonLoadingAnimation(false)
                 }
     
-                //make post request if field validation complete
                 else{
                     const signupApiCall = await axios.post(`${baseURL}/api/signin`, {...signinFormFieldData})
                     const signInResponseData = signupApiCall.data;
@@ -124,7 +123,6 @@ const Signin = () => {
                             email: '',
                             password: '', 
                         })
-    
                         toast.success('Sign in successful')
     
                         setTimeout(()=>{
@@ -134,7 +132,18 @@ const Signin = () => {
                     updateButtonLoadingAnimation(false)
                 }     
             } catch (error) {
-                    console.log(error)
+                if (axios.isAxiosError(error)) {
+                    if (error.response && error.response.data && error.response.data.message) {
+                          toast.error(`Error: ${error.response.data.message}`);
+                    } else {
+                          toast.error('Something went wrong');
+                    }
+                    updateButtonLoadingAnimation(false);
+              } else {
+                    console.error('Unexpected error:', error);
+                    toast.error('An unexpected error occurred');
+                    updateButtonLoadingAnimation(false);
+              }
             }
         }
        
@@ -142,9 +151,6 @@ const Signin = () => {
     }
 
 
-
-
-    //if not desktop screen, display error message
     if(screenWidth < 891 ){
 
             return (

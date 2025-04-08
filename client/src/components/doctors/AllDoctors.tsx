@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { TableColumn } from 'react-data-table-component';
+import spinner from '../../images/loadingspinner.svg'
 
 import {DoctorProps} from '../DataTypes';
 import { useGlobalContext } from '../../context/useGlobalContext';
@@ -235,6 +236,15 @@ const AllDoctors = () => {
             }
       ];
 
+      if (!allDoctorData || allDoctorData.length === 0 ) {
+            return (
+            <div className="relative overflow-hidden flex flex-col justify-center items-center bg-transparent text-black w-full min-h-screen">
+                        <img src={spinner} alt="loading" className="w-[50px] h-[50px]" />
+            </div>
+
+            )
+            } else {
+
 
   return (
             <div className='overflow-hidden relative w-[75%] shadow-sm mt-[100px] mb-4 py-4 px-[2rem] mx-6 flex flex-col space-y-6 text-[#161616]  bg-gradient-to-r from-slate-50 to-slate-100border border-white rounded-[15px] lx:w-[82%]'>
@@ -296,6 +306,8 @@ const AllDoctors = () => {
                   
             </div>
   )
+
+            }
 }
 
 export default AllDoctors

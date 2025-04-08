@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useGlobalContext } from '../context/useGlobalContext';
-
+import{dahshboarddataSchema} from '../components/DataTypes';
 import spinner from '../images/loadingspinner.svg'
 import alladmittedpatients from '../images/allpatientlogo.png';
 import alldoctorlogo from '../images/alldoctorlogo.png';
@@ -10,38 +10,39 @@ import allpatientlogo from '../images/alladmittedpatients.png';
 const DashboardSection = () => {
 
     const {fetchDashboardData, allDashData}  =  useGlobalContext();
+
     const [patientCount, updatePatientCount] = useState<number>()
     const [doctorCount, updateDoctorCount]   =   useState<number>()
     const [staffCount, updateStaffCount]     = useState<number>()
     const [admittedPatientsCount, updateAdmittedPatientsCount] = useState<number>()
 
+    useEffect(()=>{
+        fetchDashboardData();  
+    }, []);
+
     useEffect(() => {
         if (allDashData && allDashData.length > 0) {
-                updatePatientCount(allDashData[0].patientCount);
-                updateDoctorCount(allDashData[0].doctorCount)
-                updateStaffCount(allDashData[0].staffCount)
-                updateAdmittedPatientsCount(allDashData[0].admittedPatientsCount)
+            updatePatientCount(allDashData[0].patientCount);
+            updateDoctorCount(allDashData[0].doctorCount);
+            updateStaffCount(allDashData[0].staffCount || 0); 
+            updateAdmittedPatientsCount(allDashData[0].admissionsCount);
         }          
-    }, [fetchDashboardData]);
+    }, [allDashData]); 
 
-    interface dahshboarddataSchema  {
-        image : string,
-        number: number,
-        tag:string
-    }
-
-    const [dashboardDisplayData] = useState<dahshboarddataSchema[]>([
+    const dashboardDisplayData: dahshboarddataSchema[] = [
         { image: allpatientlogo,        number: patientCount || 0,              tag: 'Total Patients' },
-        { image: alldoctorlogo,         number: doctorCount|| 0,                tag: 'Total Doctors' },
+        { image: alldoctorlogo,         number: doctorCount || 0,               tag: 'Total Doctors' },
         { image: allappntmntlogo,       number: staffCount || 0,                tag: 'Total Staff' },
-        { image: alladmittedpatients,   number: admittedPatientsCount|| 0,      tag: 'Admitted Patients' },
-    ])
+        { image: alladmittedpatients,   number: admittedPatientsCount || 0,     tag: 'Admitted Patients' },
+    ];
+    
 
-    if (!allDashData ) {
+    if (!allDashData || allDashData.length === 0 ) {
         return (
-                <div className="relative overflow-hidden flex flex-col justify-center items-center bg-black text-black w-full min-h-screen ">
-                      <img src={spinner} alt="loading" className='w-[50px] h-[50px]'/> 
-                </div>
+        <div className="relative overflow-hidden flex flex-col justify-center items-center bg-transparent text-black w-full min-h-screen">
+                <img src={spinner} alt="loading" className="w-[50px] h-[50px]" />
+        </div>
+
         )
     } else {
         return (

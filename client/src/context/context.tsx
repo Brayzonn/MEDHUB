@@ -54,7 +54,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     //base url
     const baseURL = 'http://localhost:3300'
 
-    const [allDashData, updateAllDashData] = useState<DashboardDataProps []>([])
+    const [allDashData, updateAllDashData] = useState<DashboardDataProps[]>([])
     const [allDoctorData, updateAllDoctorData] = useState<DoctorProps []>([])
     const [allNurseData, updateAllNurseData] = useState<NurseProps []>([])
     const [allPatientData, updateAllPatientData] = useState<PatientProps[]>([])
@@ -69,7 +69,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
         try {
             const UserAuthConfig = {
                 headers: {
-                    Authorization: `Bearer ${userToken}`,
+                    Authorization: `Bearer ${sessionStorage.getItem('userToken')}`, 
                 },
             };
             const dashResponse = await axios.get(`${baseURL}/api/user/getdashboarddata`, UserAuthConfig);
