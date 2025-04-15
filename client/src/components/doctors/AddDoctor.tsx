@@ -103,7 +103,7 @@ const AddDoctor = () => {
                                         },
                                 });
                         
-                                const addDoctorResponseMessage: string =  addDoctorApiCall.data.message;
+                                const addDoctorResponseMessage: string =  addDoctorApiCall.data.payload;
                                 
                                 if(addDoctorApiCall.status === 201){                                
                                         updateButtonLoadingAnimation(false)
@@ -130,8 +130,8 @@ const AddDoctor = () => {
                         
                 } catch (error) {  
                         if (axios.isAxiosError(error)) {
-                                if (error.response && error.response.data && error.response.data.message) {
-                                        toast.error(`Error: ${error.response.data.message}`);
+                                if (error.response && error.response.data && error.response.data.payload) {
+                                        toast.error(`Error: ${error.response.data.payload}`);
                                         console.error('Unexpected error:', error);
                                 } else {
                                         toast.error('Something went wrong');

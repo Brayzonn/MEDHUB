@@ -18,7 +18,7 @@ import { RiDeleteBin3Line } from "react-icons/ri";
 
 
 
-const EditDoctor: React.FC<EditDoctorProps> = ({updateNewDoctorProfile, updateDoctorProfileState, updateEditDoctorState, updateProfileVisibility }) => {
+const EditDoctor: React.FC<EditDoctorProps> = ({updateDoctorProfileState, updateEditDoctorState }) => {
     
     //global variables
     const activeDoctorProfile = sessionStorage.getItem('activeDoctorProfile');
@@ -29,7 +29,6 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateNewDoctorProfile, updateDo
     //component variables
     const [buttonLoadingAnimation, updateButtonLoadingAnimation] = useState<boolean>(false);
     const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
-
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [parsedDoctorID, updateParsedDoctorID] = useState<string>('');
 
@@ -56,7 +55,7 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateNewDoctorProfile, updateDo
             updateParsedDoctorID(activeDoctorProfileToObject.doctorID)
 
             setIdImages(
-                `${baseURL}/images/${activeDoctorProfileToObject.profile.doctorImage}?v=${new Date(activeDoctorProfileToObject.updatedAt || Date.now()).getTime()}`
+                `${baseURL}/images/doctorimages/${activeDoctorProfileToObject.profile.doctorImage}?v=${new Date(activeDoctorProfileToObject.updatedAt || Date.now()).getTime()}`
             );              
             setUpdateDoctorForm((prevDoctorForm) => {
                 let updatedDoctorForm = { ...prevDoctorForm };
@@ -86,7 +85,8 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateNewDoctorProfile, updateDo
 
 
     //dropzone for image upload
-    const [Idimages, setIdImages] = useState<string>('');
+    const [Idimages, setIdImages] = useState<string>();
+
 
     const handleImageDrop = (acceptedFiles: File[]) => {
         if (acceptedFiles.length > 0) {
@@ -136,15 +136,14 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateNewDoctorProfile, updateDo
                         },
                 });
 
-                const updateDoctorResponseData = updateDoctorApiCall.data.message;
+                const updateDoctorResponseData = updateDoctorApiCall.data.payload;
                 
                 if(updateDoctorApiCall.status === 204){
-                        toast.error('Profile not updated')
+                        toast.error(updateDoctorResponseData)
                         updateEditDoctorState(false)
                         updateDoctorProfileState(true)
                         updateButtonLoadingAnimation(false)
-                } else if(updateDoctorApiCall.status === 200){   
-                        updateNewDoctorProfile(parsedDoctorID);            
+                } else if(updateDoctorApiCall.status === 200){             
                         toast.success(updateDoctorResponseData)
                         updateEditDoctorState(false)
                         updateButtonLoadingAnimation(false)
@@ -153,8 +152,8 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateNewDoctorProfile, updateDo
 
             } catch (error) {
                 if (axios.isAxiosError(error)) {
-                        if (error.response && error.response.data && error.response.data.message) {
-                                toast.error(`Error: ${error.response.data.message}`);
+                        if (error.response && error.response.data && error.response.data.payload) {
+                                toast.error(`Error: ${error.response.data.payload}`);
                         } else {
                                 toast.error('Unnavailable request, please try again');
                         }
@@ -216,9 +215,18 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateNewDoctorProfile, updateDo
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 lx:grid-cols-4 gap-[1rem]">
-                                        <DoctorInputForm prevValues = {updateDoctorForm}  formValue = {updateDoctorForm} onChangeFunc ={setUpdateDoctorForm} InputFormData = {InputFormData} />
+                                        <DoctorInputForm 
+                                                prevValues = {updateDoctorForm}  
+                                                formValue = {updateDoctorForm} 
+                                                onChangeFunc ={setUpdateDoctorForm} 
+                                                InputFormData = {InputFormData} 
+                                        />
 
-                                        <DoctorDropDownList doctorInitialValues={updateDoctorForm} allDropDownContainer = {dropdownContainer}   setSubmitFormDropdown = {setUpdateDoctorForm}/>
+                                        <DoctorDropDownList 
+                                                doctorInitialValues={updateDoctorForm} 
+                                                allDropDownContainer = {dropdownContainer}   
+                                                setSubmitFormDropdown = {setUpdateDoctorForm}
+                                        />
                                 </div>
                                                         
 
@@ -234,7 +242,7 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateNewDoctorProfile, updateDo
                                                 }
                                         </button>
 
-                                        <button onClick={()=> {updateEditDoctorState(false); updateProfileVisibility(true);}} className="transition-properties w-[130px] h-[40px] bg-black text-white border border-black text-[14px] rounded-md flex items-center justify-center space-x-2 hover:border-[#121212] hover:bg-[#121212]">
+                                        <button onClick={()=> {updateEditDoctorState(false); updateDoctorProfileState(true);}} className="transition-properties w-[130px] h-[40px] bg-black text-white border border-black text-[14px] rounded-md flex items-center justify-center space-x-2 hover:border-[#121212] hover:bg-[#121212]">
                                                 <FaChevronDown className ='text-white text-[14px]'/>
                                                 <p>Close</p>
                                         </button>

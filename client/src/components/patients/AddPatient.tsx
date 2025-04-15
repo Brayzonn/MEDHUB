@@ -139,7 +139,7 @@ const AddPatient = () => {
                                         },
                                 });
                                 
-                                const addPatientResponseData = addPatientApiCall.data.payload;
+                                const addPatientResponseData: string = addPatientApiCall.data.payload;
 
                                 if(addPatientApiCall.status === 201){
                                         updateButtonLoadingAnimation(false)

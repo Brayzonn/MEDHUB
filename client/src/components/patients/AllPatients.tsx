@@ -88,31 +88,41 @@ const AllPatients = () => {
 
         if (filtered) {
 
-            updateActivePatientProfile();
+            updateActivePatientProfile(filtered);
 
-            // sessionStorage.setItem('activeDoctorProfile', JSON.stringify(filtered))
+            sessionStorage.setItem('activePatientProfile', JSON.stringify(filtered))
 
-            // updateDoctorData((prevDoctorData) =>
-            //       prevDoctorData.map((item) => ({
-            //             ...item,
-            //             data: (filtered[item.identifier as keyof DoctorProps] as string) || '',
-            //       }))
-            // );
-      
-            // setProfileVisibility(true);
-      }
-        updateActivePatientProfile(filtered)
-  
-        if (filtered) {
             updatePatientProfileData((prevPatientData) =>
                 prevPatientData.map((item) => ({
                         ...item,
                         data: (filtered[item.identifier as keyof PatientProps] as string) || '',
                 }))
             );
-        
+      
             setPatientProfileVisibility(true);
-        }
+      }
+    }
+
+    //fetch new selected patient details on data update
+    const fetchUpdatedActivePatientData = async (patientID: string) => {   
+        const updatedPatients = await fetchPatients()
+
+        const filtered = updatedPatients.find((row) => row.patientID === patientID);
+
+        if (filtered) {
+                updateActivePatientProfile(filtered);
+
+                sessionStorage.setItem('activePatientProfile', JSON.stringify(filtered))
+
+                updatePatientProfileData((prevPatientData) =>
+                    prevPatientData.map((item) => ({
+                            ...item,
+                            data: (filtered[item.identifier as keyof PatientProps] as string) || '',
+                    }))
+                );
+        
+                setPatientProfileVisibility(true);
+        } 
     }
 
     //delete patient function
@@ -137,8 +147,8 @@ const AllPatients = () => {
                 }
                     
                 updateButtonLoadingAnimation(false)
-                // setIsConfirmationDialogOpen(false)
-                // setProfileVisibility(false)
+                setIsConfirmationDialogOpen(false)
+                setPatientProfileVisibility(false)
         } catch (error) {
                 if (axios.isAxiosError(error)) {
                     if (error.response && error.response.data && error.response.data.message) {
@@ -264,9 +274,9 @@ const AllPatients = () => {
                                             <PatientTable columns={columns} data={searchResults} />
                                         }
                                         {< PatientProfile 
+                                            fetchUpdatedActivePatientData = {fetchUpdatedActivePatientData}
                                             activePatientProfile = {activePatientProfile}
-                                            updateProfileVisibility = {setPatientProfileVisibility}
-                                            updateEditPatientState={updatePatientEditState}
+                                            deletePatientFunction = {deletePatientFunction}
                                             buttonLoadingAnimation={buttonLoadingAnimation}
                                             updateButtonLoadingAnimation = {updateButtonLoadingAnimation}
                                             setIsConfirmationDialogOpen ={setIsConfirmationDialogOpen} 

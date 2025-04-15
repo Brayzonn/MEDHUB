@@ -22,7 +22,7 @@ import { FaRegTrashCan } from "react-icons/fa6";
 
 
 
-const PatientProfile: React.FC<PatientProfileProps> = ({activePatientProfile, updateProfileVisibility, updateEditPatientState, patientData, updatePatientProfile, updatePatientProfileVisibility, updatePatientEditState, patientEditState, setIsConfirmationDialogOpen, buttonLoadingAnimation, isPatientProfileVisible}) => {
+const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatientData, deletePatientFunction, activePatientProfile, updatePatientProfileVisibility, updatePatientEditState, patientData, updatePatientProfile, isConfirmationDialogOpen, patientEditState, setIsConfirmationDialogOpen, buttonLoadingAnimation, isPatientProfileVisible}) => {
 
   const {baseURL, fetchPatients} = useGlobalContext();
 
@@ -31,11 +31,9 @@ const PatientProfile: React.FC<PatientProfileProps> = ({activePatientProfile, up
   useEffect(()=>{
         if (activePatientProfileString) {
            const parsedActivePatientProfile = JSON.parse(activePatientProfileString);
-           console.log(parsedActivePatientProfile)
         }        
   }, [activePatientProfileString]);
   
-  const [confirmPatientDelete, updateConfirmPatientDelete] = useState<boolean>(false);
   const [isAdmitPatientActive, updateIsAdmitPatientActive] = useState<boolean>(false);
   const [isAddNoteActive, updateIsAddNoteActive] = useState<boolean>(false); 
 
@@ -50,12 +48,11 @@ const PatientProfile: React.FC<PatientProfileProps> = ({activePatientProfile, up
   const showSelectedRoom = (roomId: string)=>{
         updateIsAdmitPatientActive(false)
         updatePatientProfileVisibility(true)
-        console.log(roomId)
   }
 
   const editPatientProfileFunc = () =>{
-        updateProfileVisibility(false);
-        updateEditPatientState(true);  
+        updatePatientProfileVisibility(false);
+        updatePatientEditState(true);  
   }
 
   const callUpdatedAllPatientData = () =>{
@@ -73,13 +70,12 @@ const PatientProfile: React.FC<PatientProfileProps> = ({activePatientProfile, up
           <div className="shadow-2xl relative px-6 py-8 w-[95%] h-[100%] bg-white border border-[#f7f7f7] rounded-[15px]">
             
                   <ConfirmationDialog
-                        isOpen={confirmPatientDelete}
+                        isOpen={isConfirmationDialogOpen}
                         title="Do you want to delete Patient profile?"
                         message="This action is irreversable"
-                        onConfirm = {()=> {updateConfirmPatientDelete(false); }}
-                        onCancel  = {()=> {updateConfirmPatientDelete(false); }}
+                        onConfirm = {()=> {deletePatientFunction(activePatientProfile.patientID); fetchUpdatedActivePatientData(activePatientProfile.patientID)}} 
+                        onCancel  = {()=> { setIsConfirmationDialogOpen(false)}}
                   />
-
 
                   <div className="w-full min-h-full flex space-x-2">
                         {/* patient details */}
@@ -88,7 +84,7 @@ const PatientProfile: React.FC<PatientProfileProps> = ({activePatientProfile, up
                                         <img 
                                         src={
                                         activePatientProfile.profile.patientImage 
-                                        ? `${baseURL}/images/${activePatientProfile.profile.patientImage}?v=${new Date(activePatientProfile.updatedAt || Date.now()).getTime()}`
+                                        ? `${baseURL}/images/patientimages/${activePatientProfile.profile.patientImage}?v=${new Date(activePatientProfile.updatedAt || Date.now()).getTime()}`
                                         : userplaceholder
                                         } 
                                         alt="profile" 
@@ -177,7 +173,7 @@ const PatientProfile: React.FC<PatientProfileProps> = ({activePatientProfile, up
                         <div className='relative w-[40%] min-h-[18rem] flex flex-col items-end'>
 
                                 <div className="absolute w-full max-h-full flex flex-col items-end space-y-2"> 
-                                        <button onClick={()=> {updatePatientProfileVisibility(false); callUpdatedAllPatientData();}} className="transition-properties p-1 w-[100px] min-h-[40px] bg-black text-white border border-black text-[14px] rounded-md flex items-center justify-center space-x-2 hover:border-[#121212] hover:bg-[#121212]">
+                                        <button onClick={()=> {sessionStorage.removeItem('activePatientProfile'); updatePatientProfileVisibility(false); callUpdatedAllPatientData();}} className="transition-properties p-1 w-[100px] min-h-[40px] bg-black text-white border border-black text-[14px] rounded-md flex items-center justify-center space-x-2 hover:border-[#121212] hover:bg-[#121212]">
                                                 <FaChevronDown className ='text-white text-[13px]'/>
                                                 <p>Close</p>
                                         </button>        
@@ -240,8 +236,19 @@ const PatientProfile: React.FC<PatientProfileProps> = ({activePatientProfile, up
     </div>}
     
 
-    {(isPatientProfileVisible && patientEditState) && <EditPatient updatePatientProfileForm ={updatePatientProfileVisibility} updateEditPatientForm={updatePatientEditState}/>}
-    {<AdmitPatients isAdmitPatientActive ={isAdmitPatientActive} allAvailableRooms={allAvailableRooms} showSelectedRoom={showSelectedRoom}/>}
+    {(isPatientProfileVisible === false && patientEditState === true) && 
+        <EditPatient 
+                updatePatientProfileState ={updatePatientProfileVisibility} 
+                updateEditPatientState={updatePatientEditState}
+        />
+        
+    }
+    {/* {   <AdmitPatients 
+                isAdmitPatientActive ={isAdmitPatientActive} 
+                allAvailableRooms={allAvailableRooms} 
+                showSelectedRoom={showSelectedRoom}
+        />
+    } */}
     </>
   )
 }

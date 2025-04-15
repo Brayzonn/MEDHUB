@@ -15,7 +15,7 @@ import { MdEditSquare } from "react-icons/md";
 import { FaChevronDown } from "react-icons/fa6";
 
 
-const DoctorProfile: React.FC<DoctorProfileProps> = ({updateNewDoctorProfile, activeDoctor, updateEditDoctorState, buttonLoadingAnimation, setIsConfirmationDialogOpen, deleteDoctorFunction, isConfirmationDialogOpen, isDoctorProfileVisible, updateProfileVisibility, doctorData, doctorEditState}) => {
+const DoctorProfile: React.FC<DoctorProfileProps> = ({fetchUpdatedActiveDoctorData, activeDoctor, updateEditDoctorState, buttonLoadingAnimation, setIsConfirmationDialogOpen, deleteDoctorFunction, isConfirmationDialogOpen, isDoctorProfileVisible, updateProfileVisibility, doctorData, doctorEditState}) => {
         
 
   const {fetchDoctors, baseURL} =  useGlobalContext();
@@ -44,8 +44,8 @@ const DoctorProfile: React.FC<DoctorProfileProps> = ({updateNewDoctorProfile, ac
                         isOpen={isConfirmationDialogOpen}
                         title     = "Do you want to delete Doctor profile?"
                         message   = "This action is irreversable"
-                        onConfirm = {()=> deleteDoctorFunction(activeDoctor.doctorID)} 
-                        onCancel  = {()=> {sessionStorage.removeItem('activeDoctorProfile'); setIsConfirmationDialogOpen(false);  }}
+                        onConfirm = {()=> {deleteDoctorFunction(activeDoctor.doctorID); fetchUpdatedActiveDoctorData(activeDoctor.doctorID)}} 
+                        onCancel  = {()=> {setIsConfirmationDialogOpen(false);  }}
                   />
 
 
@@ -54,15 +54,12 @@ const DoctorProfile: React.FC<DoctorProfileProps> = ({updateNewDoctorProfile, ac
                                 <img 
                                 src={
                                 activeDoctor.profile.doctorImage 
-                                ? `${baseURL}/images/${activeDoctor.profile.doctorImage}?v=${new Date(activeDoctor.updatedAt || Date.now()).getTime()}`
+                                ? `${baseURL}/images/doctorimages/${activeDoctor.profile.doctorImage}?v=${new Date(activeDoctor.updatedAt || Date.now()).getTime()}`
                                 : userplaceholder
                                 } 
                                 alt="profile" 
                                 className="w-[120px] h-[120px] border border-inherit rounded-full" 
                                 />
-
-
-
 
                                 <div className='flex flex-col space-y-2'> 
                                         <div className='flex items-center space-x-1'>
@@ -143,7 +140,7 @@ const DoctorProfile: React.FC<DoctorProfileProps> = ({updateNewDoctorProfile, ac
     </div>}
 
 
-    {(doctorEditState) && <EditDoctor updateNewDoctorProfile = {updateNewDoctorProfile} updateProfileVisibility = {updateProfileVisibility}  updateDoctorProfileState ={updateProfileVisibility} updateEditDoctorState={updateEditDoctorState}/>}
+    {(doctorEditState) && <EditDoctor  updateDoctorProfileState ={updateProfileVisibility} updateEditDoctorState={updateEditDoctorState}/>}
     </>
   )
 }

@@ -47,6 +47,18 @@ const AllDoctors = () => {
             doctorID: '',
       })
 
+      //doctor information for bio display 
+      const [doctorData, updateDoctorData] = useState([
+            {header: 'Doctor Department', identifier: 'doctorDepartment', data: ''},
+            {header: 'Doctor Specialty', identifier: 'doctorSpecialty', data: ''},
+            {header: 'Doctor Degree', identifier: 'doctorDegree', data: ''},
+            {header: 'Doctor Join Date', identifier: 'doctorJoinDate', data: ''},
+            {header: 'Doctor Phone', identifier: 'doctorPhone', data: ''},
+            {header: 'Doctor Address', identifier: 'doctorAddress', data: ''},
+            {header: 'Doctor ID', identifier: 'doctorID', data: ''},
+            {header: 'Employment Type', identifier: 'employmentType', data: ''},
+      ])
+
       useEffect(()=>{
             fetchDoctors();
 
@@ -67,36 +79,14 @@ const AllDoctors = () => {
             setSearchResults(filtered);
       }
       
-      //doctor information for bio display 
-      const [doctorData, updateDoctorData] = useState([
-            {header: 'Doctor Department', identifier: 'doctorDepartment', data: ''},
-            {header: 'Doctor Specialty', identifier: 'doctorSpecialty', data: ''},
-            {header: 'Doctor Degree', identifier: 'doctorDegree', data: ''},
-            {header: 'Doctor Join Date', identifier: 'doctorJoinDate', data: ''},
-            {header: 'Doctor Phone', identifier: 'doctorPhone', data: ''},
-            {header: 'Doctor Address', identifier: 'doctorAddress', data: ''},
-            {header: 'Doctor ID', identifier: 'doctorID', data: ''},
-            {header: 'Employment Type', identifier: 'employmentType', data: ''},
-      ])
+
 
       //fetch selected doctor data from table and display doctor bio
       const fetchActiveDoctor = (doctorID: string) => {
             const filtered = allDoctorData.find((row) => row.doctorID === doctorID);
   
             if (filtered) {
-                  updateActiveDoctorProfile({
-                        profile: { ...filtered.profile },
-                        doctorDepartment: filtered.doctorDepartment,
-                        doctorEmail: filtered.doctorEmail,
-                        doctorSpecialty: filtered.doctorSpecialty,
-                        doctorJoinDate: filtered.doctorJoinDate,
-                        doctorAddress: filtered.doctorAddress,
-                        doctorPhone: filtered.doctorPhone,
-                        doctorAge: filtered.doctorAge,
-                        doctorDegree: filtered.doctorDegree,
-                        employmentType: filtered.employmentType,
-                        doctorID: filtered.doctorID,
-                  });
+                  updateActiveDoctorProfile(filtered);
 
                   sessionStorage.setItem('activeDoctorProfile', JSON.stringify(filtered))
 
@@ -118,19 +108,7 @@ const AllDoctors = () => {
             const filtered = updatedDoctors.find((row) => row.doctorID === doctorID);
 
             if (filtered) {
-                  updateActiveDoctorProfile({
-                        profile: { ...filtered.profile },
-                        doctorDepartment: filtered.doctorDepartment,
-                        doctorEmail: filtered.doctorEmail,
-                        doctorSpecialty: filtered.doctorSpecialty,
-                        doctorJoinDate: filtered.doctorJoinDate,
-                        doctorAddress: filtered.doctorAddress,
-                        doctorPhone: filtered.doctorPhone,
-                        doctorAge: filtered.doctorAge,
-                        doctorDegree: filtered.doctorDegree,
-                        employmentType: filtered.employmentType,
-                        doctorID: filtered.doctorID,
-                  });
+                  updateActiveDoctorProfile(filtered);
 
                   sessionStorage.setItem('activeDoctorProfile', JSON.stringify(filtered))
 
@@ -304,7 +282,7 @@ const AllDoctors = () => {
                                           <Table columns={columns} data={searchResults} />
                                     }
                                     < DoctorProfile 
-                                          updateNewDoctorProfile = {fetchUpdatedActiveDoctorData} 
+                                          fetchUpdatedActiveDoctorData = {fetchUpdatedActiveDoctorData}
                                           buttonLoadingAnimation = {buttonLoadingAnimation}
                                           updateButtonLoadingAnimation={updateButtonLoadingAnimation} 
                                           deleteDoctorFunction = {deleteDoctorFunction}

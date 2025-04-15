@@ -89,8 +89,6 @@ export interface DoctorProps {
 export interface EditDoctorProps {
         updateDoctorProfileState: React.Dispatch<React.SetStateAction<boolean>>,
         updateEditDoctorState: React.Dispatch<React.SetStateAction<boolean>>,
-        updateProfileVisibility: React.Dispatch<React.SetStateAction<boolean>>,
-        updateNewDoctorProfile: (doctorID: string)=> void
 }
 
 interface DoctorProfileListProps{
@@ -101,11 +99,11 @@ interface DoctorProfileListProps{
 
 export interface DoctorProfileProps {
         doctorData: DoctorProfileListProps[],
+        fetchUpdatedActiveDoctorData:  (doctorID: string)=> void,
         updateDoctorProfileState:React.Dispatch<React.SetStateAction<boolean>>,
         setIsConfirmationDialogOpen: React.Dispatch<React.SetStateAction<boolean>>,
         isConfirmationDialogOpen: boolean,
         deleteDoctorFunction: (doctorID: string) => void,
-        updateNewDoctorProfile: (doctorID: string) => void,
         doctorEditState: boolean,
         updateEditDoctorState:React.Dispatch<React.SetStateAction<boolean>>
         activeDoctor: DoctorProps,
@@ -120,6 +118,7 @@ export interface PatientTableProps {
         columns: TableColumn<PatientProps>[];
         data:  PatientProps[];
 } 
+
 export interface AddPatientFormInterface{
         patientName: string; 
         patientImage: string;
@@ -155,6 +154,11 @@ export interface PatientProps {
         updatedAt?: string | Date;
 }
 
+export interface EditPatientProps {
+        updatePatientProfileState: React.Dispatch<React.SetStateAction<boolean>>,
+        updateEditPatientState: React.Dispatch<React.SetStateAction<boolean>>,
+}
+
 interface PatientProfileListProps{
         header: string ,
         data: string | string[],
@@ -163,9 +167,11 @@ interface PatientProfileListProps{
     
 export interface PatientProfileProps {
         activePatientProfile: PatientProps,
-        updateProfileVisibility:React.Dispatch<React.SetStateAction<boolean>>,
-        updateEditPatientState:React.Dispatch<React.SetStateAction<boolean>>,
+        fetchUpdatedActivePatientData:  (patientID: string)=> void
         buttonLoadingAnimation: boolean,
+        updateButtonLoadingAnimation: React.Dispatch<React.SetStateAction<boolean>>,
+        isConfirmationDialogOpen: boolean,
+        deletePatientFunction: (patientID: string) => void,
         setIsConfirmationDialogOpen: React.Dispatch<React.SetStateAction<boolean>>,
         patientData: PatientProfileListProps[],
         updatePatientEditState: React.Dispatch<React.SetStateAction<boolean>>,
