@@ -1,29 +1,33 @@
 import DataTable, {TableColumn } from 'react-data-table-component';
-import {PatientProps} from '../DataTypes'
 
 import userplaceholder from '../../images/userplaceholderlogo.png'
 
+import { useGlobalContext } from '../../context/useGlobalContext';
 
-    
-interface TableProps {
-    columns: TableColumn<PatientProps>[];
-    data:  PatientProps[];
-}
+import {PatientTableProps, PatientProps} from '../DataTypes'; 
 
-const PatientTable: React.FC<TableProps> = ({ columns, data }) => {
 
-    
+
+const PatientTable: React.FC<PatientTableProps> = ({ columns, data }) => {
+
+    const {baseURL} =  useGlobalContext();
+
     const customColumns: TableColumn<PatientProps>[] = columns.map((col) => {
         if (col.name === 'Patient'){
             return {
                 ...col,
                 cell: (row: PatientProps) => {
                     const patientProfile = row.profile;
+
+                    const imagePath = patientProfile.patientImage 
+                    ? `${baseURL}/images/patientimages/${patientProfile.patientImage}?v=${new Date(row.updatedAt || Date.now()).getTime()}
+                    ` 
+                    : userplaceholder;
             
                     return (
                       <div className="flex items-center">
                             <img
-                                src={patientProfile.patientImage ? patientProfile.patientImage : userplaceholder }
+                                src={imagePath }
                                 alt={patientProfile.patientName}
                                 className="w-8 h-8 rounded-full mr-2"
                             />
@@ -36,6 +40,7 @@ const PatientTable: React.FC<TableProps> = ({ columns, data }) => {
         return col;
     });
 
+    
 
     const paginationComponentOptions = {
         rowsPerPageText: '',

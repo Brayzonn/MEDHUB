@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 
-
+import { useGlobalContext } from '../../context/useGlobalContext';
+import {PatientProfileProps} from '../DataTypes';
 import ConfirmationDialog from '../globalComponents/ConfirmationDialog';
 import EditPatient from "./EditPatient";
 import AdmitPatients from "./AdmitPatients";
-// import { useGlobalContext } from '../../context/useGlobalContext';
+
 
 import userplaceholder from '../../images/userplaceholderlogo.png';
 import emailIcon from '../../images/mailicon.png';
 import phoneIcon from '../../images/mobileicon.png';
+import whiteBtnLoader from '../../images/buttonloaderwhite.svg';
 
 import { FaEdit } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
@@ -18,24 +20,11 @@ import { MdLocalHospital } from "react-icons/md";
 import { FaRegTrashCan } from "react-icons/fa6";
 
 
-interface PatientProfileListProps{
-    header: string ,
-    data: string | string[],
-    identifier: string,
-}
 
-interface PatientProfileProps {
-    patientData: PatientProfileListProps[],
-    updatePatientEditState: React.Dispatch<React.SetStateAction<boolean>>,
-    patientEditState: boolean,
-    updatePatientProfile: () => void,
-    isPatientProfileVisible: boolean,
-    updatePatientProfileVisibility: React.Dispatch<React.SetStateAction<boolean>>,
-}
 
-const PatientProfile: React.FC<PatientProfileProps> = ({patientData, updatePatientProfile, updatePatientProfileVisibility, updatePatientEditState, patientEditState, isPatientProfileVisible}) => {
+const PatientProfile: React.FC<PatientProfileProps> = ({activePatientProfile, updateProfileVisibility, updateEditPatientState, patientData, updatePatientProfile, updatePatientProfileVisibility, updatePatientEditState, patientEditState, setIsConfirmationDialogOpen, buttonLoadingAnimation, isPatientProfileVisible}) => {
 
-//   const {allPatientData} = useGlobalContext();
+  const {baseURL, fetchPatients} = useGlobalContext();
 
   const activePatientProfileString = sessionStorage.getItem('activePatientProfile');
 
@@ -64,6 +53,15 @@ const PatientProfile: React.FC<PatientProfileProps> = ({patientData, updatePatie
         console.log(roomId)
   }
 
+  const editPatientProfileFunc = () =>{
+        updateProfileVisibility(false);
+        updateEditPatientState(true);  
+  }
+
+  const callUpdatedAllPatientData = () =>{
+        fetchPatients()
+  }
+
   return (
     <>
     {(isPatientProfileVisible && !patientEditState) && <div className="z-50 fixed top-0 left-0 w-full min-h-full flex justify-center items-center text-[#161616]">
@@ -87,22 +85,30 @@ const PatientProfile: React.FC<PatientProfileProps> = ({patientData, updatePatie
                         {/* patient details */}
                         <div className="w-[60%] flex flex-col space-y-2 ">
                                 <div className="w-full flex space-x-4">
-                                    <img src={userplaceholder} alt="profile" className="w-[120px] h-[120px] border border-inherit rounded-full" />
+                                        <img 
+                                        src={
+                                        activePatientProfile.profile.patientImage 
+                                        ? `${baseURL}/images/${activePatientProfile.profile.patientImage}?v=${new Date(activePatientProfile.updatedAt || Date.now()).getTime()}`
+                                        : userplaceholder
+                                        } 
+                                        alt="profile" 
+                                        className="w-[120px] h-[120px] border border-inherit rounded-full" 
+                                        />
                                     
-                                    <div className='flex flex-col space-y-2'>
-                                <h3 className='text-[24px] font-bold text-black'>{}</h3>
-                                            <div className='flex items-center flex-wrap w-full'>
-                                                <div className='flex items-center space-x-2 mr-[25px] mb-2'>
-                                                        <img src={emailIcon} alt='emailIcon' className='w-[20px] h-[20px]' />
-                                                        <a href={`mailto:grey@gmail.com`}  className='text-[#555555] text-[14px]'>grey@gmail.com</a>
-                                                </div>
+                                        <div className='flex flex-col space-y-2'>
+                                                <h3 className='text-[24px] font-bold text-black'>{}</h3>
+                                                <div className='flex items-center flex-wrap w-full'>
+                                                        <div className='flex items-center space-x-2 mr-[25px] mb-2'>
+                                                                <img src={emailIcon} alt='emailIcon' className='w-[20px] h-[20px]' />
+                                                                <a href={`mailto:grey@gmail.com`}  className='text-[#555555] text-[14px]'>grey@gmail.com</a>
+                                                        </div>
 
-                                                <div className='flex items-center space-x-2 mr-[25px] mb-2'>
-                                                        <img src={phoneIcon} alt='emailIcon' className='w-[20px] h-[20px]' />
-                                                        <p className='text-[#555555] text-[14px]'>+234 80 456 3677</p>
+                                                        <div className='flex items-center space-x-2 mr-[25px] mb-2'>
+                                                                <img src={phoneIcon} alt='emailIcon' className='w-[20px] h-[20px]' />
+                                                                <p className='text-[#555555] text-[14px]'>+234 80 456 3677</p>
+                                                        </div>
                                                 </div>
-                                            </div>
-                                    </div>
+                                        </div>
 
                                 </div>
                                 
@@ -144,7 +150,7 @@ const PatientProfile: React.FC<PatientProfileProps> = ({patientData, updatePatie
                                 </div>
                 
                                 <div className='pt-2 w-full flex items-end space-x-2'>
-                                        <button onClick={()=>{updatePatientEditState(true); window.scrollTo(0, 400);}} className="transition-properties p-1 w-[130px] min-h-[40px] text-white border bg-yellow-500 text-[14px] border-yellow-500 rounded-md flex items-center justify-center space-x-1 hover:border-yellow-400 hover:bg-yellow-400">
+                                        <button onClick={()=>{editPatientProfileFunc(); window.scrollTo(0, 400);}} className="transition-properties p-1 w-[130px] min-h-[40px] text-white border bg-yellow-500 text-[14px] border-yellow-500 rounded-md flex items-center justify-center space-x-1 hover:border-yellow-400 hover:bg-yellow-400">
                                             <MdEditSquare className = "text-white text-[13px]"/>
                                             <p>Edit Profile</p>
                                         </button>
@@ -154,9 +160,15 @@ const PatientProfile: React.FC<PatientProfileProps> = ({patientData, updatePatie
                                             <p>Admit Patient</p>
                                         </button>
 
-                                        <button onClick={()=> {updateConfirmPatientDelete(true)}} className="transition-properties p-1 w-[130px] min-h-[40px] bg-[#d42c31] text-white border border-[#d42c31] text-[14px] rounded-md flex items-center justify-center space-x-1 hover:border-[#c63439] hover:bg-[#c63439]">
-                                            <FaTrash className = "text-white text-[13px]"/>
-                                            <p>Delete Profile</p>
+                                        <button disabled = {buttonLoadingAnimation ? true : false}  onClick={()=> {setIsConfirmationDialogOpen(true)}} className="transition-properties w-[130px] h-[40px] bg-[#d42c31] text-white border border-[#d42c31] text-[14px] rounded-md flex items-center justify-center space-x-2 hover:border-[#c63439] hover:bg-[#c63439]">
+                                                {buttonLoadingAnimation ? 
+                                                                <img src = {whiteBtnLoader} className='w-[15px] h-[15px]' alt='loader'/>    
+                                                        :
+                                                                <div className="flex items-center justify-center space-x-2">
+                                                                        <p>Delete Profile</p>
+                                                                        <FaTrash className = "text-white text-[14px]"/>
+                                                                </div>
+                                                }
                                         </button>
                                 </div>
                         </div>
@@ -165,7 +177,7 @@ const PatientProfile: React.FC<PatientProfileProps> = ({patientData, updatePatie
                         <div className='relative w-[40%] min-h-[18rem] flex flex-col items-end'>
 
                                 <div className="absolute w-full max-h-full flex flex-col items-end space-y-2"> 
-                                        <button onClick={()=> updatePatientProfileVisibility(false)} className="transition-properties p-1 w-[100px] min-h-[40px] bg-black text-white border border-black text-[14px] rounded-md flex items-center justify-center space-x-2 hover:border-[#121212] hover:bg-[#121212]">
+                                        <button onClick={()=> {updatePatientProfileVisibility(false); callUpdatedAllPatientData();}} className="transition-properties p-1 w-[100px] min-h-[40px] bg-black text-white border border-black text-[14px] rounded-md flex items-center justify-center space-x-2 hover:border-[#121212] hover:bg-[#121212]">
                                                 <FaChevronDown className ='text-white text-[13px]'/>
                                                 <p>Close</p>
                                         </button>        

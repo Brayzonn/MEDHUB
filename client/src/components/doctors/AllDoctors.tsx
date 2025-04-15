@@ -18,9 +18,13 @@ const AllDoctors = () => {
 
       //global variables
       const userToken = sessionStorage.getItem('userToken');
-      const {allDoctorData, fetchDoctor, baseURL} =  useGlobalContext();
+      const {allDoctorData, fetchDoctors, baseURL} =  useGlobalContext();
 
       //component variables
+      const [isLoading, setIsLoading] = useState<boolean>(true); 
+      const [searchResults, setSearchResults] = useState<DoctorProps[]>([]);
+      const [isInputActive, setInputIsActive] = useState<boolean>(false);
+      const [isProfileVisible, setProfileVisibility] = useState<boolean>(false);
       const [buttonLoadingAnimation, updateButtonLoadingAnimation] = useState<boolean>(false)
       const [allDoctorState, updateAllDoctorState] = useState<boolean>(true);
       const [addDoctorState, updateAddDoctorState] = useState<boolean>(false);
@@ -43,13 +47,16 @@ const AllDoctors = () => {
             doctorID: '',
       })
 
-
-      const [searchResults, setSearchResults] = useState<DoctorProps[]>([]);
-      const [isInputActive, setInputIsActive] = useState<boolean>(false);
-      const [isProfileVisible, setProfileVisibility] = useState<boolean>(false);
-
       useEffect(()=>{
-            fetchDoctor() 
+            fetchDoctors();
+
+            if(!allDoctorData || allDoctorData.length === 0){
+                  const timeout = setTimeout(() => {
+                        setIsLoading(false);
+                  }, 700);
+                  return () => clearTimeout(timeout);  
+            }
+            setIsLoading(false);
       }, [])
 
       //filter doctor data based off search parameters
@@ -106,7 +113,7 @@ const AllDoctors = () => {
 
       //fetch new selected doctor details on data update
       const fetchUpdatedActiveDoctorData = async (doctorID: string) => {   
-            const updatedDoctors = await fetchDoctor()
+            const updatedDoctors = await fetchDoctors()
 
             const filtered = updatedDoctors.find((row) => row.doctorID === doctorID);
 
@@ -236,14 +243,14 @@ const AllDoctors = () => {
             }
       ];
 
-      if (!allDoctorData || allDoctorData.length === 0 ) {
+      if (isLoading ) {
             return (
             <div className="relative overflow-hidden flex flex-col justify-center items-center bg-transparent text-black w-full min-h-screen">
                         <img src={spinner} alt="loading" className="w-[50px] h-[50px]" />
             </div>
 
             )
-            } else {
+      } else {
 
 
   return (
@@ -296,7 +303,21 @@ const AllDoctors = () => {
                                           :   
                                           <Table columns={columns} data={searchResults} />
                                     }
-                                    < DoctorProfile updateNewDoctorProfile = {fetchUpdatedActiveDoctorData}  buttonLoadingAnimation = {buttonLoadingAnimation} updateButtonLoadingAnimation={updateButtonLoadingAnimation} deleteDoctorFunction = {deleteDoctorFunction} setIsConfirmationDialogOpen ={setIsConfirmationDialogOpen} isConfirmationDialogOpen ={isConfirmationDialogOpen} updateEditDoctorState ={updateEditDoctorState} activeDoctor = {activeDoctorProfile} doctorEditState={doctorEditState} updateDoctorProfileState = {setProfileVisibility} doctorData={doctorData} isDoctorProfileVisible={isProfileVisible} updateProfileVisibility={setProfileVisibility}/> 
+                                    < DoctorProfile 
+                                          updateNewDoctorProfile = {fetchUpdatedActiveDoctorData} 
+                                          buttonLoadingAnimation = {buttonLoadingAnimation}
+                                          updateButtonLoadingAnimation={updateButtonLoadingAnimation} 
+                                          deleteDoctorFunction = {deleteDoctorFunction}
+                                          setIsConfirmationDialogOpen ={setIsConfirmationDialogOpen} 
+                                          isConfirmationDialogOpen ={isConfirmationDialogOpen} 
+                                          updateEditDoctorState ={updateEditDoctorState} 
+                                          activeDoctor = {activeDoctorProfile} 
+                                          doctorEditState={doctorEditState} 
+                                          updateDoctorProfileState = {setProfileVisibility}
+                                          doctorData={doctorData} 
+                                          isDoctorProfileVisible={isProfileVisible} 
+                                          updateProfileVisibility={setProfileVisibility}
+                                    /> 
                               </div>
                             </> 
                               : 

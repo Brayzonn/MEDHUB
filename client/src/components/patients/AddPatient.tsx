@@ -3,157 +3,183 @@ import { useState } from "react";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
+import {AddPatientFormInterface} from '../DataTypes'
 import { useGlobalContext } from '../../context/useGlobalContext';
-import {DropDownListPatient} from "../globalComponents/DropDownList";
+import {PatientDropDownList} from "../globalComponents/DropDownList";
 import {PatientInputForm} from '../globalComponents/InputForm';
+
+import whiteBtnLoader from '../../images/buttonloaderwhite.svg';
+
 
 const AddPatient = () => {
 
-      const {baseURL} =  useGlobalContext();
+
+      //global variables
+      const {baseURL, fetchPatients, fetchDashboardData} =  useGlobalContext();
+      const userToken = sessionStorage.getItem('userToken');
+
+      //component variables
+      const [buttonLoadingAnimation, updateButtonLoadingAnimation] = useState<boolean>(false)
 
       const dropdownContainer = [
-            {buttonId: 'patientEMO' , buttonName: 'EMO', listOptions : ['YARN Construction', 'Grey Finances', 'Chelsea FC'] },
-            {buttonId: 'patientBloodType ' , buttonName: 'Blood Type', listOptions : ['O+', 'O-'] }  , 
-            {buttonId: 'patientGenotype' , buttonName: 'Genotype', listOptions : ['AA', 'AS', 'SS'] }  ,   
+        {buttonId: 'patientEMO' , buttonName: 'EMO', listOptions : ['YARN Construction', 'Grey Finances', 'Chelsea FC'] },
+        {buttonId: 'patientBloodType' , buttonName: 'Blood Type', listOptions : ['O+', 'O-'] }  , 
+        {buttonId: 'patientGenotype' , buttonName: 'Genotype', listOptions : ['AA', 'AS', 'SS'] }  ,   
       ]
 
-      const [InputFormData] = useState([
+      const InputFormData = [
                 {
-                        labelName: 'Patient Name ', labelSpan: '*', onChange: (value: string) => setAddPatientForm((prevState) => ({
-                                ...prevState,
-                                profile: { ...prevState.profile, patientName: value },
-                        })),
-                        inputName: 'patientName', inputType: 'text',
+                        labelName: 'Patient Name ', labelSpan: '*', inputName: 'patientName', inputType: 'text', 
                 },
 
                 {       
-                        labelName: 'Age', labelSpan: '*', onChange: (value: string) => setAddPatientForm((prevState) => ({
-                                ...prevState,
-                                profile: { ...prevState.profile, patientAge: value },
-                         })),
-                        inputName: 'patientAge', inputType: 'number', 
+                        labelName: 'Age', labelSpan: '*', inputName: 'patientAge', inputType: 'number', 
                 },
 
-                {labelName: 'Medical Conditions', labelSpan: '*',  onChange: (value: string) => setAddPatientForm((prevState) => ({
-                        ...prevState,
-                                profile: { ...prevState.profile, patientConditions: value },
-                        })),
-                        inputName: 'patientConditions', inputType: 'text', 
+                {
+                        labelName: 'Medical Conditions', labelSpan: '*', inputName: 'patientConditions', inputType: 'text', 
                 },
 
-                {labelName: 'Phone Number', labelSpan: '*', onChange: (value: string) => setAddPatientForm((prevState) => ({
-                        ...prevState,
-                                profile: { ...prevState.profile, patientPhoneNumber: value },
-                        })),
-                        inputName: 'patientPhoneNumber', inputType: 'tel', 
+                {
+                        labelName: 'Phone Number', labelSpan: '*', inputName: 'patientPhoneNumber', inputType: 'tel', 
                 },
 
-                {labelName: 'Email', labelSpan: '*', onChange: (value: string) => setAddPatientForm((prevState) => ({
-                        ...prevState,
-                                profile: { ...prevState.profile, patientEmail: value },
-                        })),
-                        inputName: 'patientEmail', inputType: 'email', 
+                {
+                        labelName: 'Email', labelSpan: '*', inputName: 'patientEmail', inputType: 'email', 
                 },
 
-                {labelName: 'Height(inches)', labelSpan: '*', onChange: (value: string) => setAddPatientForm((prevState) => ({
-                        ...prevState,
-                                profile: { ...prevState.profile, patientHeight: value },
-                        })),
-                        inputName: 'patientHeight', inputType: 'number', 
+                {
+                        labelName: 'Height(inches)', labelSpan: '*', inputName: 'patientHeight', inputType: 'number', 
                 },
 
-                {labelName: 'Weight(kg)', labelSpan: '*', onChange: (value: string) => setAddPatientForm((prevState) => ({
-                        ...prevState,
-                                profile: { ...prevState.profile, patientWeight: value },
-                        })),
-                        inputName: 'patientWeight', inputType: 'number', 
+                {
+                        labelName: 'Weight(kg)', labelSpan: '*', inputName: 'patientWeight', inputType: 'number', 
                 },
 
-                {labelName: 'Birth Date ', labelSpan: '*', onChange: (value: string) => setAddPatientForm((prevState) => ({
-                        ...prevState,
-                                profile: { ...prevState.profile, patientJoindate: value },
-                        })),
-                        inputName: 'patientJoindate', inputType: 'date'
+                {
+                        labelName: 'Birth Date ', labelSpan: '*', inputName: 'patientBirthDate', inputType: 'date'
                 },
 
-                {labelName: 'Join Date', labelSpan: '*',onChange: (value: string) => setAddPatientForm((prevState) => ({
-                        ...prevState,
-                                profile: { ...prevState.profile, patientJoindate: value },
-                        })),
-                        inputName: 'patientJoindate', inputType: 'date'
+                {
+                        labelName: 'Join Date', labelSpan: '*', inputName: 'patientJoinDate', inputType: 'date'
                 },  
-      ])
+      ]
 
       //dropzone for image upload
-      const [Idimages, setIdImages] = useState<string>('');
+      const [Idimages, setIdImages] = useState<File>();
+      const [stringIdimages, setStringIdImages] = useState<string>('');
 
-      const handleImageDrop = (acceptedFiles: File[]) => {
-                if (acceptedFiles.length > 0) {
-                        const firstAcceptedFile = acceptedFiles[0];
-                        const imageUrl = URL.createObjectURL(firstAcceptedFile);
+      const handleImageDrop = (acceptedFile: File[]) => {
+                if (acceptedFile) {
+                        const imageUrl  = acceptedFile[0];
+                        const stringifiedImageUrl = URL.createObjectURL(acceptedFile[0]);
+                        
+                        setStringIdImages(stringifiedImageUrl);
                         setIdImages(imageUrl);
-                        setAddPatientForm({...addPatientForm, profile: {...addPatientForm.profile, patientImage: imageUrl }})
+                        setAddPatientForm({...addPatientForm, patientImage: stringifiedImageUrl});       
                 }    
       };
 
 
       //add patient form submit logic
-      const [addPatientForm, setAddPatientForm] = useState({
-                profile: { patientName: '', patientImage: '' },
-                patientID: '',
-                patientNotes: [''] ,
+      const [addPatientForm, setAddPatientForm] = useState<AddPatientFormInterface>({
+                patientName: '', 
+                patientImage: '',
                 patientAge: '',
                 patientBloodType: '',
                 patientHeight: '',
                 patientGenotype: '',
                 patientWeight: '',
                 patientConditions: [''],
-                patientJoindate: '',
+                patientJoinDate: '',
                 patientBirthDate: '',
                 patientPhoneNumber: '', 
                 patientEmail: '',
-                admissionStatus: false,
                 patientEMO: '',
       })
 
+      const callUpdatedAllPatientData = () =>{
+        fetchPatients()
+      }
+
+
       const submitAddPatientForm = async () =>{
                 try {
-
+                        updateButtonLoadingAnimation(true)
                         if (Object.values(addPatientForm).some(value => value === '')) {
-                                toast.error('Please fill in all fields.')  
+                                toast.error('Please complete all fields.')  
+                                updateButtonLoadingAnimation(false)
                         } else {
-                                const addPatientApiCall = await axios.post(`${baseURL}/api/user/addpatient`, {...addPatientForm})
-                                const addPatientErrorResponseData = addPatientApiCall.data.errorMessage;
-                                const addPatientResponseStatus: boolean =  addPatientApiCall.data.status;
+                                const formData = new FormData();
+                                const {patientImage, ...updatedPatientForm} = addPatientForm
 
-                                if(addPatientResponseStatus === false){
-                                        toast.error(addPatientErrorResponseData)
+                                Object.entries(updatedPatientForm).forEach(([key, value]) => {
+                                        if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+                                                formData.append(key, String(value));
+                                        } else if (Array.isArray(value)) {
+                                                value.forEach((item, index) => {
+                                                        formData.append(`${key}[${index}]`, item); 
+                                                });
+                                        } 
+                                });
+                                      
+                                if (Idimages instanceof File) {
+                                      formData.append('patientImage', Idimages);
                                 }
-                                else{
+
+                                if (!userToken || !baseURL) {
+                                      toast.error('Authorization token or base URL is missing');
+                                      return;
+                                }
+
+                                const addPatientApiCall = await axios.post(`${baseURL}/api/user/addnewpatient`, formData, {
+                                        headers: {
+                                                Authorization: `Bearer ${userToken}`,
+                                                'Content-Type': 'multipart/form-data',  
+                                        },
+                                });
+                                
+                                const addPatientResponseData = addPatientApiCall.data.payload;
+
+                                if(addPatientApiCall.status === 201){
+                                        updateButtonLoadingAnimation(false)
+                                        setIdImages(undefined)
                                         setAddPatientForm({
-                                                profile: { patientName: '', patientImage: '' },
-                                                patientID: '',
-                                                patientNotes: [''] ,
+                                                patientName: '', 
+                                                patientImage: '',
                                                 patientAge: '',
                                                 patientBloodType: '',
                                                 patientHeight: '',
                                                 patientGenotype: '',
                                                 patientWeight: '',
                                                 patientConditions: [''],
-                                                patientJoindate: '',
+                                                patientJoinDate: '',
                                                 patientBirthDate: '',
                                                 patientPhoneNumber: '', 
                                                 patientEmail: '',
-                                                admissionStatus: false,
-                                                patientEMO: '',
+                                                patientEMO: ''
                                         })
-
-                                        toast.success('Patient added successfully')
+                                        toast.success(addPatientResponseData)
+                                        fetchDashboardData()
+                                        callUpdatedAllPatientData()
                                 }        
                         }
                         
                 } catch (error) {
-                        console.log(error)
+                        if (axios.isAxiosError(error)) {
+                                if (error.response && error.response.data && error.response.data.message) {
+                                        toast.error(`Error: ${error.response.data.message}`);
+                                        console.error('Unexpected error:', error);
+                                } else {
+                                        toast.error('Something went wrong');
+                                        console.error('Unexpected error2:', error);
+                                }
+                                updateButtonLoadingAnimation(false);
+                        } else {
+                                console.error('Unexpected error:', error);
+                                toast.error('An unexpected error occurred');
+                                updateButtonLoadingAnimation(false);
+                        }
                 }
       }
 
@@ -167,14 +193,14 @@ const AddPatient = () => {
                                 {({ getRootProps, getInputProps }) => (
                                         <div {...getRootProps()} className="relative max-w-[150px] min-h-[150px] flex justify-center items-center p-2 border bg-inherit border-[#e9eaeb] rounded-md">
                                                 <input {...getInputProps()} />
-                                                {Idimages && <img src={Idimages} alt='Selected Image' className='transition-properties w-full h-full object-cover rounded-md' />}
+                                                {Idimages && <img src={stringIdimages} alt='Selected Image' className='transition-properties w-full h-full object-cover rounded-md' />}
                                                 {!Idimages && <p className='text-[14px]'>Click/Drag and drop here to select doctor image.</p>}
                                         </div>
                                 )}
                         </Dropzone>  
 
-                        {Idimages !== '' && <button 
-                                onClick={()=>setIdImages('')}
+                        {stringIdimages !== '' && <button 
+                                onClick={()=>{setStringIdImages(''); setIdImages(undefined)}}
                                 className="transition-properties text-[13px] font-[600] flex justify-center items-center bg-red-500 text-white w-[20px] h-[20px] border border-red-50 rounded-md"
                         >
                                 X
@@ -182,14 +208,20 @@ const AddPatient = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lx:grid-cols-4 gap-[1rem]">
-                        <PatientInputForm prevValues = {addPatientForm} InputFormData = {InputFormData} />
-
-                        <DropDownListPatient allPatientDropDownContainer = {dropdownContainer}  setPatientSubmitFormDropdown = {setAddPatientForm}/>
+                        <PatientInputForm formValue = {addPatientForm} onChangeFunc={setAddPatientForm} prevValues = {addPatientForm} InputFormData = {InputFormData} />
+                        
+                        <PatientDropDownList allPatientDropDownContainer = {dropdownContainer} patientInitialValues = {addPatientForm}  setPatientSubmitFormDropdown = {setAddPatientForm}/>
                 </div>
 
-                <button onClick={()=> submitAddPatientForm()} className="transition-properties w-[190px] h-[40px] bg-gradient-to-r from-slate-800 to-slate-900 text-white border border-white text-[14px] rounded-md flex items-center justify-center space-x-2 hover:bg-[#13117c]">
-                        <p>Add Patient</p>
-                        <p className="text-[16px]">+</p>
+                <button disabled = {buttonLoadingAnimation ? true : false} onClick={()=>submitAddPatientForm()} className="transition-properties w-[190px] h-[40px] bg-gradient-to-r from-slate-800 to-slate-900 text-white border border-white text-[14px] rounded-md flex items-center justify-center space-x-2 hover:bg-[#13117c]">
+                        {buttonLoadingAnimation ? 
+                                <img src = {whiteBtnLoader} className='w-[25px] h-[25px]' alt='loader'/>    
+                        :
+                                <>
+                                <p>Add Patient</p>
+                                <p className="text-[16px]">+</p>
+                                </>
+                        }
                 </button>
     </div>
     </>

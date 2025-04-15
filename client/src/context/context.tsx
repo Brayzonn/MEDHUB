@@ -20,9 +20,9 @@ interface AppContextProps {
       allAdmissionsData: AdmissionProps[];
       updateAllAdmissionsData: Dispatch<SetStateAction<AdmissionProps[]>>;
 
-      fetchDoctor: () => Promise<DoctorProps[]>;
-      fetchNurse: () => Promise<void>;
-      fetchPatient: () => Promise<void>;
+      fetchDoctors: () => Promise<DoctorProps[]>;
+      fetchNurses: () => Promise<void>;
+      fetchPatients: () => Promise<PatientProps[]>;
       fetchStaff: () => Promise<void>;
       fetchAdmissions: () => Promise<void>; 
       fetchDashboardData : () => Promise<void>; 
@@ -42,9 +42,9 @@ const AppContext = createContext<AppContextProps>({
       allDashData : [],
       fetchDashboardData:  async () => {},
       updateAllAdmissionsData: () => {},
-      fetchDoctor: async () => [],
-      fetchNurse: async () => {},
-      fetchPatient: async () => {},
+      fetchDoctors: async () => [],
+      fetchNurses: async () => {},
+      fetchPatients: async () => [],
       fetchStaff: async () => {},
       fetchAdmissions: async () => {},
 });
@@ -81,7 +81,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     }
 
     //fetch doctor data
-    const fetchDoctor = async () => { 
+    const fetchDoctors = async () => { 
         try {
             const authConfig = {
                 headers: {
@@ -96,39 +96,42 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
             console.log(error);
         }  
     };
+
+    //fetch patient data
+    const fetchPatients = async () => { 
+        try {
+            const authConfig = {
+                headers: {
+                    Authorization: `Bearer ${sessionStorage.getItem('userToken')}`,
+                },
+            };
+            const patientResponse = await axios.get(`${baseURL}/api/user/getallpatients`, authConfig);
+            const patientData = patientResponse.data.payload;
+            updateAllPatientData(patientData);
+            return patientData;
+        } catch (error) {
+            console.log(error)
+        }  
+    }
     
 
     //fetch nurse data
-    const fetchNurse = async () => { 
+    const fetchNurses = async () => { 
         try {
             const UserAuthConfig = {
                 headers: {
-                    Authorization: `Bearer ${userToken}`,
+                    Authorization: `Bearer ${sessionStorage.getItem('userToken')}`,
                 },
             };
             const nurseResponse = await axios.get(`${baseURL}/api/user/getallnurses`, UserAuthConfig);
-            const nurseData = nurseResponse.data;
+            const nurseData = nurseResponse.data.payload;
             updateAllNurseData(nurseData);
         } catch (error) {
             console.log(error)
         }  
     }
 
-    //fetch patient data
-    const fetchPatient = async () => { 
-        try {
-            const UserAuthConfig = {
-                headers: {
-                    Authorization: `Bearer ${userToken}`,
-                },
-            };
-            const patientResponse = await axios.get(`${baseURL}/api/user/getallpatients`, UserAuthConfig);
-            const patientData = patientResponse.data;
-            updateAllPatientData(patientData);
-        } catch (error) {
-            console.log(error)
-        }  
-    }
+
 
     //fetch staff data
     const fetchStaff = async () => { 
@@ -151,7 +154,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
         try {
             const UserAuthConfig = {
                 headers: {
-                    Authorization: `Bearer ${userToken}`,
+                    Authorization: `Bearer ${sessionStorage.getItem('userToken')}`,
                 },
             };
             const admissionResponse = await axios.get(`${baseURL}/api/user/getalladmissions`, UserAuthConfig);
@@ -164,15 +167,15 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
 
     return <AppContext.Provider value={{
         baseURL,
-        fetchDoctor,
+        fetchDoctors,
         allDoctorData,
         allDashData,
         fetchDashboardData,
         updateAllDoctorData,
-        fetchNurse,
+        fetchNurses,
         allNurseData,
         updateAllNurseData,
-        fetchPatient,
+        fetchPatients,
         allPatientData,
         updateAllPatientData,
         fetchStaff,

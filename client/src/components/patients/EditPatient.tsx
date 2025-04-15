@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 import userplaceholder from '../../images/userplaceholderlogo.png'
 
-import {DropDownListPatient} from "../globalComponents/DropDownList";
+import {PatientDropDownList} from "../globalComponents/DropDownList";
 import ConfirmationDialog from '../globalComponents/ConfirmationDialog';
 import {PatientInputForm} from '../globalComponents/InputForm';
 import { useGlobalContext } from '../../context/useGlobalContext';
@@ -221,7 +221,7 @@ const EditPatient: React.FC<EditPatientProps> = ({updatePatientProfileForm, upda
 
                                         <PatientInputForm  prevValues = {editPatientForm} InputFormData = {InputFormData} />
 
-                                        <DropDownListPatient patientInitialValues = {editPatientForm} allPatientDropDownContainer = {dropdownContainer}  setPatientSubmitFormDropdown = {setEditPatientForm}/>
+                                        <PatientDropDownList patientInitialValues = {editPatientForm} allPatientDropDownContainer = {dropdownContainer}  setPatientSubmitFormDropdown = {setEditPatientForm}/>
                                 </div>
                                                         
 

@@ -1,7 +1,7 @@
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { useState } from "react";
 
-import {AddDoctorFormInterface, PatientProps, NurseFormProps, StaffFormProps} from '../DataTypes'
+import {AddDoctorFormInterface, AddPatientFormInterface, NurseFormProps, StaffFormProps} from '../DataTypes'
 
     //doctor dropdown
     interface dropdownContainer {
@@ -18,7 +18,7 @@ import {AddDoctorFormInterface, PatientProps, NurseFormProps, StaffFormProps} fr
 
     const DoctorDropDownList: React.FC<DoctordropDownProps> = ({setSubmitFormDropdown, doctorInitialValues, allDropDownContainer }) => {
 
-        const [doctorSpecialtyDropDownStates, updateDoctorSpecialtyDropDownStates] = useState<number[]>(Array(allDropDownContainer.length).fill(-1));
+        const [doctorDropDownStates, updateDoctorDropDownStates] = useState<number[]>(Array(allDropDownContainer.length).fill(-1));
         const [test, uptest] = useState<{ [key: string]: string }>({});
 
         return (
@@ -27,23 +27,23 @@ import {AddDoctorFormInterface, PatientProps, NurseFormProps, StaffFormProps} fr
                 <div className="relative flex items-end space-y-1" key={index}>
                         <button
                                 onClick={() => {
-                                    const newStates = [...doctorSpecialtyDropDownStates];
+                                    const newStates = [...doctorDropDownStates];
                                     newStates[index] = newStates[index] === -1 ? index : -1;
-                                    updateDoctorSpecialtyDropDownStates(newStates);
+                                    updateDoctorDropDownStates(newStates);
                                 }}
                                 className="shadow-inner p-2 border-[#e1e1e1] border-[1px] rounded-[5px] w-[200px] min-h-[42px] text-black bg-white flex items-center justify-between"
                         >
                                 <p className="text-[#636363]">
-                                    {doctorSpecialtyDropDownStates[index] !== -1 ? 
+                                    {doctorDropDownStates[index] !== -1 ? 
                                         (test[dropdown.buttonName] === undefined ? dropdown.buttonName : test[dropdown.buttonName]) 
                                     :
                                         doctorInitialValues?.[dropdown.buttonId as keyof AddDoctorFormInterface] as string || dropdown.buttonName     
                                     }
                                 </p>
-                                {doctorSpecialtyDropDownStates[index] !== -1 ? <FaChevronUp className="text-[#636363]" /> : < FaChevronDown className="text-[#636363]" />}
+                                {doctorDropDownStates[index] !== -1 ? <FaChevronUp className="text-[#636363]" /> : < FaChevronDown className="text-[#636363]" />}
                         </button>
 
-                        {doctorSpecialtyDropDownStates[index] !== -1 && (
+                        {doctorDropDownStates[index] !== -1 && (
                                 <ul className="absolute z-50 left-0 p-2 overflow-y-auto flex flex-col space-y-1 top-[100%] text-[14px] w-[200px] max-h-[550px] bg-black border border-black border-r-[#fff] rounded-[5px] text-white">
                                         {dropdown.listOptions.map((objectData: string, optionIndex: number, array: string[]) => (
                                             <li
@@ -53,9 +53,9 @@ import {AddDoctorFormInterface, PatientProps, NurseFormProps, StaffFormProps} fr
                                                     newTest[dropdown.buttonName] = objectData;
                                                     uptest(newTest);
                                                     setSubmitFormDropdown((prevForm: AddDoctorFormInterface) => ({ ...prevForm, [dropdown.buttonId]: objectData }));
-                                                    const newStates = [...doctorSpecialtyDropDownStates];
+                                                    const newStates = [...doctorDropDownStates];
                                                     newStates[index] = -1;
-                                                    updateDoctorSpecialtyDropDownStates(newStates);
+                                                    updateDoctorDropDownStates(newStates);
                                                 }}
                                                 className={`${optionIndex !== array.length - 1 && 'border-b border-b-[#3e3e3e]'} py-1 cursor-pointer`}
                                             >
@@ -76,11 +76,11 @@ import {AddDoctorFormInterface, PatientProps, NurseFormProps, StaffFormProps} fr
     // add patient drop down
     interface dropDownPropsPatient {
             allPatientDropDownContainer: dropdownContainer[],
-            patientInitialValues?: PatientProps,
-            setPatientSubmitFormDropdown: React.Dispatch<React.SetStateAction<PatientProps>>,
+            patientInitialValues?: AddPatientFormInterface,
+            setPatientSubmitFormDropdown: React.Dispatch<React.SetStateAction<AddPatientFormInterface>>,
     }
 
-    const DropDownListPatient: React.FC<dropDownPropsPatient> = ({patientInitialValues, setPatientSubmitFormDropdown, allPatientDropDownContainer }) => {
+    const PatientDropDownList: React.FC<dropDownPropsPatient> = ({patientInitialValues, setPatientSubmitFormDropdown, allPatientDropDownContainer }) => {
 
         const [patientDropDownStates, updatePatientDropDownStates] = useState<number[]>(Array(allPatientDropDownContainer.length).fill(-1));
         const [test, uptest] = useState<{ [key: string]: string }>({});
@@ -98,8 +98,10 @@ import {AddDoctorFormInterface, PatientProps, NurseFormProps, StaffFormProps} fr
                                 className="shadow-inner p-2 border-[#e1e1e1] border-[1px] rounded-[5px] w-[200px] min-h-[42px] text-black bg-white flex items-center justify-between"
                         >
                                 <p className="text-[#636363]">
-                                    {patientDropDownStates[index] !== -1 ? (test[dropdownFeature.buttonName] === undefined ? dropdownFeature.buttonName : test[dropdownFeature.buttonName]) 
-                                    : patientInitialValues?.[dropdownFeature.buttonId as keyof PatientProps] as string || dropdownFeature.buttonName}
+                                    {patientDropDownStates[index] !== -1 ? 
+                                        (test[dropdownFeature.buttonId] === undefined ? dropdownFeature.buttonName : test[dropdownFeature.buttonName]) 
+                                    : 
+                                        patientInitialValues?.[dropdownFeature.buttonId as keyof AddPatientFormInterface] as string || dropdownFeature.buttonName}
                                 </p>
                                 {patientDropDownStates[index] !== -1 ? <FaChevronUp className="text-[#636363]" /> : < FaChevronDown className="text-[#636363]" />}
                         </button>
@@ -111,9 +113,9 @@ import {AddDoctorFormInterface, PatientProps, NurseFormProps, StaffFormProps} fr
                                                 key={optionIndex}
                                                 onClick={() => {
                                                         const newTest = { ...test };
-                                                        newTest[dropdownFeature.buttonName] = objectData;
+                                                        newTest[dropdownFeature.buttonId] = objectData;
                                                         uptest(newTest);
-                                                        setPatientSubmitFormDropdown((prevForm: PatientProps) => ({ ...prevForm, [dropdownFeature.buttonId]: objectData }));
+                                                        setPatientSubmitFormDropdown((prevForm: AddPatientFormInterface) => ({ ...prevForm, [dropdownFeature.buttonId]: objectData }));
                                                         const newStates = [...patientDropDownStates];
                                                         newStates[index] = -1;
                                                         updatePatientDropDownStates(newStates);
@@ -252,4 +254,4 @@ import {AddDoctorFormInterface, PatientProps, NurseFormProps, StaffFormProps} fr
         );
     };
 
-export {DropDownListPatient, DoctorDropDownList, DropDownListNurse, DropDownListStaff} 
+export {PatientDropDownList, DoctorDropDownList, DropDownListNurse, DropDownListStaff} 

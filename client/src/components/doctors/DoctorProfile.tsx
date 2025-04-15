@@ -18,7 +18,7 @@ import { FaChevronDown } from "react-icons/fa6";
 const DoctorProfile: React.FC<DoctorProfileProps> = ({updateNewDoctorProfile, activeDoctor, updateEditDoctorState, buttonLoadingAnimation, setIsConfirmationDialogOpen, deleteDoctorFunction, isConfirmationDialogOpen, isDoctorProfileVisible, updateProfileVisibility, doctorData, doctorEditState}) => {
         
 
-  const {fetchDoctor, baseURL} =  useGlobalContext();
+  const {fetchDoctors, baseURL} =  useGlobalContext();
 
   const editDoctorProfileFunc = () =>{
         updateProfileVisibility(false);
@@ -26,7 +26,7 @@ const DoctorProfile: React.FC<DoctorProfileProps> = ({updateNewDoctorProfile, ac
   }
 
   const callUpdatedAllDoctorData = () =>{
-        fetchDoctor()
+        fetchDoctors()
   }
 
   return (

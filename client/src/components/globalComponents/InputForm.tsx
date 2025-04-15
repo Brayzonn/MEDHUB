@@ -1,4 +1,4 @@
-import  {InputFormProps, AddDoctorFormInterface, PatientProps, StaffFormProps, NurseFormProps} from '../DataTypes'
+import  {InputFormProps, AddDoctorFormInterface, AddPatientFormInterface, StaffFormProps, NurseFormProps} from '../DataTypes'
 
 interface DoctorInputFormInterface{
         InputFormData: InputFormProps[],
@@ -27,9 +27,10 @@ const DoctorInputForm: React.FC<DoctorInputFormInterface> = ({prevValues, formVa
 
 interface PatientInputFormInterface{
         InputFormData: InputFormProps[],
-        prevValues: PatientProps,
-        formValue?: PatientProps,
-        onChangeFunc?: React.Dispatch<React.SetStateAction<PatientProps>>
+        prevValues: AddPatientFormInterface,
+        formValue?: AddPatientFormInterface,
+        onChangeFunc?: React.Dispatch<React.SetStateAction<AddPatientFormInterface>>,
+        nestedKey?: keyof AddPatientFormInterface,
 }
 
 const PatientInputForm: React.FC<PatientInputFormInterface> = ({prevValues, formValue, InputFormData, onChangeFunc}) => {
@@ -39,7 +40,7 @@ const PatientInputForm: React.FC<PatientInputFormInterface> = ({prevValues, form
                         <div key={index} className='flex flex-col justify-end space-y-1'>
                                 <label className='text-[14px] text-[#636363]'>{data.labelName} <span>{data.labelSpan}</span></label>
                                 <input type={data.inputType} name={data.inputName}
-                                        value={formValue ? (formValue[data.inputName as keyof PatientProps] as string) : ''}
+                                        value={formValue ? (formValue[data.inputName as keyof AddPatientFormInterface] as string) : ''}
                                         onChange={(e) =>  onChangeFunc?.({...prevValues, [data.inputName]: e.target.value})}
                                         placeholder={data.placeholder}
                                         className='shadow-inner p-2 border-[#e1e1e1] border-[1px] rounded-[5px] w-[200px] min-h-[42px] text-black bg-white flex items-center justify-between' 

@@ -14,7 +14,7 @@ import whiteBtnLoader from '../../images/buttonloaderwhite.svg';
 const AddDoctor = () => {
 
         //global variables
-        const {baseURL, fetchDashboardData, fetchDoctor} =  useGlobalContext();
+        const {baseURL, fetchDashboardData, fetchDoctors} =  useGlobalContext();
         const userToken = sessionStorage.getItem('userToken');
         
 
@@ -69,15 +69,15 @@ const AddDoctor = () => {
         })
 
         const callUpdatedAllDoctorData = () =>{
-                fetchDoctor()
+                fetchDoctors()
         }
         
         const submitAddDoctorForm = async () =>{
                        
                 try {
                         updateButtonLoadingAnimation(true)
-                        if (Object.values(addDoctorForm).some(value => value === 'd')) {
-                                toast.error('Please fill in all fields.')  
+                        if (Object.values(addDoctorForm).some(value => value === '')) {
+                                toast.error('Please complete in all fields.')  
                                 updateButtonLoadingAnimation(false)
                         } else {
                                 const formData = new FormData();

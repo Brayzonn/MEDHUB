@@ -1,6 +1,6 @@
 import {TableColumn } from 'react-data-table-component';
 
-//global props
+
 // google auth logic for sign in
 export interface AccessToken {
         access_token: string,
@@ -12,10 +12,6 @@ export interface AccessToken {
         token_type: string,
 }
 
-export interface TableProps {
-        columns: TableColumn<DoctorProps>[];
-        data:  DoctorProps[];
-}
 
 export interface InputFormProps{
         labelName:  string,
@@ -55,6 +51,12 @@ export interface dahshboarddataSchema  {
 }
 
 //doctor object props----------------------------
+export interface DoctorTableProps {
+        columns: TableColumn<DoctorProps>[];
+        data:  DoctorProps[];
+}
+
+
 export interface AddDoctorFormInterface {
         doctorSpecialty: string,
         doctorAddress: string,
@@ -113,7 +115,91 @@ export interface DoctorProfileProps {
         updateProfileVisibility: React.Dispatch<React.SetStateAction<boolean>>,
 }
 //----------------------------
+//patient
+export interface PatientTableProps {
+        columns: TableColumn<PatientProps>[];
+        data:  PatientProps[];
+} 
+export interface AddPatientFormInterface{
+        patientName: string; 
+        patientImage: string;
+        patientAge: string;
+        patientBloodType: string;
+        patientHeight: string;
+        patientGenotype: string;
+        patientWeight: string;
+        patientConditions?: string []; 
+        patientJoinDate: string;
+        patientBirthDate: string;
+        patientPhoneNumber: string;
+        patientEmail: string;
+        patientEMO: string;
+}
 
+export interface PatientProps {
+        profile: { patientName: string; patientImage: string };
+        patientID: string;
+        patientNotes: string [] ;
+        patientAge: string;
+        patientBloodType: string;
+        patientHeight: string;
+        patientGenotype: string;
+        patientWeight: string;
+        patientConditions: string []; 
+        patientJoinDate: string;
+        patientBirthDate: string;
+        admissionStatus: boolean;
+        patientPhoneNumber: string;
+        patientEmail: string;
+        patientEMO: string;
+        updatedAt?: string | Date;
+}
+
+interface PatientProfileListProps{
+        header: string ,
+        data: string | string[],
+        identifier: string,
+}
+    
+export interface PatientProfileProps {
+        activePatientProfile: PatientProps,
+        updateProfileVisibility:React.Dispatch<React.SetStateAction<boolean>>,
+        updateEditPatientState:React.Dispatch<React.SetStateAction<boolean>>,
+        buttonLoadingAnimation: boolean,
+        setIsConfirmationDialogOpen: React.Dispatch<React.SetStateAction<boolean>>,
+        patientData: PatientProfileListProps[],
+        updatePatientEditState: React.Dispatch<React.SetStateAction<boolean>>,
+        patientEditState: boolean,
+        updatePatientProfile: () => void,
+        isPatientProfileVisible: boolean,
+        updatePatientProfileVisibility: React.Dispatch<React.SetStateAction<boolean>>,
+}
+
+//staff
+export interface StaffProps {
+        profile: { staffName: string, staffImage: string },
+        staffAge: string,
+        staffDateOfBirth: string,
+        staffTimeRole: string,
+        staffJoinDate: string,
+        staffID: string,
+        staffEmail: string,
+        staffPhone: string,
+        staffAddress: string,
+}
+
+export interface StaffFormProps {
+        staffName: string,
+        staffImage: string,
+        staffAge: string,
+        staffDateOfBirth: string,
+        staffTimeRole: string,
+        staffDegree: string,
+        staffJoinDate: string,
+        staffID: string,
+        staffEmail: string,
+        staffPhone: string,
+}
 
 //admissions
 export interface AdmissionProps {
@@ -149,50 +235,5 @@ export interface NurseFormProps {
         nurseID: string,
         nurseEmail: string,
         nursePhone: string,
-}
-
-//patient
-export interface PatientProps {
-        profile: { patientName: string; patientImage: string };
-        patientID: string;
-        patientNotes: string [] ;
-        patientAge: string;
-        patientBloodType: string;
-        patientHeight: string;
-        patientGenotype: string;
-        patientWeight: string;
-        patientConditions: string []; 
-        patientJoindate: string;
-        patientBirthDate: string;
-        admissionStatus: boolean;
-        patientPhoneNumber: string;
-        patientEmail: string;
-        patientEMO: string;
-}
-
-//staff
-export interface StaffProps {
-        profile: { staffName: string, staffImage: string },
-        staffAge: string,
-        staffDateOfBirth: string,
-        staffTimeRole: string,
-        staffJoinDate: string,
-        staffID: string,
-        staffEmail: string,
-        staffPhone: string,
-        staffAddress: string,
-}
-
-export interface StaffFormProps {
-        staffName: string,
-        staffImage: string,
-        staffAge: string,
-        staffDateOfBirth: string,
-        staffTimeRole: string,
-        staffDegree: string,
-        staffJoinDate: string,
-        staffID: string,
-        staffEmail: string,
-        staffPhone: string,
 }
 
