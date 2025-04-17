@@ -167,8 +167,8 @@ const AddPatient = () => {
                         
                 } catch (error) {
                         if (axios.isAxiosError(error)) {
-                                if (error.response && error.response.data && error.response.data.message) {
-                                        toast.error(`Error: ${error.response.data.message}`);
+                                if (error.response && error.response.data && error.response.data.payload) {
+                                        toast.error(`Error: ${error.response.data.payload}`);
                                         console.error('Unexpected error:', error);
                                 } else {
                                         toast.error('Something went wrong');

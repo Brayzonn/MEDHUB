@@ -145,14 +145,14 @@ const AllPatients = () => {
                 if(deletePatientApiCall.status === 200){
                     toast.success(deletePatientPayload)
                 }
-                    
+                await fetchPatients()
                 updateButtonLoadingAnimation(false)
                 setIsConfirmationDialogOpen(false)
                 setPatientProfileVisibility(false)
         } catch (error) {
                 if (axios.isAxiosError(error)) {
-                    if (error.response && error.response.data && error.response.data.message) {
-                            toast.error(`Error: ${error.response.data.message}`);
+                    if (error.response && error.response.data && error.response.data.payload) {
+                            toast.error(`Error: ${error.response.data.payload}`);
                     } else {
                             toast.error('Something went wrong');
                     }

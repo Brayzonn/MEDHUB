@@ -138,23 +138,21 @@ const AllDoctors = () => {
                         },
                   });
 
-                  const deleteDoctorErrorResponseData = deleteDoctorApiCall.data.message;
+                  const deleteDoctorErrorResponseData = deleteDoctorApiCall.data.payload;
 
                   if(deleteDoctorApiCall.status === 200){
                         toast.success(deleteDoctorErrorResponseData)
-                  } else if(deleteDoctorApiCall.status === 404){                  
+                  } else{                  
                         toast.error(deleteDoctorErrorResponseData)
-                  }else if(deleteDoctorApiCall.status === 500){                  
-                        toast.error(deleteDoctorErrorResponseData)
-                  }   
+                  }
                       
                   updateButtonLoadingAnimation(false)
                   setIsConfirmationDialogOpen(false)
                   setProfileVisibility(false)
             } catch (error) {
                   if (axios.isAxiosError(error)) {
-                        if (error.response && error.response.data && error.response.data.message) {
-                              toast.error(`Error: ${error.response.data.message}`);
+                        if (error.response && error.response.data && error.response.data.payload) {
+                              toast.error(`Error: ${error.response.data.payload}`);
                         } else {
                               toast.error('Something went wrong');
                         }

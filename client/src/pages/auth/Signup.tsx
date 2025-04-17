@@ -3,18 +3,20 @@ import  { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
+import { RiEyeLine, RiEyeOffLine } from 'react-icons/ri';
+import { IoIosCheckmark } from "react-icons/io";
+
 import whiteBtnLoader from '../../images/buttonloaderwhite.svg';
 import {useGoogleLogin } from '@react-oauth/google';
 import googleicon from '../../images/googleimage.png';
 import signupillustration from '../../../src/images/sigupillustration.svg';
 
-
+import { AccessTokenProps , AllPasswordRequirementsProps, SignupFormFieldDataSchema} from '../../components/DataTypes';
 import UseScreenWidth from '../../components/globalComponents/UseScreenWidth';
 import { checkPasswordStrength } from '../../components/globalComponents/SignUpPasswordValidator';
 import { useGlobalContext } from '../../context/useGlobalContext';
 
-import { RiEyeLine, RiEyeOffLine } from 'react-icons/ri';
-import { IoIosCheckmark } from "react-icons/io";
+
 
 
 const Signup = () => {
@@ -30,27 +32,19 @@ const Signup = () => {
     const [showPasswordtwo, setShowPasswordtwo] = useState<boolean>(false);
     const [passwordActive, updatePasswordActive] = useState<boolean>(false);
 
-    interface AllPasswordRequirements {
-        text: string,
-        status: boolean
-    }
-    const [allPasswordRequirements, updateAllPasswordRequirements] =  useState<AllPasswordRequirements[]>([
+    const [signupFormFieldData, updateSignupFormFieldData] = useState<SignupFormFieldDataSchema>({
+        email: '',
+        fullName: '',
+        password: '', 
+        confirmPassword: ''
+    });
+
+    const [allPasswordRequirements, updateAllPasswordRequirements] =  useState<AllPasswordRequirementsProps[]>([
         { text: "6 characters minimum", status: false },  {text: 'one number',  status: false}, {text: "one special character",  status: false}, {text: "One uppercase",  status: false}, {text: "one lower case" , status:false}
     ])
 
     const passwordCheck = (passwordValue: string) =>{
         checkPasswordStrength(passwordValue, updateAllPasswordRequirements)
-    }
-
-    // google auth logic for sign in
-    interface AccessToken {
-        access_token: string,
-        authuser?: string,
-        expires_in: number,
-        hd?: string,
-        prompt: string,
-        scope: string,
-        token_type: string,
     }
     
     const googleAuthSignin = useGoogleLogin({
@@ -60,7 +54,7 @@ const Signup = () => {
         onError: (error) => console.log('Login Failed:', error)
     })
 
-    const googleApi = async (codeResponse: AccessToken) => {
+    const googleApi = async (codeResponse: AccessTokenProps) => {
 
             try {
                 const googleApiCall = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${codeResponse.access_token}`, {
@@ -80,10 +74,9 @@ const Signup = () => {
 
                     const sininGoogleApiCall = await axios.post(`${baseURL}/api/google/signin`, {...userValues})
                     const signInResponseData = sininGoogleApiCall.data
-                    const signInResponseStatus: boolean =  signInResponseData.status;
 
-                    if(signInResponseStatus === false){
-                        toast.error(signInResponseData.message)
+                    if(sininGoogleApiCall.status !== 200){
+                        toast.error(signInResponseData.payload)
                     }else{
                         sessionStorage.setItem('userToken', JSON.stringify(signInResponseData.token))
                         toast.success('Sign in successful, please wait.')
@@ -98,8 +91,8 @@ const Signup = () => {
             
             } catch (error) {
                 if (axios.isAxiosError(error)) {
-                    if (error.response && error.response.data && error.response.data.message) {
-                          toast.error(`Error: ${error.response.data.message}`);
+                    if (error.response && error.response.data && error.response.data.payload) {
+                          toast.error(`Error: ${error.response.data.payload}`);
                     } else {
                           toast.error('Something went wrong');
                     }
@@ -114,19 +107,7 @@ const Signup = () => {
 
 
 
-    //manual sign up logic
-    interface SignupFormFieldDataSchema {
-        email: string,
-        fullName: string,
-        password: string, 
-        confirmPassword: string
-    }
-    const [signupFormFieldData, updateSignupFormFieldData] = useState<SignupFormFieldDataSchema>({
-        email: '',
-        fullName: '',
-        password: '', 
-        confirmPassword: ''
-    });
+
 
     const submitSignupData = async () =>{
         if(userToken){
@@ -134,7 +115,7 @@ const Signup = () => {
         }else{
             try {
                 updateButtonLoadingAnimation(true)
-                const checkPassword = (requirements: AllPasswordRequirements[]): boolean => {
+                const checkPassword = (requirements: AllPasswordRequirementsProps[]): boolean => {
                     return requirements.every((requirement) => requirement.status === true);
                 };
     

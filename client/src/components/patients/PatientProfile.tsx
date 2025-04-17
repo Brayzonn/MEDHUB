@@ -240,6 +240,7 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatie
         <EditPatient 
                 updatePatientProfileState ={updatePatientProfileVisibility} 
                 updateEditPatientState={updatePatientEditState}
+                fetchUpdatedActivePatientData = {fetchUpdatedActivePatientData}
         />
         
     }

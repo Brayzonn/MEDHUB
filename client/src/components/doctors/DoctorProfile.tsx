@@ -140,7 +140,7 @@ const DoctorProfile: React.FC<DoctorProfileProps> = ({fetchUpdatedActiveDoctorDa
     </div>}
 
 
-    {(doctorEditState) && <EditDoctor  updateDoctorProfileState ={updateProfileVisibility} updateEditDoctorState={updateEditDoctorState}/>}
+    {(doctorEditState) && <EditDoctor  fetchUpdatedActiveDoctorData = {fetchUpdatedActiveDoctorData} updateDoctorProfileState ={updateProfileVisibility} updateEditDoctorState={updateEditDoctorState}/>}
     </>
   )
 }

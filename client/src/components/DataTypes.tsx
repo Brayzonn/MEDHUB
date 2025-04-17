@@ -2,7 +2,7 @@ import {TableColumn } from 'react-data-table-component';
 
 
 // google auth logic for sign in
-export interface AccessToken {
+export interface AccessTokenProps {
         access_token: string,
         authuser?: string,
         expires_in: number,
@@ -10,6 +10,20 @@ export interface AccessToken {
         prompt: string,
         scope: string,
         token_type: string,
+}
+
+
+//manual sign up logic
+export   interface SignupFormFieldDataSchema {
+        email: string,
+        fullName: string,
+        password: string, 
+        confirmPassword: string
+}
+
+export interface AllPasswordRequirementsProps {
+        text: string,
+        status: boolean
 }
 
 
@@ -89,6 +103,7 @@ export interface DoctorProps {
 export interface EditDoctorProps {
         updateDoctorProfileState: React.Dispatch<React.SetStateAction<boolean>>,
         updateEditDoctorState: React.Dispatch<React.SetStateAction<boolean>>,
+        fetchUpdatedActiveDoctorData: (doctorID: string) => void
 }
 
 interface DoctorProfileListProps{
@@ -157,6 +172,7 @@ export interface PatientProps {
 export interface EditPatientProps {
         updatePatientProfileState: React.Dispatch<React.SetStateAction<boolean>>,
         updateEditPatientState: React.Dispatch<React.SetStateAction<boolean>>,
+        fetchUpdatedActivePatientData: (patientID: string) => void
 }
 
 interface PatientProfileListProps{

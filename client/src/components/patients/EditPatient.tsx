@@ -20,7 +20,7 @@ import { RiDeleteBin3Line } from "react-icons/ri";
 import { CiEdit } from "react-icons/ci";
 
 
-const EditPatient: React.FC<EditPatientProps> = ({updatePatientProfileState, updateEditPatientState}) => {
+const EditPatient: React.FC<EditPatientProps> = ({fetchUpdatedActivePatientData, updatePatientProfileState, updateEditPatientState}) => {
 
         //global variables
         const activePatientProfile = sessionStorage.getItem('activePatientProfile');
@@ -143,9 +143,7 @@ const EditPatient: React.FC<EditPatientProps> = ({updatePatientProfileState, upd
                                         });
                                 } 
                         });
-                      
-        
-                              
+                                            
                         const updatePatientApiCall = await axios.post(`${baseURL}/api/user/updatepatientprofile`, formData, {
                                 headers: {
                                         Authorization: `Bearer ${userToken}`,
@@ -154,19 +152,19 @@ const EditPatient: React.FC<EditPatientProps> = ({updatePatientProfileState, upd
                         });
 
                         const updatePatientResponseData = updatePatientApiCall.data.payload;
-                        console.log(updatePatientResponseData)
-
-                        // if(updatePatientApiCall.status === 204){
-                        //         toast.error(updatePatientResponseData)
-                        //         updateEditPatientState(false)
-                        //         updatePatientProfileState(true)
-                        //         updateButtonLoadingAnimation(false)
-                        // } else if(updatePatientApiCall.status === 200){             
-                        //         toast.success(updatePatientResponseData)
-                        //         updateEditPatientState(false)
-                        //         updateButtonLoadingAnimation(false)
-                        //         updatePatientProfileState(true) 
-                        // }  
+                        if(updatePatientApiCall.status === 200){             
+                                toast.success(updatePatientResponseData)
+                                updateEditPatientState(false)
+                                updateButtonLoadingAnimation(false)
+                                updatePatientProfileState(true) 
+                                fetchUpdatedActivePatientData(parsedPatientID)
+                        }  
+                        else {
+                                toast.error('Details could not be updated')
+                                updateEditPatientState(false)
+                                updatePatientProfileState(true)
+                                updateButtonLoadingAnimation(false)
+                        } 
                 } catch (error) {
                         if (axios.isAxiosError(error)) {
                                 if (error.response && error.response.data && error.response.data.payload) {
@@ -174,13 +172,13 @@ const EditPatient: React.FC<EditPatientProps> = ({updatePatientProfileState, upd
                                 } else {
                                         toast.error('Unnavailable request, please try again');
                                 }
-        
-                                // navigate(0);
+                                console.error('Unexpected error:', error);
+                                navigate(0);
                                 updateButtonLoadingAnimation(false);
                         } else {
                                 console.error('Unexpected error:', error);
                                 toast.error('An unexpected error occurred');
-                                // navigate(0);
+                                navigate(0);
                                 updateButtonLoadingAnimation(false);
                         }
                     }

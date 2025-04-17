@@ -1,7 +1,6 @@
 import Dropzone from 'react-dropzone';
 import { useEffect, useState } from "react";
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 import { toast } from 'react-toastify';
 import {AddDoctorFormInterface, EditDoctorProps} from '../DataTypes';
@@ -18,12 +17,11 @@ import { RiDeleteBin3Line } from "react-icons/ri";
 
 
 
-const EditDoctor: React.FC<EditDoctorProps> = ({updateDoctorProfileState, updateEditDoctorState }) => {
+const EditDoctor: React.FC<EditDoctorProps> = ({fetchUpdatedActiveDoctorData, updateDoctorProfileState, updateEditDoctorState }) => {
     
     //global variables
     const activeDoctorProfile = sessionStorage.getItem('activeDoctorProfile');
     const userToken = sessionStorage.getItem('userToken');
-    const navigate = useNavigate();
     const {baseURL} =  useGlobalContext();
 
     //component variables
@@ -125,7 +123,7 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateDoctorProfileState, update
                 }
 
                 // Append other form fields
-                Object.entries(updateDoctorForm).forEach(([key, value]) => {
+                Object.entries(updateDoctorForm).forEach(([key, value]) => { 
                         formData.append(key, value);
                 });
 
@@ -138,17 +136,20 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateDoctorProfileState, update
 
                 const updateDoctorResponseData = updateDoctorApiCall.data.payload;
                 
-                if(updateDoctorApiCall.status === 204){
-                        toast.error(updateDoctorResponseData)
-                        updateEditDoctorState(false)
-                        updateDoctorProfileState(true)
-                        updateButtonLoadingAnimation(false)
-                } else if(updateDoctorApiCall.status === 200){             
+                if(updateDoctorApiCall.status === 200){             
                         toast.success(updateDoctorResponseData)
                         updateEditDoctorState(false)
                         updateButtonLoadingAnimation(false)
                         updateDoctorProfileState(true) 
-                }  
+                        fetchUpdatedActiveDoctorData(parsedDoctorID)
+
+                } else{
+                        toast.error(updateDoctorResponseData)
+                        updateEditDoctorState(false)
+                        updateDoctorProfileState(true)
+                        updateButtonLoadingAnimation(false)   
+                        
+                } 
 
             } catch (error) {
                 if (axios.isAxiosError(error)) {
@@ -157,13 +158,10 @@ const EditDoctor: React.FC<EditDoctorProps> = ({updateDoctorProfileState, update
                         } else {
                                 toast.error('Unnavailable request, please try again');
                         }
-
-                        navigate(0);
                         updateButtonLoadingAnimation(false);
                 } else {
                         console.error('Unexpected error:', error);
                         toast.error('An unexpected error occurred');
-                        navigate(0);
                         updateButtonLoadingAnimation(false);
                 }
             }

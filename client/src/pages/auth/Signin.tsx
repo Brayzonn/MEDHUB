@@ -58,10 +58,9 @@ const Signin = () => {
 
                     const sininGoogleApiCall = await axios.post(`${baseURL}/api/google/signin`, {...userValues})
                     const signInResponseData = sininGoogleApiCall.data
-                    const signInResponseStatus: boolean =  signInResponseData.status;
 
-                    if(signInResponseStatus === false){
-                        toast.error(signInResponseData.message)
+                    if(sininGoogleApiCall.status !==  200){
+                        toast.error(signInResponseData.payload)
                     }else{
                         sessionStorage.setItem('userToken', JSON.stringify(signInResponseData.token))
                         toast.success('Sign in successful, please wait.')
@@ -74,8 +73,8 @@ const Signin = () => {
             
             } catch (error) {
                 if (axios.isAxiosError(error)) {
-                    if (error.response && error.response.data && error.response.data.message) {
-                          toast.error(`Error: ${error.response.data.message}`);
+                    if (error.response && error.response.data && error.response.data.payload) {
+                          toast.error(`Error: ${error.response.data.payload}`);
                     } else {
                           toast.error('Something went wrong');
                     }
@@ -112,10 +111,9 @@ const Signin = () => {
                 else{
                     const signupApiCall = await axios.post(`${baseURL}/api/signin`, {...signinFormFieldData})
                     const signInResponseData = signupApiCall.data;
-                    const signInResponseStatus: boolean =  signInResponseData.status;
     
-                    if(signInResponseStatus === false){
-                        toast.error(signInResponseData.message)
+                    if(signupApiCall.status !== 200){
+                        toast.error(signInResponseData.payload)
                     }
                     else{
                         sessionStorage.setItem('userToken', JSON.stringify(signInResponseData.token))
@@ -133,8 +131,8 @@ const Signin = () => {
                 }     
             } catch (error) {
                 if (axios.isAxiosError(error)) {
-                    if (error.response && error.response.data && error.response.data.message) {
-                          toast.error(`Error: ${error.response.data.message}`);
+                    if (error.response && error.response.data && error.response.data.payload) {
+                          toast.error(`Error: ${error.response.data.payload}`);
                     } else {
                           toast.error('Something went wrong');
                     }
