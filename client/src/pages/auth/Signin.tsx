@@ -6,7 +6,7 @@ import {useGoogleLogin } from '@react-oauth/google';
 
 import UseScreenWidth from '../../components/globalComponents/UseScreenWidth';
 import { useGlobalContext } from '../../context/useGlobalContext';
-import { AccessToken } from '../../components/DataTypes';
+import { AccessTokenProps } from '../../components/DataTypes';
 
 import googleicon from '../../images/googleimage.png'
 import whiteBtnLoader from '../../images/buttonloaderwhite.svg';
@@ -39,7 +39,7 @@ const Signin = () => {
         onError: (error) => console.log('Login Failed:', error)
     })
 
-    const googleApi = async (codeResponse: AccessToken) => {
+    const googleApi = async (codeResponse: AccessTokenProps) => {
             try {
                 const googleApiCall = await axios.get(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${codeResponse.access_token}`, {
                     headers: {

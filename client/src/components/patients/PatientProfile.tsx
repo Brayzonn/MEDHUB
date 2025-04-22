@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 import { useGlobalContext } from '../../context/useGlobalContext';
-import {PatientProfileProps} from '../DataTypes';
+import {PatientProfileProps, PatientNotesProps, PatientProps} from '../DataTypes';
 import ConfirmationDialog from '../globalComponents/ConfirmationDialog';
 import EditPatient from "./EditPatient";
-import AdmitPatients from "./AdmitPatients";
+import { PatientInputForm } from "../globalComponents/InputForm";
+// import AdmitPatients from "./AdmitPatients";
 
 
 import userplaceholder from '../../images/userplaceholderlogo.png';
@@ -25,39 +28,143 @@ import { FaRegTrashCan } from "react-icons/fa6";
 const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatientData, deletePatientFunction, activePatientProfile, updatePatientProfileVisibility, updatePatientEditState, patientData, updatePatientProfile, isConfirmationDialogOpen, patientEditState, setIsConfirmationDialogOpen, buttonLoadingAnimation, isPatientProfileVisible}) => {
 
   const {baseURL, fetchPatients} = useGlobalContext();
-
   const activePatientProfileString = sessionStorage.getItem('activePatientProfile');
-
-  useEffect(()=>{
-        if (activePatientProfileString) {
-           const parsedActivePatientProfile = JSON.parse(activePatientProfileString);
-        }        
-  }, [activePatientProfileString]);
+  const userToken = sessionStorage.getItem('userToken');
   
-  const [isAdmitPatientActive, updateIsAdmitPatientActive] = useState<boolean>(false);
+  //component variables
+  const [ButtonLoadingAnimation, setButtonLoadingAnimation] = useState<boolean>(false)
   const [isAddNoteActive, updateIsAddNoteActive] = useState<boolean>(false); 
+  const [isAdmitPatientActive, updateIsAdmitPatientActive] = useState<boolean>(false);
+  const [addPatientNotesForm, setAddPatientNotesForm] = useState<PatientNotesProps>({
+        noteHeader: '',
+        noteText: '',
+        prescription: '',
+        _id: '',
+  })
 
-  const [allAvailableRooms, ] = useState([
-        {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
-        {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
-        {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
-        {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
-        {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
-  ])
+  const InputFormData = [
+        {labelName: 'Note Header',          labelSpan: '*',  inputName: 'noteHeader',    inputType: 'text',      placeholder: 'Constant Migranes'},
+        {labelName: 'Note Text',            labelSpan: '*',  inputName: 'noteText',      inputType: 'text',      placeholder: '...'},
+        {labelName: 'Note Prescription',    labelSpan: '*',  inputName: 'prescription',  inputType: 'tel',       placeholder: 'Panadol, cough syrup.'},
+  ]
 
-  const showSelectedRoom = (roomId: string)=>{
+  const [allAvailableRooms, ] = [
+        {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
+        {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
+        {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
+        {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
+        {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
+  ]
+
+  const showSelectedRoom = (roomId: string)=> {
         updateIsAdmitPatientActive(false)
         updatePatientProfileVisibility(true)
   }
 
-  const editPatientProfileFunc = () =>{
+  const editPatientProfileFunc = () => {
         updatePatientProfileVisibility(false);
         updatePatientEditState(true);  
   }
 
-  const callUpdatedAllPatientData = () =>{
-        fetchPatients()
-  }
+  //function to display header patient data
+  const getProfileData = (identifier: string) => {
+        const item = patientData.find(entry => entry.identifier === identifier);
+        return item?.data || '';
+   };
+
+
+   //patient notes logic
+   const createNewNote = async () => {
+        try {
+                setButtonLoadingAnimation(true);    
+                const addNewPatientNoteApiCall = await axios.post(`${baseURL}/api/user/createpatientnotes`, {...addPatientNotesForm, patientID: activePatientProfile.patientID},
+                {
+                    headers: {
+                        Authorization: `Bearer ${userToken}`,
+                    },
+                })
+
+                const addNewPatientNoteApiCallPayload = addNewPatientNoteApiCall.data.payload;
+
+                if(addNewPatientNoteApiCall.status === 200){
+                        toast.success(addNewPatientNoteApiCallPayload)
+
+                        setTimeout(() => {
+                                setButtonLoadingAnimation(false);
+                                updateIsAddNoteActive(false);
+                        }, 1000);
+                }else{
+                        toast.error(addNewPatientNoteApiCallPayload) 
+
+                        setTimeout(() => {
+                                setButtonLoadingAnimation(false);
+                                updateIsAddNoteActive(false);
+                        }, 1000);
+                }
+                
+
+        } catch (error) {
+                if (axios.isAxiosError(error)) {
+                        if (error.response && error.response.data && error.response.data.payload) {
+                                toast.error(`Error: ${error.response.data.payload}`);
+                                console.error('Unexpected error:', error);
+                        } else {
+                                toast.error('Something went wrong');
+                                console.error('Unexpected error2:', error);
+                        }
+                        setButtonLoadingAnimation(false);
+                } else {
+                        console.error('Unexpected error:', error);
+                        toast.error('An unexpected error occurred');
+                        setButtonLoadingAnimation(false);
+                }                
+        }
+   }
+
+   const deletepatientNote = async (noteID: string) =>{
+        try {
+                setButtonLoadingAnimation(true)
+
+                const deletePatientNote = await axios.delete(`${baseURL}/api/user/deletepatientnote`,
+                {
+                        headers: {
+                                Authorization: `Bearer ${userToken}`,
+                        },
+
+                        data: {
+                                noteID,
+                                patientID: activePatientProfile.patientID
+
+                        },
+                });
+
+                const deletePatientNotePayload = deletePatientNote.data.payload;
+
+                if(deletePatientNote.status === 200){
+                        toast.success(deletePatientNotePayload)
+                }else{
+                        toast.error(deletePatientNotePayload)
+                }
+                await fetchPatients()
+                setButtonLoadingAnimation(false)
+
+        } catch (error) {
+                if (axios.isAxiosError(error)) {
+                        if (error.response && error.response.data && error.response.data.payload) {
+                                toast.error(`Error: ${error.response.data.payload}`);
+                        } else {
+                                toast.error('Something went wrong');
+                        }
+                        setButtonLoadingAnimation(false);
+                } else {
+                        console.error('Unexpected error:', error);
+                        toast.error('An unexpected error occurred');
+                        setButtonLoadingAnimation(false);
+                }
+                }    
+            
+   }
+      
 
   return (
     <>
@@ -92,16 +199,16 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatie
                                         />
                                     
                                         <div className='flex flex-col space-y-2'>
-                                                <h3 className='text-[24px] font-bold text-black'>{}</h3>
+                                                <h3 className='text-[24px] font-bold text-black'>{getProfileData('patientName')}</h3>
                                                 <div className='flex items-center flex-wrap w-full'>
                                                         <div className='flex items-center space-x-2 mr-[25px] mb-2'>
                                                                 <img src={emailIcon} alt='emailIcon' className='w-[20px] h-[20px]' />
-                                                                <a href={`mailto:grey@gmail.com`}  className='text-[#555555] text-[14px]'>grey@gmail.com</a>
+                                                                <a href={`mailto:${getProfileData('patientEmail')}`}  className='text-[#555555] text-[14px]'>{getProfileData('patientEmail')}</a>
                                                         </div>
 
                                                         <div className='flex items-center space-x-2 mr-[25px] mb-2'>
                                                                 <img src={phoneIcon} alt='emailIcon' className='w-[20px] h-[20px]' />
-                                                                <p className='text-[#555555] text-[14px]'>+234 80 456 3677</p>
+                                                                <p className='text-[#555555] text-[14px]'>{getProfileData('patientPhoneNumber')}</p>
                                                         </div>
                                                 </div>
                                         </div>
@@ -111,24 +218,25 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatie
                                 <div className='pt-2 flex items-center space-x-12 max-w-[500px]'>
                                         <div className='flex flex-col space-y-1'>
                                                 <p className='text-[14px] font-[500] text-[#999999]'>Patient ID</p>
-                                                <p className='text-[15px] text-[#555555] font-[500]'>DC-789</p>
+                                                <p className='text-[15px] text-[#555555] font-[500]'>{getProfileData('patientID')}</p>
                                         </div>
 
                                         <div className='flex flex-col space-y-1'>
                                                 <p className='text-[14px] font-[500] text-[#999999] uppercase'>Age</p>
-                                                <p className='text-[15px] text-[#555555] font-[500]'>23</p>
+                                                <p className='text-[15px] text-[#555555] font-[500]'>{getProfileData('patientAge')}</p>
                                         </div>
 
                                         <div className='flex flex-col space-y-1'>
                                                 <p className='text-[14px] font-[500] text-[#999999] uppercase'>Blood Type</p>
-                                                <p className='text-[15px] text-[#555555] font-[500]'>O+</p>
+                                                <p className='text-[15px] text-[#555555] font-[500]'>{getProfileData('patientBloodType')}</p>
                                         </div>
 
                                         <div className='flex flex-col space-y-1'>
                                                 <p className='text-[14px] font-[500] text-[#999999] uppercase'>Genotype</p>
-                                                <p className='text-[15px] text-[#555555] font-[500]'>AA</p>
+                                                <p className='text-[15px] text-[#555555] font-[500]'>{getProfileData('patientGenotype')}</p>
                                         </div>
                                 </div>
+
 
                                 <div className='w-full flex border-b border-b-[#f1f1f1] pt-8 pb-4'>
                                         <div className='w-[170px] flex justify-center items-center p-1 min-h-[40px] border border-white rounded-md bg-gradient-to-r from-slate-500 to-slate-800 text-white'>
@@ -173,7 +281,7 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatie
                         <div className='relative w-[40%] min-h-[18rem] flex flex-col items-end'>
 
                                 <div className="absolute w-full max-h-full flex flex-col items-end space-y-2"> 
-                                        <button onClick={()=> {sessionStorage.removeItem('activePatientProfile'); updatePatientProfileVisibility(false); callUpdatedAllPatientData();}} className="transition-properties p-1 w-[100px] min-h-[40px] bg-black text-white border border-black text-[14px] rounded-md flex items-center justify-center space-x-2 hover:border-[#121212] hover:bg-[#121212]">
+                                        <button onClick={()=> {sessionStorage.removeItem('activePatientProfile'); updatePatientProfileVisibility(false); fetchPatients();}} className="transition-properties p-1 w-[100px] min-h-[40px] bg-black text-white border border-black text-[14px] rounded-md flex items-center justify-center space-x-2 hover:border-[#121212] hover:bg-[#121212]">
                                                 <FaChevronDown className ='text-white text-[13px]'/>
                                                 <p>Close</p>
                                         </button>        
@@ -190,40 +298,44 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatie
                                                
                                                {/* add note */}
                                                 {isAddNoteActive ? <div className="mb-2 w-full min-h-[100px] p-2 flex flex-col space-y-[4rem] border border-[#5d5d5d] rounded-md">
-                                                        <input type="text" className="bg-inherit outline-none text-white" placeholder="title e.g Constant Headaches " />
-                                                        <textarea className="min-h-[90px] resize-none bg-inherit outline-none text-white" placeholder="Enter Note" />
-                                                        <textarea className="min-h-[70px] resize-none bg-inherit outline-none text-white" placeholder="Drugs prescribed e.g Pracetamol, Lonart." />
+
+                                                        <PatientInputForm InputFormData={InputFormData} onChangeFunc={setAddPatientNotesForm} formValue={addPatientNotesForm} prevValues={addPatientNotesForm} />
 
                                                         <div className="w-full flex justify-end items-end space-x-2">
                                                                 <button onClick={()=> {updateIsAddNoteActive(false);}} className="text-white max-w-[300px] min-h-[20px] px-2 py-1 text-[12px] border border-transparent rounded-md bg-gradient-to-r from-red-500 to-red-400 flex justify-center items-center">
                                                                         Cancel
                                                                 </button>
-                                                                <button onClick={()=> {updateIsAddNoteActive(false);}} className="text-white max-w-[300px] min-h-[20px] px-2 py-1 text-[12px] border border-transparent rounded-md bg-gradient-to-r from-green-500 to-emerald-400 flex justify-center items-center">
+                                                                <button onClick={()=> { createNewNote()}} className="text-white max-w-[300px] min-h-[20px] px-2 py-1 text-[12px] border border-transparent rounded-md bg-gradient-to-r from-green-500 to-emerald-400 flex justify-center items-center">
                                                                         Add
                                                                 </button>
                                                         </div>
                                                 </div> 
                                                 :
                                                 <div className="mb-2 w-full min-h-[100px] p-2 flex flex-col border border-[#5d5d5d] rounded-md">
+                                                        {activePatientProfile.patientNotes.map((profile, index) =>(
+                                                                <div className="" key ={index}>
+                                                                        <div className="w-full flex justify-between">
+                                                                                <h4 className="text-[16px] text-white font-bold">{profile.noteHeader}</h4> 
+                                                                                <div className="flex space-x-3 justify-end">
+                                                                                        <button><FaEdit className= 'text-white text-[17px]'/></button>
+                                                                                        <button><FaRegTrashCan className= 'text-red-500 text-[17px]'/></button>
+                                                                                </div>
+                                                                        </div>
+                                                                
+                                                                        <p className="text-[13px] text-[#6f6f6f] tracking-wide">
+                                                                                {profile.date ? new Date(profile.date).toLocaleDateString() : ''}
+                                                                        </p>
 
-                                                        <div className="w-full flex justify-between">
-                                                                <h4 className="text-[16px] text-white font-bold">Stomach Cramps</h4> 
-                                                                <div className="flex space-x-3 justify-end">
-                                                                        <button><FaEdit className= 'text-white text-[17px]'/></button>
-                                                                        <button><FaRegTrashCan className= 'text-red-500 text-[17px]'/></button>
+                                                                        <div className="w-full flex flex-col">
+                                                                                <p className="text-[14px] text-white">{profile.noteText}</p>
+
+                                                                                <div className="flex flex-wrap space-x-3 text-[#9f9d9d] text-[13px]">
+                                                                                        {profile.prescription}
+                                                                                </div>
+
+                                                                        </div>
                                                                 </div>
-                                                        </div>
-                                                       
-                                                        <p className="text-[13px] text-[#6f6f6f] tracking-wide">02/04/24</p>
-
-                                                        <div className="w-full flex flex-col">
-                                                                <p className="text-[14px] text-white">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dicta ducimus, quis dignissimos tempore repellat dolore! Eligendi sequi animi necessitatibus illo dignissimos, atque dolorum. Esse, ea incidunt. Eum laborum dignissimos laudantium?</p>
-
-                                                                <div className="flex flex-wrap space-x-3 text-[#9f9d9d] text-[13px]">
-                                                                        <p>Pandol 4mg</p>
-                                                                        <p>Malaria Drip 20mg</p>
-                                                                </div>
-                                                        </div>
+                                                        ))}
                                                 </div> }                                               
                                         </div>
                                 </div>

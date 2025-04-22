@@ -5,7 +5,7 @@ import axios from 'axios';
 import AddPatient from "./AddPatient";
 import PatientTable from "./PatientTable";
 import PatientProfile from "./PatientProfile";
-import {PatientProps} from '../DataTypes'
+import {PatientProps, PatientNotesProps} from '../DataTypes'
 import { useGlobalContext } from '../../context/useGlobalContext';
 
 import spinner from '../../images/loadingspinner.svg'
@@ -51,7 +51,6 @@ const AllPatients = () => {
     const [patientProfileData, updatePatientProfileData] = useState([
         {header: 'Patient Name', identifier: 'patientName', data: ''},
         {header: 'Patient ID', identifier: 'patientID', data: ''},
-        {header: 'Patient Notes', identifier: 'patientNotes', data: ''},
         {header: 'Patient Age', identifier: 'patientAge', data: ''},
         {header: 'Blood Type', identifier: 'patientBloodType', data: ''},
         {header: 'Patient Height', identifier: 'patientHeight', data: ''},
@@ -93,12 +92,21 @@ const AllPatients = () => {
             sessionStorage.setItem('activePatientProfile', JSON.stringify(filtered))
 
             updatePatientProfileData((prevPatientData) =>
-                prevPatientData.map((item) => ({
+                prevPatientData.map((item) => {
+                    let value: string = '';
+            
+                    if (item.identifier === 'patientName') {
+                        value = filtered.profile.patientName || '';
+                    } else {
+                        value = (filtered[item.identifier as keyof PatientProps] as string) || '';
+                    }
+            
+                    return {
                         ...item,
-                        data: (filtered[item.identifier as keyof PatientProps] as string) || '',
-                }))
+                        data: value,
+                    };
+                })
             );
-      
             setPatientProfileVisibility(true);
       }
     }
@@ -108,19 +116,29 @@ const AllPatients = () => {
         const updatedPatients = await fetchPatients()
 
         const filtered = updatedPatients.find((row) => row.patientID === patientID);
-
+        
         if (filtered) {
                 updateActivePatientProfile(filtered);
 
                 sessionStorage.setItem('activePatientProfile', JSON.stringify(filtered))
 
                 updatePatientProfileData((prevPatientData) =>
-                    prevPatientData.map((item) => ({
+                    prevPatientData.map((item) => {
+                        let value: string = '';
+                
+                        if (item.identifier === 'patientName') {
+                            value = filtered.profile.patientName || '';
+                        } else {
+                            value = (filtered[item.identifier as keyof PatientProps] as string) || '';
+                        }
+                
+                        return {
                             ...item,
-                            data: (filtered[item.identifier as keyof PatientProps] as string) || '',
-                    }))
+                            data: value,
+                        };
+                    })
                 );
-        
+
                 setPatientProfileVisibility(true);
         } 
     }
@@ -197,7 +215,7 @@ const AllPatients = () => {
   
             {
                   name: 'Admission Status',
-                  selector: (row) => row.admissionStatus,
+                  selector: (row) => row.admissionStatus ? 'Admitted' : 'Not Admitted',
             },
   
             {

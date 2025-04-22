@@ -70,6 +70,13 @@ export interface DoctorTableProps {
         data:  DoctorProps[];
 }
 
+export interface DoctorInputFormInterface{
+        InputFormData: InputFormProps[],
+        prevValues: AddDoctorFormInterface,
+        formValue?: AddDoctorFormInterface,
+        onChangeFunc?: React.Dispatch<React.SetStateAction<AddDoctorFormInterface>>
+}
+
 
 export interface AddDoctorFormInterface {
         doctorSpecialty: string,
@@ -133,7 +140,14 @@ export interface PatientTableProps {
         columns: TableColumn<PatientProps>[];
         data:  PatientProps[];
 } 
-
+export interface PatientInputFormInterface<T> {
+        InputFormData: InputFormProps[];
+        prevValues: T;
+        formValue?: T;
+        onChangeFunc?: React.Dispatch<React.SetStateAction<T>>;
+        nestedKey?: keyof T; 
+}
+      
 export interface AddPatientFormInterface{
         patientName: string; 
         patientImage: string;
@@ -143,6 +157,7 @@ export interface AddPatientFormInterface{
         patientGenotype: string;
         patientWeight: string;
         patientConditions?: string []; 
+        patientNotes?: string [] ;
         patientJoinDate: string;
         patientBirthDate: string;
         patientPhoneNumber: string;
@@ -150,10 +165,19 @@ export interface AddPatientFormInterface{
         patientEMO: string;
 }
 
+export interface PatientNotesProps {
+        date?: Date;
+        noteHeader: string;
+        noteText: string;
+        prescription: string;
+        lastEdited?: Date;
+        _id: string;
+}
+
 export interface PatientProps {
         profile: { patientName: string; patientImage: string };
         patientID: string;
-        patientNotes: string [] ;
+        patientNotes: PatientNotesProps[];
         patientAge: string;
         patientBloodType: string;
         patientHeight: string;
