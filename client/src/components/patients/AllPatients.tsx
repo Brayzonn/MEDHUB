@@ -183,20 +183,20 @@ const AllPatients = () => {
             }    
     }
 
-    const EditPatientProfile = () =>{
+    // const EditPatientProfile = () =>{
 
-        if (activePatientProfile) {
-            sessionStorage.setItem('activePatientProfile', JSON.stringify(activePatientProfile));
-            updatePatientProfileData((prevPatientData) =>
-                prevPatientData.map((item) => ({
-                        ...item,
-                        data: (activePatientProfile[item.identifier as keyof PatientProps] as string) || '',
-                }))
-            );
-            setPatientProfileVisibility(false);         
-        }  
+    //     if (activePatientProfile) {
+    //         sessionStorage.setItem('activePatientProfile', JSON.stringify(activePatientProfile));
+    //         updatePatientProfileData((prevPatientData) =>
+    //             prevPatientData.map((item) => ({
+    //                     ...item,
+    //                     data: (activePatientProfile[item.identifier as keyof PatientProps] as string) || '',
+    //             }))
+    //         );
+    //         setPatientProfileVisibility(false);         
+    //     }  
 
-    }
+    // }
   
     const columns: TableColumn<PatientProps>[] = [
             {
@@ -299,7 +299,6 @@ const AllPatients = () => {
                                             updateButtonLoadingAnimation = {updateButtonLoadingAnimation}
                                             setIsConfirmationDialogOpen ={setIsConfirmationDialogOpen} 
                                             isConfirmationDialogOpen = {isConfirmationDialogOpen}
-                                            updatePatientProfile={EditPatientProfile} 
                                             patientEditState={patientEditState} 
                                             updatePatientEditState = {updatePatientEditState} 
                                             patientData={patientProfileData} 

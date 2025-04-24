@@ -24,8 +24,8 @@ const Patients = () => {
         { to: '/user/dashboard',    icon: homeIconImage,    text: 'Dashboard' },
         { to: '/user/doctors',      icon: doctorIcon,       text: 'Doctors' },
         { to: '/user/patients',     icon: patientIcon,      text: 'Patients' },
-        { to: '/user/nurses',       icon: nurseicon,  text: 'Nurses' },
-        { to: '/user/staff',        icon: appointmentIcon,  text: 'Staff' },
+        { to: '/user/dashboard',       icon: nurseicon,  text: 'Nurses' },
+        { to: '/user/dashboard',        icon: appointmentIcon,  text: 'Staff' },
         { to: '/user/admissions',   icon: admissionsicon,   text: 'Admissions' },
         
     ];

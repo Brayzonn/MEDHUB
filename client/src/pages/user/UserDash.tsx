@@ -25,15 +25,14 @@ const AdminDash = () => {
         { to: '/user/dashboard',    icon: homeIconImage,    text: 'Dashboard' },
         { to: '/user/doctors',      icon: doctorIcon,       text: 'Doctors' },
         { to: '/user/patients',     icon: patientIcon,      text: 'Patients' },
-        { to: '/user/nurses',       icon: nurseicon,  text: 'Nurses' },
-        { to: '/user/staff',        icon: appointmentIcon,  text: 'Staff' },
+        { to: '/user/dashboard',       icon: nurseicon,  text: 'Nurses' },
+        { to: '/user/dashboard',        icon: appointmentIcon,  text: 'Staff' },
         { to: '/user/admissions',   icon: admissionsicon,   text: 'Admissions' }, 
     ];
 
     const remainingHeight: number = window.innerHeight - 70;
 
-
-
+    
     //if not desktop screen, display error message
     if(screenWidth < 891 ){
 

@@ -35,6 +35,8 @@ export interface InputFormProps{
         inputName:  string,
         inputType:  string,
         placeholder?: string,
+        customClassName?: string,
+        isTextArea?: boolean,
 }
 
 export interface DecodedDataInterface {
@@ -216,7 +218,7 @@ export interface PatientProfileProps {
         patientData: PatientProfileListProps[],
         updatePatientEditState: React.Dispatch<React.SetStateAction<boolean>>,
         patientEditState: boolean,
-        updatePatientProfile: () => void,
+        // updatePatientProfile: () => void,
         isPatientProfileVisible: boolean,
         updatePatientProfileVisibility: React.Dispatch<React.SetStateAction<boolean>>,
 }
@@ -247,39 +249,15 @@ export interface StaffFormProps {
         staffPhone: string,
 }
 
-//admissions
+//admissions--------------------------------------------------
 export interface AdmissionProps {
         buttonAction?: ()=> void,
         roomNumber: string,
-        checkinDate: string,
-        roomStatus: string,
+        occupantID: string,
         occupantName: string,
+        isRoomAvailable: boolean,
+        checkInDate: Date,
 }
 
 
-//nurse
-export interface NurseProps {
-        profile: { nurseName: string; nurseImage: string };
-        nurseAge: string,
-        nurseDateOfBirth: string,
-        nurseTimeRole: string,
-        nurseDegree: string,
-        nurseJoinDate: string,
-        nurseID: string,
-        nurseEmail: string,
-        nursePhone: string,
-}
-
-export interface NurseFormProps {
-        nurseName: string,
-        nurseImage: string,
-        nurseAge: string,
-        nurseDateOfBirth: string,
-        nurseTimeRole: string,
-        nurseDegree: string,
-        nurseJoinDate: string,
-        nurseID: string,
-        nurseEmail: string,
-        nursePhone: string,
-}
 

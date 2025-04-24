@@ -8,8 +8,7 @@ import Signup from './pages/auth/Signup';
 import Doctors from './pages/user/Doctors';
 import Admissions from './pages/user/Admissions';
 import Patients from './pages/user/Patients';
-import Nurses from './pages/user/Nurses';
-import Staff from './pages/user/Staff';
+
 
 import UserRoutes from './Routes/UserRoutes';
 
@@ -29,8 +28,6 @@ function App() {
                               <Route path = '/user/dashboard'  element = {<UserDash />}/>
                               <Route path = '/user/doctors'    element = {< Doctors />} />
                               <Route path = '/user/patients' element = {< Patients />} />
-                              <Route path = '/user/staff' element = {< Staff />} /> 
-                              <Route path = '/user/nurses' element = {< Nurses />} /> 
                               <Route path = '/user/admissions' element = {< Admissions />} /> 
                         </Route>
                   </Routes>

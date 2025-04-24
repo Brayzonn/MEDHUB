@@ -25,7 +25,7 @@ import { FaRegTrashCan } from "react-icons/fa6";
 
 
 
-const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatientData, deletePatientFunction, activePatientProfile, updatePatientProfileVisibility, updatePatientEditState, patientData, updatePatientProfile, isConfirmationDialogOpen, patientEditState, setIsConfirmationDialogOpen, buttonLoadingAnimation, isPatientProfileVisible}) => {
+const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatientData, deletePatientFunction, activePatientProfile, updatePatientProfileVisibility, updatePatientEditState, patientData, isConfirmationDialogOpen, patientEditState, setIsConfirmationDialogOpen, buttonLoadingAnimation, isPatientProfileVisible}) => {
 
   const {baseURL, fetchPatients} = useGlobalContext();
   const activePatientProfileString = sessionStorage.getItem('activePatientProfile');
@@ -41,26 +41,13 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatie
         prescription: '',
         _id: '',
   })
-
   const InputFormData = [
-        {labelName: 'Note Header',          labelSpan: '*',  inputName: 'noteHeader',    inputType: 'text',      placeholder: 'Constant Migranes'},
-        {labelName: 'Note Text',            labelSpan: '*',  inputName: 'noteText',      inputType: 'text',      placeholder: '...'},
-        {labelName: 'Note Prescription',    labelSpan: '*',  inputName: 'prescription',  inputType: 'tel',       placeholder: 'Panadol, cough syrup.'},
+        {labelName: 'Note Header',          labelSpan: '*',  inputName: 'noteHeader',    inputType: 'text',      customClassName: 'w-full h-[60px] p-3 border rounded-lg resize-none bg-[#f9f9f9] text-sm text-black', placeholder: 'Constant Migranes'},
+        {labelName: 'Note Text',            labelSpan: '*',  inputName: 'noteText',      inputType: 'text',      isTextArea: true,  customClassName: 'w-full h-[150px] p-3 border rounded-lg resize-none bg-[#f9f9f9] text-sm text-black',   placeholder: '...'},
+        {labelName: 'Note Prescription',    labelSpan: '*',  inputName: 'prescription',  inputType: 'tel',       isTextArea: true,  customClassName: 'w-full h-[90px] p-3 border rounded-lg resize-none bg-[#f9f9f9] text-sm text-black',  placeholder: 'Panadol, cough syrup.'},
   ]
 
-  const [allAvailableRooms, ] = [
-        {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
-        {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
-        {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
-        {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
-        {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
-  ]
-
-  const showSelectedRoom = (roomId: string)=> {
-        updateIsAdmitPatientActive(false)
-        updatePatientProfileVisibility(true)
-  }
-
+  //open patient profile edit state
   const editPatientProfileFunc = () => {
         updatePatientProfileVisibility(false);
         updatePatientEditState(true);  
@@ -70,8 +57,59 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatie
   const getProfileData = (identifier: string) => {
         const item = patientData.find(entry => entry.identifier === identifier);
         return item?.data || '';
-   };
+  };
 
+
+  //confirmation dialog logic
+  const [confirmationData, setConfirmationData] = useState<{
+        title: string;
+        message: string; 
+        onConfirm: () => void;
+  } | null>(null);
+
+
+  const openConfirmationDialog = (
+        title: string,
+        message: string,
+        onConfirm: () => void
+      ) => {
+        setConfirmationData({ title, message, onConfirm });
+        setIsConfirmationDialogOpen(true);
+  };
+
+
+  //actions on patient note cancel button
+  const patientNoteBtnCancelFunc = () =>{
+        updateIsAddNoteActive(false);  
+        setAddPatientNotesForm({
+                noteHeader: '',
+                noteText: '',
+                prescription: '',
+                _id: '',
+        }); 
+  }
+      
+
+
+//   const [allAvailableRooms, ] = [
+//         {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
+//         {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
+//         {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
+//         {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
+//         {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
+//   ]
+
+//   const showSelectedRoom = (roomId: string)=> {
+//         updateIsAdmitPatientActive(false)
+//         updatePatientProfileVisibility(true)
+//   }
+
+
+   //admit patient logic
+   const admitPatientButnFunc = () =>{
+        updatePatientProfileVisibility(false); 
+        updateIsAdmitPatientActive(true);
+   }  
 
    //patient notes logic
    const createNewNote = async () => {
@@ -88,11 +126,13 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatie
 
                 if(addNewPatientNoteApiCall.status === 200){
                         toast.success(addNewPatientNoteApiCallPayload)
+                        fetchUpdatedActivePatientData(activePatientProfile.patientID);
 
                         setTimeout(() => {
                                 setButtonLoadingAnimation(false);
                                 updateIsAddNoteActive(false);
                         }, 1000);
+                        
                 }else{
                         toast.error(addNewPatientNoteApiCallPayload) 
 
@@ -121,7 +161,73 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatie
         }
    }
 
-   const deletepatientNote = async (noteID: string) =>{
+   const editPatientNote = (patientNoteID: string) => {
+        const noteToEdit = activePatientProfile.patientNotes.find(note => note._id === patientNoteID);
+
+        if (noteToEdit) {
+            setAddPatientNotesForm({
+                noteHeader: noteToEdit.noteHeader,
+                noteText: noteToEdit.noteText,
+                prescription: noteToEdit.prescription,
+                _id: noteToEdit._id,
+            });
+            updateIsAddNoteActive(true);
+        }
+    };
+    
+
+   const updatePatientNote = async () => {
+        try { 
+               
+                setButtonLoadingAnimation(true);    
+                
+                const updatePatientNoteApiCall = await axios.post(`${baseURL}/api/user/updatepatientnotes`, {...addPatientNotesForm, patientID: activePatientProfile.patientID},
+                {
+                    headers: {
+                        Authorization: `Bearer ${userToken}`,
+                    },
+                })
+
+                const updatePatientNoteApiCallPayload = updatePatientNoteApiCall.data.payload;
+
+                if(updatePatientNoteApiCall.status === 200){
+                        toast.success(updatePatientNoteApiCallPayload)
+                        fetchUpdatedActivePatientData(activePatientProfile.patientID);
+
+                        setTimeout(() => {
+                                setButtonLoadingAnimation(false);
+                                updateIsAddNoteActive(false);
+                        }, 1000);
+                        
+                }else{
+                        toast.error(updatePatientNoteApiCallPayload) 
+
+                        setTimeout(() => {
+                                setButtonLoadingAnimation(false);
+                                updateIsAddNoteActive(false);
+                        }, 1000);
+                }
+                
+
+        } catch (error) {
+                if (axios.isAxiosError(error)) {
+                        if (error.response && error.response.data && error.response.data.payload) {
+                                toast.error(`Error: ${error.response.data.payload}`);
+                                console.error('Unexpected error:', error);
+                        } else {
+                                toast.error('Something went wrong');
+                                console.error('Unexpected error2:', error);
+                        }
+                        setButtonLoadingAnimation(false);
+                } else {
+                        console.error('Unexpected error:', error);
+                        toast.error('An unexpected error occurred');
+                        setButtonLoadingAnimation(false);
+                }                
+        }
+   }
+
+   const deletepatientNoteFunc  = async (patientNoteID: string) =>{
         try {
                 setButtonLoadingAnimation(true)
 
@@ -132,7 +238,7 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatie
                         },
 
                         data: {
-                                noteID,
+                                patientNoteID,
                                 patientID: activePatientProfile.patientID
 
                         },
@@ -147,6 +253,7 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatie
                 }
                 await fetchPatients()
                 setButtonLoadingAnimation(false)
+                fetchUpdatedActivePatientData(activePatientProfile.patientID);
 
         } catch (error) {
                 if (axios.isAxiosError(error)) {
@@ -176,13 +283,19 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatie
           
           <div className="shadow-2xl relative px-6 py-8 w-[95%] h-[100%] bg-white border border-[#f7f7f7] rounded-[15px]">
             
-                  <ConfirmationDialog
-                        isOpen={isConfirmationDialogOpen}
-                        title="Do you want to delete Patient profile?"
-                        message="This action is irreversable"
-                        onConfirm = {()=> {deletePatientFunction(activePatientProfile.patientID); fetchUpdatedActivePatientData(activePatientProfile.patientID)}} 
-                        onCancel  = {()=> { setIsConfirmationDialogOpen(false)}}
-                  />
+                  {confirmationData && (
+                        <ConfirmationDialog
+                                isOpen={isConfirmationDialogOpen}
+                                title={confirmationData.title}
+                                message={confirmationData.message}
+                                onConfirm={() => {
+                                        confirmationData.onConfirm();
+                                        setIsConfirmationDialogOpen(false);
+                                }}
+                                onCancel={() => setIsConfirmationDialogOpen(false)}
+                        />
+                  )}
+
 
                   <div className="w-full min-h-full flex space-x-2">
                         {/* patient details */}
@@ -215,7 +328,7 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatie
 
                                 </div>
                                 
-                                <div className='pt-2 flex items-center space-x-12 max-w-[500px]'>
+                                <div className='pt-[1.5rem] flex items-center space-x-12 max-w-[500px]'>
                                         <div className='flex flex-col space-y-1'>
                                                 <p className='text-[14px] font-[500] text-[#999999]'>Patient ID</p>
                                                 <p className='text-[15px] text-[#555555] font-[500]'>{getProfileData('patientID')}</p>
@@ -253,18 +366,21 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatie
                                         ))}  
                                 </div>
                 
-                                <div className='pt-2 w-full flex items-end space-x-2'>
+                                <div className='pt-[1.5rem] w-full flex items-end space-x-2'>
                                         <button onClick={()=>{editPatientProfileFunc(); window.scrollTo(0, 400);}} className="transition-properties p-1 w-[130px] min-h-[40px] text-white border bg-yellow-500 text-[14px] border-yellow-500 rounded-md flex items-center justify-center space-x-1 hover:border-yellow-400 hover:bg-yellow-400">
                                             <MdEditSquare className = "text-white text-[13px]"/>
                                             <p>Edit Profile</p>
                                         </button>
 
-                                        <button onClick={()=>{updatePatientProfile(); updateIsAdmitPatientActive(true);  window.scrollTo(0, 400);}} className="transition-properties p-1 w-[130px] min-h-[40px] bg-green-500 text-white border border-green-500 text-[14px] rounded-md flex items-center justify-center space-x-1 hover:border-green-400 hover:bg-green-400">
+                                        <button onClick={()=>{admitPatientButnFunc();  window.scrollTo(0, 400);}} className="transition-properties p-1 w-[130px] min-h-[40px] bg-green-500 text-white border border-green-500 text-[14px] rounded-md flex items-center justify-center space-x-1 hover:border-green-400 hover:bg-green-400">
                                             <MdLocalHospital className = "text-white text-[13px]"/>
                                             <p>Admit Patient</p>
                                         </button>
 
-                                        <button disabled = {buttonLoadingAnimation ? true : false}  onClick={()=> {setIsConfirmationDialogOpen(true)}} className="transition-properties w-[130px] h-[40px] bg-[#d42c31] text-white border border-[#d42c31] text-[14px] rounded-md flex items-center justify-center space-x-2 hover:border-[#c63439] hover:bg-[#c63439]">
+                                        <button disabled = {buttonLoadingAnimation ? true : false}  onClick={()=> {openConfirmationDialog("Do you want to delete this patient profile?", "This action is irreversible.", 
+                                                () => { deletePatientFunction(activePatientProfile.patientID);
+                                                        fetchUpdatedActivePatientData(activePatientProfile.patientID);
+                                                        }); }} className="transition-properties w-[130px] h-[40px] bg-[#d42c31] text-white border border-[#d42c31] text-[14px] rounded-md flex items-center justify-center space-x-2 hover:border-[#c63439] hover:bg-[#c63439]">
                                                 {buttonLoadingAnimation ? 
                                                                 <img src = {whiteBtnLoader} className='w-[15px] h-[15px]' alt='loader'/>    
                                                         :
@@ -302,41 +418,47 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatie
                                                         <PatientInputForm InputFormData={InputFormData} onChangeFunc={setAddPatientNotesForm} formValue={addPatientNotesForm} prevValues={addPatientNotesForm} />
 
                                                         <div className="w-full flex justify-end items-end space-x-2">
-                                                                <button onClick={()=> {updateIsAddNoteActive(false);}} className="text-white max-w-[300px] min-h-[20px] px-2 py-1 text-[12px] border border-transparent rounded-md bg-gradient-to-r from-red-500 to-red-400 flex justify-center items-center">
+                                                                <button onClick={()=> {patientNoteBtnCancelFunc() }} className="text-white max-w-[300px] min-h-[20px] px-2 py-1 text-[12px] border border-transparent rounded-md bg-gradient-to-r from-red-500 to-red-400 flex justify-center items-center">
                                                                         Cancel
                                                                 </button>
-                                                                <button onClick={()=> { createNewNote()}} className="text-white max-w-[300px] min-h-[20px] px-2 py-1 text-[12px] border border-transparent rounded-md bg-gradient-to-r from-green-500 to-emerald-400 flex justify-center items-center">
+                                                                <button onClick={()=> { addPatientNotesForm._id ? updatePatientNote() : createNewNote(); }} className="text-white max-w-[300px] min-h-[20px] px-2 py-1 text-[12px] border border-transparent rounded-md bg-gradient-to-r from-green-500 to-emerald-400 flex justify-center items-center">
                                                                         Add
                                                                 </button>
                                                         </div>
                                                 </div> 
                                                 :
-                                                <div className="mb-2 w-full min-h-[100px] p-2 flex flex-col border border-[#5d5d5d] rounded-md">
-                                                        {activePatientProfile.patientNotes.map((profile, index) =>(
-                                                                <div className="" key ={index}>
-                                                                        <div className="w-full flex justify-between">
-                                                                                <h4 className="text-[16px] text-white font-bold">{profile.noteHeader}</h4> 
-                                                                                <div className="flex space-x-3 justify-end">
-                                                                                        <button><FaEdit className= 'text-white text-[17px]'/></button>
-                                                                                        <button><FaRegTrashCan className= 'text-red-500 text-[17px]'/></button>
-                                                                                </div>
-                                                                        </div>
-                                                                
-                                                                        <p className="text-[13px] text-[#6f6f6f] tracking-wide">
-                                                                                {profile.date ? new Date(profile.date).toLocaleDateString() : ''}
-                                                                        </p>
-
-                                                                        <div className="w-full flex flex-col">
-                                                                                <p className="text-[14px] text-white">{profile.noteText}</p>
-
-                                                                                <div className="flex flex-wrap space-x-3 text-[#9f9d9d] text-[13px]">
-                                                                                        {profile.prescription}
-                                                                                </div>
-
+                                                <>
+                                                {activePatientProfile.patientNotes.map((profile, index) =>(
+                                                        <div key ={index} className="mb-2 w-full min-h-[100px] p-2 flex flex-col border border-[#5d5d5d] rounded-md">
+                                                                <div className="w-full flex justify-between">
+                                                                        <h4 className="text-[16px] uppercase text-white font-bold">{profile.noteHeader}</h4> 
+                                                                        <div className="flex space-x-3 justify-end">
+                                                                                <button onClick={()=> editPatientNote(profile._id)}>
+                                                                                        <FaEdit className= 'text-white text-[17px]'/>
+                                                                                </button>
+                                                                                <button onClick={()=>{openConfirmationDialog("Do you want to delete this patient note?", "This action is irreversible.", 
+                                                                                                () => {deletepatientNoteFunc(profile._id)}) 
+                                                                                        }}>
+                                                                                        <FaRegTrashCan className= 'text-red-500 text-[17px]'/>
+                                                                                </button>
                                                                         </div>
                                                                 </div>
-                                                        ))}
-                                                </div> }                                               
+                                                        
+                                                                <p className="text-[13px] text-[#6f6f6f] tracking-wide">
+                                                                        {profile.date ? new Date(profile.date).toLocaleDateString() : ''}
+                                                                </p>
+
+                                                                <div className="w-full flex flex-col">
+                                                                        <p className="text-[14px] text-white">{profile.noteText}</p>
+
+                                                                        <div className="flex flex-wrap space-x-3 text-[#9f9d9d] text-[13px]">
+                                                                                {profile.prescription}
+                                                                        </div>
+
+                                                                </div>
+                                                        </div> 
+                                                ))}
+                                                </>}                                               
                                         </div>
                                 </div>
 

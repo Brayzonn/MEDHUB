@@ -2,7 +2,7 @@ import { createContext, ReactNode, Dispatch, SetStateAction } from 'react';
 import axios from 'axios';
 import { useState  } from 'react';
 
-import {DoctorProps, DashboardDataProps, StaffProps, PatientProps, NurseProps, AdmissionProps, } from '../components/DataTypes';
+import {DoctorProps, DashboardDataProps, PatientProps, AdmissionProps} from '../components/DataTypes';
 
 
 
@@ -11,19 +11,13 @@ interface AppContextProps {
       allDashData: DashboardDataProps[],
       allDoctorData:DoctorProps[];
       updateAllDoctorData: Dispatch<SetStateAction<DoctorProps[]>>;
-      allNurseData: NurseProps[];
-      updateAllNurseData: Dispatch<SetStateAction<NurseProps[]>>;
       allPatientData: PatientProps[];
       updateAllPatientData: Dispatch<SetStateAction<PatientProps[]>>;
-      allStaffData: StaffProps[];
-      updateAllStaffData: Dispatch<SetStateAction<StaffProps[]>>;
       allAdmissionsData: AdmissionProps[];
       updateAllAdmissionsData: Dispatch<SetStateAction<AdmissionProps[]>>;
 
       fetchDoctors: () => Promise<DoctorProps[]>;
-      fetchNurses: () => Promise<void>;
       fetchPatients: () => Promise<PatientProps[]>;
-      fetchStaff: () => Promise<void>;
       fetchAdmissions: () => Promise<void>; 
       fetchDashboardData : () => Promise<void>; 
 }
@@ -32,20 +26,14 @@ const AppContext = createContext<AppContextProps>({
       allDoctorData: [],
       updateAllDoctorData: () => {},
       baseURL: '',
-      allNurseData: [],
-      updateAllNurseData: () => {},
       allPatientData: [],
       updateAllPatientData: () => {},
-      allStaffData: [],
-      updateAllStaffData: () => {},
       allAdmissionsData: [],
       allDashData : [],
       fetchDashboardData:  async () => {},
       updateAllAdmissionsData: () => {},
       fetchDoctors: async () => [],
-      fetchNurses: async () => {},
       fetchPatients: async () => [],
-      fetchStaff: async () => {},
       fetchAdmissions: async () => {},
 });
 
@@ -56,9 +44,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
 
     const [allDashData, updateAllDashData] = useState<DashboardDataProps[]>([])
     const [allDoctorData, updateAllDoctorData] = useState<DoctorProps []>([])
-    const [allNurseData, updateAllNurseData] = useState<NurseProps []>([])
     const [allPatientData, updateAllPatientData] = useState<PatientProps[]>([])
-    const [allStaffData, updateAllStaffData] = useState<StaffProps[]>([])
     const [allAdmissionsData, updateAllAdmissionsData] = useState<AdmissionProps []>([])
       
     // Get the token from sessionStorage
@@ -115,40 +101,6 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     }
     
 
-    //fetch nurse data
-    const fetchNurses = async () => { 
-        try {
-            const UserAuthConfig = {
-                headers: {
-                    Authorization: `Bearer ${sessionStorage.getItem('userToken')}`,
-                },
-            };
-            const nurseResponse = await axios.get(`${baseURL}/api/user/getallnurses`, UserAuthConfig);
-            const nurseData = nurseResponse.data.payload;
-            updateAllNurseData(nurseData);
-        } catch (error) {
-            console.log(error)
-        }  
-    }
-
-
-
-    //fetch staff data
-    const fetchStaff = async () => { 
-        try {
-            const UserAuthConfig = {
-                headers: {
-                    Authorization: `Bearer ${userToken}`,
-                },
-            };
-            const staffResponse = await axios.get(`${baseURL}/api/user/getallstaffs`, UserAuthConfig);
-            const staffData = staffResponse.data;
-            updateAllStaffData(staffData);
-        } catch (error) {
-            console.log(error)
-        }  
-    }
-
     //fetch admission data
     const fetchAdmissions = async () => { 
         try {
@@ -172,15 +124,9 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
         allDashData,
         fetchDashboardData,
         updateAllDoctorData,
-        fetchNurses,
-        allNurseData,
-        updateAllNurseData,
         fetchPatients,
         allPatientData,
         updateAllPatientData,
-        fetchStaff,
-        allStaffData,
-        updateAllStaffData,
         fetchAdmissions,
         allAdmissionsData, 
         updateAllAdmissionsData
