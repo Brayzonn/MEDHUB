@@ -3,11 +3,12 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 
 import { useGlobalContext } from '../../context/useGlobalContext';
-import {PatientProfileProps, PatientNotesProps, PatientProps} from '../DataTypes';
+import {PatientProfileProps, PatientNotesProps, AdmissionProps} from '../DataTypes';
 import ConfirmationDialog from '../globalComponents/ConfirmationDialog';
 import EditPatient from "./EditPatient";
 import { PatientInputForm } from "../globalComponents/InputForm";
-// import AdmitPatients from "./AdmitPatients";
+import AdmitPatients from "./AdmitPatients";
+import RoomOptions from "../admissions/RoomOptions";
 
 
 import userplaceholder from '../../images/userplaceholderlogo.png';
@@ -27,13 +28,16 @@ import { FaRegTrashCan } from "react-icons/fa6";
 
 const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatientData, deletePatientFunction, activePatientProfile, updatePatientProfileVisibility, updatePatientEditState, patientData, isConfirmationDialogOpen, patientEditState, setIsConfirmationDialogOpen, buttonLoadingAnimation, isPatientProfileVisible}) => {
 
-  const {baseURL, fetchPatients} = useGlobalContext();
-  const activePatientProfileString = sessionStorage.getItem('activePatientProfile');
+  const {baseURL, fetchPatients, fetchClinicRoomData, allClinicRoomData} = useGlobalContext();
   const userToken = sessionStorage.getItem('userToken');
   
   //component variables
   const [ButtonLoadingAnimation, setButtonLoadingAnimation] = useState<boolean>(false)
+  const [roomOptionsActive, updateRoomOptions]= useState<boolean>(false)
+  const [allLocalClinicRoomData, setAllLocalClinicRoomData] = useState<AdmissionProps[]>([]);
+  const [patientToBeAdmitted, setPatientToBeAdmitted] = useState<string>('');
   const [isAddNoteActive, updateIsAddNoteActive] = useState<boolean>(false); 
+  const [allAvailableRooms, updateAvailableRooms] = useState<AdmissionProps[]>([]);
   const [isAdmitPatientActive, updateIsAdmitPatientActive] = useState<boolean>(false);
   const [addPatientNotesForm, setAddPatientNotesForm] = useState<PatientNotesProps>({
         noteHeader: '',
@@ -41,12 +45,180 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatie
         prescription: '',
         _id: '',
   })
+
   const InputFormData = [
         {labelName: 'Note Header',          labelSpan: '*',  inputName: 'noteHeader',    inputType: 'text',      customClassName: 'w-full h-[60px] p-3 border rounded-lg resize-none bg-[#f9f9f9] text-sm text-black', placeholder: 'Constant Migranes'},
         {labelName: 'Note Text',            labelSpan: '*',  inputName: 'noteText',      inputType: 'text',      isTextArea: true,  customClassName: 'w-full h-[150px] p-3 border rounded-lg resize-none bg-[#f9f9f9] text-sm text-black',   placeholder: '...'},
         {labelName: 'Note Prescription',    labelSpan: '*',  inputName: 'prescription',  inputType: 'tel',       isTextArea: true,  customClassName: 'w-full h-[90px] p-3 border rounded-lg resize-none bg-[#f9f9f9] text-sm text-black',  placeholder: 'Panadol, cough syrup.'},
   ]
 
+  const [currentRoomOption, setCurrentRoomOption] = useState<AdmissionProps>({
+        roomNumber: '',
+        occupantID: '',
+        occupantName: '',
+        isRoomAvailable: false,
+  });
+      
+  
+   useEffect(()=>{
+        const fetchData = async () => {
+              await fetchClinicRoomData();
+        };
+
+        fetchData();
+   }, [])
+
+
+   //check out patient logic
+   const checkOutPatientButnFnc = (patientID: string) =>{
+
+        const patientRoom = allClinicRoomData.find(room => room.occupantID === patientID);
+    
+        if (patientRoom) {
+                setCurrentRoomOption(patientRoom);
+                updateRoomOptions(true);
+                updateIsAdmitPatientActive(false)
+        }
+   }
+
+   //admit patient logic
+   const admitPatientButnFunc = async (patientID: string) =>{
+
+        setPatientToBeAdmitted(patientID)
+
+        const filterForAvailableRooms = allClinicRoomData.filter((row) => row.isRoomAvailable === true)
+
+        if (filterForAvailableRooms) {
+           updateAvailableRooms(filterForAvailableRooms);
+        }
+
+        updateIsAdmitPatientActive(true); 
+   }  
+
+   const closeAdmitPatients = () =>{
+        updatePatientProfileVisibility(true); 
+        updateIsAdmitPatientActive(false); 
+   }
+
+
+   const showSelectedRoom = (roomID: string)=> {
+
+        const selectedRoom = allClinicRoomData.find(room => room.roomNumber === roomID);
+    
+        if (selectedRoom) {
+                setCurrentRoomOption(selectedRoom);
+                updateRoomOptions(true);
+                updateIsAdmitPatientActive(false)
+        }
+   }
+
+   const checkInFunction = async (roomID: string) =>{
+        try {
+                setButtonLoadingAnimation(true);    
+                
+                const checkInPatientCall = await axios.post(`${baseURL}/api/user/checkinpatient`, {patientID: patientToBeAdmitted, roomNumber: roomID},
+                {
+                    headers: {
+                        Authorization: `Bearer ${userToken}`,
+                    },
+                })
+
+                const checkInPatientCallPayload = checkInPatientCall.data.payload;
+
+                if(checkInPatientCall.status === 200){
+                        toast.success(checkInPatientCallPayload)
+                        fetchUpdatedActivePatientData(activePatientProfile.patientID);
+                        await fetchClinicRoomData()
+                    
+                        setTimeout(() => {
+                                setButtonLoadingAnimation(false);
+                                updateRoomOptions(false);
+                                updatePatientProfileVisibility(true)
+                        }, 1000);
+                        
+                }else{
+                        toast.error(checkInPatientCallPayload) 
+
+                        setTimeout(() => {
+                                setButtonLoadingAnimation(false);
+                                updateRoomOptions(false);
+                                updatePatientProfileVisibility(true)
+                        }, 1000);
+                }
+                
+
+        } catch (error) {
+                if (axios.isAxiosError(error)) {
+                        if (error.response && error.response.data && error.response.data.payload) {
+                                toast.error(`Error: ${error.response.data.payload}`);
+                                console.error('Unexpected error:', error);
+                        } else {
+                                toast.error('Something went wrong');
+                                console.error('Unexpected error2:', error);
+                        }
+                        setButtonLoadingAnimation(false);
+                } else {
+                        console.error('Unexpected error:', error);
+                        toast.error('An unexpected error occurred');
+                        setButtonLoadingAnimation(false);
+                }                
+        }   
+   }
+
+   const checkOutFunction = async (roomID: string) =>{
+        try {
+                setButtonLoadingAnimation(true);    
+                
+                const checkOutPatientCall = await axios.post(`${baseURL}/api/user/checkoutpatient`, {patientID: activePatientProfile.patientID, roomNumber: roomID},
+                {
+                    headers: {
+                        Authorization: `Bearer ${userToken}`,
+                    },
+                })
+
+                const checkOutPatientCallPayload = checkOutPatientCall.data.payload;
+
+                if(checkOutPatientCall.status === 200){
+                        toast.success(checkOutPatientCallPayload)
+                        fetchUpdatedActivePatientData(activePatientProfile.patientID);
+                        await fetchClinicRoomData()
+                    
+                        setTimeout(() => {
+                                setButtonLoadingAnimation(false);
+                                updateRoomOptions(false);
+                                updatePatientProfileVisibility(true)
+                        }, 1000);
+                        
+                }else{
+                        toast.error(checkOutPatientCallPayload) 
+
+                        setTimeout(() => {
+                                setButtonLoadingAnimation(false);
+                                updateRoomOptions(false);
+                                updatePatientProfileVisibility(true)
+                        }, 1000);
+                }
+                
+
+        } catch (error) {
+                if (axios.isAxiosError(error)) {
+                        if (error.response && error.response.data && error.response.data.payload) {
+                                toast.error(`Error: ${error.response.data.payload}`);
+                                console.error('Unexpected error:', error);
+                        } else {
+                                toast.error('Something went wrong');
+                                console.error('Unexpected error2:', error);
+                        }
+                        setButtonLoadingAnimation(false);
+                } else {
+                        console.error('Unexpected error:', error);
+                        toast.error('An unexpected error occurred');
+                        setButtonLoadingAnimation(false);
+                }                
+        } 
+   }
+
+  
   //open patient profile edit state
   const editPatientProfileFunc = () => {
         updatePatientProfileVisibility(false);
@@ -88,28 +260,6 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatie
                 _id: '',
         }); 
   }
-      
-
-
-//   const [allAvailableRooms, ] = [
-//         {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
-//         {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
-//         {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
-//         {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
-//         {roomNumber: ' 12C', roomStatus: 'Available', occupantName: 'Dave Green'},
-//   ]
-
-//   const showSelectedRoom = (roomId: string)=> {
-//         updateIsAdmitPatientActive(false)
-//         updatePatientProfileVisibility(true)
-//   }
-
-
-   //admit patient logic
-   const admitPatientButnFunc = () =>{
-        updatePatientProfileVisibility(false); 
-        updateIsAdmitPatientActive(true);
-   }  
 
    //patient notes logic
    const createNewNote = async () => {
@@ -372,9 +522,9 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatie
                                             <p>Edit Profile</p>
                                         </button>
 
-                                        <button onClick={()=>{admitPatientButnFunc();  window.scrollTo(0, 400);}} className="transition-properties p-1 w-[130px] min-h-[40px] bg-green-500 text-white border border-green-500 text-[14px] rounded-md flex items-center justify-center space-x-1 hover:border-green-400 hover:bg-green-400">
+                                        <button onClick={()=>{!activePatientProfile.admissionStatus ? admitPatientButnFunc(activePatientProfile.patientID) : checkOutPatientButnFnc(activePatientProfile.patientID);  window.scrollTo(0, 400);}} className="transition-properties p-1 w-[130px] min-h-[40px] bg-green-500 text-white border border-green-500 text-[14px] rounded-md flex items-center justify-center space-x-1 hover:border-green-400 hover:bg-green-400">
                                             <MdLocalHospital className = "text-white text-[13px]"/>
-                                            <p>Admit Patient</p>
+                                            <p>{activePatientProfile.admissionStatus ? 'Checkout' : 'Admit Patient'}</p>
                                         </button>
 
                                         <button disabled = {buttonLoadingAnimation ? true : false}  onClick={()=> {openConfirmationDialog("Do you want to delete this patient profile?", "This action is irreversible.", 
@@ -470,20 +620,34 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatie
     </div>}
     
 
-    {(isPatientProfileVisible === false && patientEditState === true) && 
+    {(isPatientProfileVisible === false && patientEditState === true) &&
         <EditPatient 
                 updatePatientProfileState ={updatePatientProfileVisibility} 
                 updateEditPatientState={updatePatientEditState}
                 fetchUpdatedActivePatientData = {fetchUpdatedActivePatientData}
-        />
-        
+        />     
     }
-    {/* {   <AdmitPatients 
-                isAdmitPatientActive ={isAdmitPatientActive} 
-                allAvailableRooms={allAvailableRooms} 
-                showSelectedRoom={showSelectedRoom}
+
+    {(isAdmitPatientActive === true) &&   
+        <AdmitPatients 
+                closeAdmitPatients = {closeAdmitPatients}
+                isAdmitPatientActive = {isAdmitPatientActive} 
+                allAvailableRooms = {allAvailableRooms} 
+                showSelectedRoom = {showSelectedRoom}
         />
-    } */}
+
+    }
+
+
+    {   <RoomOptions 
+                buttonLoadingAnimation = {ButtonLoadingAnimation}
+                roomOptionsCheckOutFnc =  {checkOutFunction}
+                roomOptionsCheckInFnc = {checkInFunction}
+                RoomOptions={currentRoomOption}
+                updateRoomOptionsActive ={updateRoomOptions}
+                roomOptionsActive ={roomOptionsActive}
+        />
+    }
     </>
   )
 }

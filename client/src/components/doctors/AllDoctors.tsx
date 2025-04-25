@@ -59,17 +59,15 @@ const AllDoctors = () => {
             {header: 'Employment Type', identifier: 'employmentType', data: ''},
       ])
 
-      useEffect(()=>{
-            fetchDoctors();
-
-            if(!allDoctorData || allDoctorData.length === 0){
-                  const timeout = setTimeout(() => {
-                        setIsLoading(false);
-                  }, 700);
-                  return () => clearTimeout(timeout);  
-            }
-            setIsLoading(false);
-      }, [])
+      useEffect(() => {
+            const fetchData = async () => {
+                setIsLoading(true);
+                await fetchDoctors();
+                setIsLoading(false);
+            };
+        
+            fetchData();
+      }, []);  
 
       //filter doctor data based off search parameters
       const searchInputValue = (searchValue: string) => {

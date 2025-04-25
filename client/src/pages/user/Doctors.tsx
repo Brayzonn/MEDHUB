@@ -20,13 +20,12 @@ const Doctors = () => {
 
     //navlinks for sidenav component
     const navLinks = [
-        { to: '/user/dashboard',    icon: homeIconImage,    text: 'Dashboard' },
-        { to: '/user/doctors',      icon: doctorIcon,       text: 'Doctors' },
-        { to: '/user/patients',     icon: patientIcon,      text: 'Patients' },
-        { to: '/user/dashboard',       icon: nurseicon,  text: 'Nurses' },
-        { to: '/user/dashboard',        icon: appointmentIcon,  text: 'Staff' },
-        { to: '/user/admissions',   icon: admissionsicon,   text: 'Admissions' },
-        
+        { to: '/user/dashboard', icon: homeIconImage, text: 'Dashboard' },
+        { to: '/user/doctors', icon: doctorIcon, text: 'Doctors' },
+        { to: '/user/patients', icon: patientIcon, text: 'Patients' },
+        { to: '/user/deadlink', icon: nurseicon, text: 'Nurses', disabled: true },
+        { to: '/user/deadlink', icon: appointmentIcon, text: 'Staff', disabled: true },
+        { to: '/user/admissions', icon: admissionsicon, text: 'Admissions' },
     ];
   
   

@@ -13,12 +13,12 @@ interface AppContextProps {
       updateAllDoctorData: Dispatch<SetStateAction<DoctorProps[]>>;
       allPatientData: PatientProps[];
       updateAllPatientData: Dispatch<SetStateAction<PatientProps[]>>;
-      allAdmissionsData: AdmissionProps[];
-      updateAllAdmissionsData: Dispatch<SetStateAction<AdmissionProps[]>>;
+      allClinicRoomData: AdmissionProps[];
+      updateAllClinicRoomData: Dispatch<SetStateAction<AdmissionProps[]>>;
 
       fetchDoctors: () => Promise<DoctorProps[]>;
       fetchPatients: () => Promise<PatientProps[]>;
-      fetchAdmissions: () => Promise<void>; 
+      fetchClinicRoomData: () => Promise<AdmissionProps[]>; 
       fetchDashboardData : () => Promise<void>; 
 }
 
@@ -28,13 +28,13 @@ const AppContext = createContext<AppContextProps>({
       baseURL: '',
       allPatientData: [],
       updateAllPatientData: () => {},
-      allAdmissionsData: [],
+      allClinicRoomData: [],
       allDashData : [],
       fetchDashboardData:  async () => {},
-      updateAllAdmissionsData: () => {},
+      updateAllClinicRoomData: () => {},
       fetchDoctors: async () => [],
       fetchPatients: async () => [],
-      fetchAdmissions: async () => {},
+      fetchClinicRoomData: async () => [],
 });
 
 // Define the provider component
@@ -45,10 +45,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     const [allDashData, updateAllDashData] = useState<DashboardDataProps[]>([])
     const [allDoctorData, updateAllDoctorData] = useState<DoctorProps []>([])
     const [allPatientData, updateAllPatientData] = useState<PatientProps[]>([])
-    const [allAdmissionsData, updateAllAdmissionsData] = useState<AdmissionProps []>([])
-      
-    // Get the token from sessionStorage
-    const userToken = sessionStorage.getItem('userToken');
+    const [allClinicRoomData, updateAllClinicRoomData] = useState<AdmissionProps []>([])
 
     //fetch dashboard data
     const fetchDashboardData = async () => { 
@@ -69,12 +66,12 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     //fetch doctor data
     const fetchDoctors = async () => { 
         try {
-            const authConfig = {
+            const UserAuthConfig = {
                 headers: {
                     Authorization: `Bearer ${sessionStorage.getItem('userToken')}`, 
                 },
             };
-            const doctorResponse = await axios.get(`${baseURL}/api/user/getalldoctors`, authConfig);
+            const doctorResponse = await axios.get(`${baseURL}/api/user/getalldoctors`, UserAuthConfig);
             const doctorData = doctorResponse.data.payload;
             updateAllDoctorData(doctorData);
             return doctorData;
@@ -86,12 +83,12 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     //fetch patient data
     const fetchPatients = async () => { 
         try {
-            const authConfig = {
+            const UserAuthConfig = {
                 headers: {
                     Authorization: `Bearer ${sessionStorage.getItem('userToken')}`,
                 },
             };
-            const patientResponse = await axios.get(`${baseURL}/api/user/getallpatients`, authConfig);
+            const patientResponse = await axios.get(`${baseURL}/api/user/getallpatients`, UserAuthConfig);
             const patientData = patientResponse.data.payload;
             updateAllPatientData(patientData);
             return patientData;
@@ -102,16 +99,17 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     
 
     //fetch admission data
-    const fetchAdmissions = async () => { 
+    const fetchClinicRoomData = async () => { 
         try {
             const UserAuthConfig = {
                 headers: {
                     Authorization: `Bearer ${sessionStorage.getItem('userToken')}`,
                 },
             };
-            const admissionResponse = await axios.get(`${baseURL}/api/user/getalladmissions`, UserAuthConfig);
-            const admissionData = admissionResponse.data;
-            updateAllAdmissionsData(admissionData);
+            const admissionResponse = await axios.get(`${baseURL}/api/user/getallclinicrooms`, UserAuthConfig);
+            const admissionData = admissionResponse.data.payload;
+            updateAllClinicRoomData(admissionData);
+            return admissionData;
         } catch (error) {
             console.log(error)
         }  
@@ -127,9 +125,9 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
         fetchPatients,
         allPatientData,
         updateAllPatientData,
-        fetchAdmissions,
-        allAdmissionsData, 
-        updateAllAdmissionsData
+        fetchClinicRoomData,
+        allClinicRoomData, 
+        updateAllClinicRoomData
     }}>{children}</AppContext.Provider>;
 };
 

@@ -51,6 +51,21 @@ export interface DecodedJwt{
         id: DecodedDataInterface
 }
 
+//sidenav props
+export interface NavLinks {
+        to: string;
+        icon: string;
+        text: string;
+        disabled?: boolean;
+}
+      
+      
+export  interface SideNavProps {
+        navLinks: NavLinks[];
+        setIsHovered: React.Dispatch<React.SetStateAction<boolean>>;
+        widthClass: string;
+}
+
 //dashboard data props
 export interface DashboardDataProps {
         patientCount: number,
@@ -253,10 +268,27 @@ export interface StaffFormProps {
 export interface AdmissionProps {
         buttonAction?: ()=> void,
         roomNumber: string,
+        roomType?: string,
         occupantID: string,
         occupantName: string,
         isRoomAvailable: boolean,
-        checkInDate: Date,
+        checkInDate?: Date,
+}
+
+export interface AdmitPatientsProps{
+        allAvailableRooms: AdmissionProps[],
+        isAdmitPatientActive: boolean,
+        closeAdmitPatients: ()=> void,
+        showSelectedRoom: (roomId: string) => void,
+ }
+
+export interface RoomOptionsProps {
+        RoomOptions: AdmissionProps,
+        buttonLoadingAnimation:boolean ,
+        updateRoomOptionsActive: React.Dispatch<React.SetStateAction<boolean>>,
+        roomOptionsActive:boolean,
+        roomOptionsCheckOutFnc: (roomNumber:string) => void,
+        roomOptionsCheckInFnc: (roomNumber:string) => void,
 }
 
 

@@ -5,7 +5,7 @@ import axios from 'axios';
 import AddPatient from "./AddPatient";
 import PatientTable from "./PatientTable";
 import PatientProfile from "./PatientProfile";
-import {PatientProps, PatientNotesProps} from '../DataTypes'
+import {PatientProps} from '../DataTypes'
 import { useGlobalContext } from '../../context/useGlobalContext';
 
 import spinner from '../../images/loadingspinner.svg'
@@ -71,8 +71,7 @@ const AllPatients = () => {
         };
     
         fetchData();
-    }, []);
-    
+    }, []);    
 
     //filter patient data based off search parameters
     const searchInputValue = (searchValue: string) => {

@@ -7,6 +7,7 @@ import patientIcon from '../../images/patient-icon.svg';
 import doctorIcon from '../../images/doctor-icon.svg';
 import appointmentIcon from '../../images/stafficon.png';
 
+import { AdmissionProps } from '../../components/DataTypes';
 import AllAdmissions from '../../components/admissions/AllAdmissions';
 import SideNav from "../../components/SideNav";
 import UseScreenWidth from '../../components/globalComponents/UseScreenWidth';
@@ -19,48 +20,40 @@ const Admissions = () => {
   const screenWidth = UseScreenWidth();
   const [, setIsHovered] = useState(false);
 
-
   //navlinks for sidenav component
   const navLinks = [
-    { to: '/user/dashboard',    icon: homeIconImage,    text: 'Dashboard' },
-    { to: '/user/doctors',      icon: doctorIcon,       text: 'Doctors' },
-    { to: '/user/patients',     icon: patientIcon,      text: 'Patients' },
-    { to: '/user/nurses',       icon: nurseicon,  text: 'Nurses' },
-    { to: '/user/staff',        icon: appointmentIcon,  text: 'Staff' },
-    { to: '/user/admissions',   icon: admissionsicon,   text: 'Admissions' },
-    
-];
+      { to: '/user/dashboard', icon: homeIconImage, text: 'Dashboard' },
+      { to: '/user/doctors', icon: doctorIcon, text: 'Doctors' },
+      { to: '/user/patients', icon: patientIcon, text: 'Patients' },
+      { to: '/user/deadlink', icon: nurseicon, text: 'Nurses', disabled: true },
+      { to: '/user/deadlink', icon: appointmentIcon, text: 'Staff', disabled: true },
+      { to: '/user/admissions', icon: admissionsicon, text: 'Admissions' },
+  ];
 
   const [allRooms,] = useState([
-              {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
-              {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
-              {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
-              {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
-              {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
-              {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
-              {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
+      {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
+      {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
+      {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
+      {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
+      {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
+      {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
+      {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
   ])
-
-
 
   //
   const displaySelectedRoom = (roomId: string)=>{
-        alert(roomId)
         updateRoomOptions(true)
-    
   }
 
   const [roomOptionsActive, updateRoomOptions]= useState<boolean>(false)
 
-  const [currentRoomOption,  ] = useState({
-        roomId: '14C',
-        occupantName: 'Grey Matters',
-        occupantId: '674',
-        roomType: 'Maternity',
-        checkInDate: '12/02/24',
-        checkOutDate: '',
-        checkedIn: false,
-  })
+  const [currentRoomOption, setCurrentRoomOption] = useState<AdmissionProps>({
+      roomNumber: '',
+      occupantID: '',
+      occupantName: '',
+      isRoomAvailable: false,
+  });
+  
 
   //check out and check in logic
   const checkOutFunction = () =>{
@@ -70,9 +63,6 @@ const Admissions = () => {
   const checkInFunction = () =>{
     
   }
-
-
-
 
   //if not desktop screen, display error message
   if(screenWidth < 891 ){

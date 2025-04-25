@@ -1,26 +1,11 @@
 
 import { FaSignOutAlt, FaSignInAlt, FaTimes } from "react-icons/fa";
 import { TiCancel } from "react-icons/ti";
+import {RoomOptionsProps} from '../DataTypes';
+import whiteBtnLoader from '../../images/buttonloaderwhite.svg';
 
-interface RoomOptionsObject {
-    roomId: string,
-    occupantName: string,
-    occupantId: string,
-    roomType: string,
-    checkInDate: string,
-    checkOutDate: string,
-    checkedIn: boolean,
-}
 
-interface RoomOptionsProps {
-    RoomOptions: RoomOptionsObject,
-    updateRoomOptionsActive: React.Dispatch<React.SetStateAction<boolean>>
-    roomOptionsActive:boolean,
-    roomOptionsCheckOutFnc: (roomId:string) => void,
-    roomOptionsCheckInFnc: (roomId:string) => void,
-}
-
-const RoomOptions: React.FC<RoomOptionsProps> = ({roomOptionsCheckOutFnc, roomOptionsCheckInFnc, RoomOptions, updateRoomOptionsActive, roomOptionsActive }) => {
+const RoomOptions: React.FC<RoomOptionsProps> = ({buttonLoadingAnimation, roomOptionsCheckOutFnc, roomOptionsCheckInFnc, RoomOptions, updateRoomOptionsActive, roomOptionsActive }) => {
 
   return (
     <>
@@ -41,7 +26,7 @@ const RoomOptions: React.FC<RoomOptionsProps> = ({roomOptionsCheckOutFnc, roomOp
                                     <FaTimes />
                                 </button>
                                 
-                                <h3 className="tracking-wider text-[22px] font-bold">ROOM {RoomOptions.roomId}</h3>
+                                <h3 className="tracking-wider text-[22px] font-bold">{RoomOptions.roomNumber}</h3>
 
                                 <div className="pt-[2rem] w-full flex flex-col justify-center items-center space-y-4">
                                         <div className="w-full flex flex-col justify-center items-center">
@@ -51,59 +36,79 @@ const RoomOptions: React.FC<RoomOptionsProps> = ({roomOptionsCheckOutFnc, roomOp
 
                                         <div className="w-full flex flex-col justify-center items-center">
                                             <h6 className="text-[14px] font-semibold text-[#8f8f8f]">Occupant ID</h6>
-                                            <p className="">PT {RoomOptions.occupantId}</p>
+                                            <p className="">{RoomOptions.occupantID}</p>
                                         </div>
 
                                         <div className="w-full flex flex-col justify-center items-center">
                                             <h6 className="text-[14px] font-semibold text-[#8f8f8f]">Room Type</h6>
-                                            <p className="">{RoomOptions.roomType}</p>
+                                            <p className="">{RoomOptions.roomType? RoomOptions.roomType : 'General'}</p>
                                         </div>
 
                                         <div className="pt-[2rem] w-full flex justify-between items-center">
                                                 <div className="w-full flex flex-col justify-center items-center">
                                                     <h6 className="text-[14px] font-semibold text-[#8f8f8f]">Check-in date</h6>
-                                                    <p className="text-[14px]">{RoomOptions.checkInDate}</p>
+                                                    <p className="text-[14px]">
+                                                        {RoomOptions.checkInDate
+                                                            ? new Date(RoomOptions.checkInDate).toLocaleDateString()
+                                                            : ''
+                                                        }
+                                                    </p>
+
                                                 </div>
 
                                                 <div className="w-full flex flex-col justify-center items-center">
                                                     <h6 className="text-[14px] font-semibold text-[#8f8f8f]">Check-out date</h6>
-                                                    <p className="text-[14px]">{RoomOptions.checkOutDate !== '' ? RoomOptions.checkOutDate : '-'}</p>
+                                                    <p className="text-[14px]">-</p>
                                                 </div>
                                         </div>
                                 </div>
 
                                 <div className="pt-[2rem] w-full flex justify-between items-center">
                                     
-
-                                        {!RoomOptions.checkedIn ? 
-                                        
-                                            <button onClick={()=>roomOptionsCheckOutFnc} className="transition-properties w-[130px] h-[40px] bg-red-500 text-white border border-red-500 text-[14px] rounded-md flex items-center justify-center space-x-2 hover:border-red-400 hover:bg-red-400">
-                                                <FaSignOutAlt />
-                                                <p>Check-out</p>
-                                            </button>
-
-                                                :
-
-                                            <button disabled={true} className="transition-properties w-[130px] h-[40px] bg-red-500 text-white border border-red-500 text-[14px] rounded-md flex items-center justify-center space-x-2">
-                                                <TiCancel className = 'text-white text-[18px]'/>
-                                                <p>Check-out</p>
-                                            </button> 
-                                        }
-
-                                        {RoomOptions.checkedIn ? 
-                                        
-                                            <button onClick={()=>roomOptionsCheckInFnc} className="transition-properties w-[130px] h-[40px] bg-green-500 text-white border border-green-500 text-[14px] rounded-md flex items-center justify-center space-x-2 hover:border-green-400 hover:bg-green-400">
-                                                <FaSignInAlt />
-                                                <p>Check-in</p>
-                                            </button> 
-                                            
+                                    <button
+                                        onClick={() => roomOptionsCheckInFnc(RoomOptions.roomNumber)}
+                                        disabled={!RoomOptions.isRoomAvailable} 
+                                        className={`transition-properties w-[130px] h-[40px] text-white border text-[14px] rounded-md flex items-center justify-center space-x-2 
+                                            ${!RoomOptions.isRoomAvailable 
+                                            ? 'bg-green-300 border-green-300 cursor-not-allowed' 
+                                            : 'bg-green-500 border-green-500 hover:border-green-400 hover:bg-green-400'}`}
+                                        >
+                                            {buttonLoadingAnimation ? 
+                                                <img src = {whiteBtnLoader} className='w-[16px] h-[16px]' alt='loader'/>   
                                             :
-
-                                            <button disabled={true} className="transition-properties w-[130px] h-[40px] bg-green-500 text-white border border-green-500 text-[14px] rounded-md flex items-center justify-center space-x-2">
-                                                <TiCancel className = 'text-white text-[18px]'/>
+                                            <>
+                                                {!RoomOptions.isRoomAvailable 
+                                                    ? <TiCancel className="text-white text-[18px]" /> 
+                                                    : <FaSignInAlt />
+                                                }
                                                 <p>Check-in</p>
-                                            </button> 
-                                        }
+                                            </>
+                                            }
+                                  
+                                    </button>
+
+
+                                    <button
+                                        onClick={() => roomOptionsCheckOutFnc(RoomOptions.roomNumber)}
+                                        disabled={RoomOptions.isRoomAvailable} 
+                                        className={`transition-properties w-[130px] h-[40px] text-white border text-[14px] rounded-md flex items-center justify-center space-x-2 
+                                            ${RoomOptions.isRoomAvailable 
+                                            ? 'bg-red-300 border-red-300 cursor-not-allowed' 
+                                            : 'bg-red-500 border-red-500 hover:border-red-400 hover:bg-red-400'}`}
+                                        >
+
+                                        {buttonLoadingAnimation ? 
+                                            <img src = {whiteBtnLoader} className='w-[16px] h-[16px]' alt='loader'/>   
+                                        :
+                                        <>
+                                            {RoomOptions.isRoomAvailable 
+                                            ? <TiCancel className="text-white text-[18px]" /> 
+                                            : <FaSignOutAlt />}
+                                            <p>Check-out</p>
+                                        </>
+                                        }  
+                                    </button>
+
                                 </div>
                         </div>  
 
