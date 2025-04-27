@@ -1,7 +1,7 @@
 import { FaHandPointer } from "react-icons/fa";
 import { AdmissionProps, AdmitPatientsProps } from "../DataTypes";
 
-const AdmitPatients: React.FC<AdmitPatientsProps> = ({closeAdmitPatients, allAvailableRooms, showSelectedRoom, isAdmitPatientActive}) => {
+const AdmitPatients: React.FC<AdmitPatientsProps> = ({closeAdmitPatients, allClinicRooms, showSelectedRoom, isAdmitPatientActive}) => {
     return (
       <>
         {(isAdmitPatientActive) && 
@@ -21,7 +21,7 @@ const AdmitPatients: React.FC<AdmitPatientsProps> = ({closeAdmitPatients, allAva
                           </div>
                           
                           <div  className="w-full h-full grid grid-cols-6 gap-[0.50rem] xl:grid-cols-8">
-                                  {allAvailableRooms.filter((room:AdmissionProps) => room.isRoomAvailable === true)
+                                  {allClinicRooms.filter((room:AdmissionProps) => room.isRoomAvailable === true)
                                   .map((room: AdmissionProps) => (
                                           <button onClick={()=> showSelectedRoom(room.roomNumber)} key={room.roomNumber} className={`p-2 transition-properties max-w-[170px] min-h-[130px] flex flex-col space-y-1 items-center justify-center border border-white rounded-md 
                                             bg-gradient-to-r from-slate-800 to-slate-900 hover:transform hover:scale-105`}

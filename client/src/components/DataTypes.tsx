@@ -276,8 +276,8 @@ export interface AdmissionProps {
 }
 
 export interface AdmitPatientsProps{
-        allAvailableRooms: AdmissionProps[],
-        isAdmitPatientActive: boolean,
+        allClinicRooms: AdmissionProps[],
+        isAdmitPatientActive?: boolean,
         closeAdmitPatients: ()=> void,
         showSelectedRoom: (roomId: string) => void,
  }

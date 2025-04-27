@@ -1,4 +1,5 @@
-import  { useState } from 'react';
+import axios from 'axios';
+import { useEffect, useState } from "react";
 
 import admissionsicon from '../../images/admissionsicon.png';
 import nurseicon from '../../images/nurseicon.png';
@@ -7,18 +8,26 @@ import patientIcon from '../../images/patient-icon.svg';
 import doctorIcon from '../../images/doctor-icon.svg';
 import appointmentIcon from '../../images/stafficon.png';
 
+
+import { useGlobalContext } from '../../context/useGlobalContext';
 import { AdmissionProps } from '../../components/DataTypes';
 import AllAdmissions from '../../components/admissions/AllAdmissions';
 import SideNav from "../../components/SideNav";
 import UseScreenWidth from '../../components/globalComponents/UseScreenWidth';
 import NavSection from '../../components/NavSection';
 import RoomOptions from '../../components/admissions/RoomOptions';
+import { toast } from "react-toastify";
 
 
 const Admissions = () => {
-
+  const {baseURL, fetchClinicRoomData, allClinicRoomData} = useGlobalContext();
+  const userToken = sessionStorage.getItem('userToken');
   const screenWidth = UseScreenWidth();
   const [, setIsHovered] = useState(false);
+
+
+  const [ButtonLoadingAnimation, setButtonLoadingAnimation] = useState<boolean>(false)
+
 
   //navlinks for sidenav component
   const navLinks = [
@@ -30,38 +39,96 @@ const Admissions = () => {
       { to: '/user/admissions', icon: admissionsicon, text: 'Admissions' },
   ];
 
-  const [allRooms,] = useState([
-      {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
-      {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
-      {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
-      {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
-      {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
-      {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
-      {roomNumber: ' 12C', roomStatus: 'Taken', occupantName: 'Dave Green'},
-  ])
-
-  //
-  const displaySelectedRoom = (roomId: string)=>{
-        updateRoomOptions(true)
-  }
 
   const [roomOptionsActive, updateRoomOptions]= useState<boolean>(false)
 
   const [currentRoomOption, setCurrentRoomOption] = useState<AdmissionProps>({
-      roomNumber: '',
-      occupantID: '',
-      occupantName: '',
-      isRoomAvailable: false,
+    roomNumber: '',
+    occupantID: '',
+    occupantName: '',
+    isRoomAvailable: false,
   });
+
+  useEffect(()=>{
+    const fetchData = async () => {
+          await fetchClinicRoomData();
+    };
+
+        fetchData()
+
+       
+    }, [])
+
+    
+
+  const showSelectedRoom = (roomID: string)=> {
+
+    const selectedRoom = allClinicRoomData.find(room => room.roomNumber === roomID);
+    
+    if (selectedRoom) {
+            setCurrentRoomOption(selectedRoom);
+            updateRoomOptions(true);
+    }
+ }
+
+  const closeAdmitPatients = () =>{
+
+  }
   
 
   //check out and check in logic
-  const checkOutFunction = () =>{
-    
+  const checkOutFunction = async () =>{
+    try {
+      setButtonLoadingAnimation(true);    
+      
+      const checkOutPatientCall = await axios.post(`${baseURL}/api/user/checkoutpatient`, {patientID: currentRoomOption?.occupantID, roomNumber: currentRoomOption?.roomNumber},
+      {
+          headers: {
+              Authorization: `Bearer ${userToken}`,
+          },
+      })
+
+      const checkOutPatientCallPayload = checkOutPatientCall.data.payload;
+
+      if(checkOutPatientCall.status === 200){
+              toast.success(checkOutPatientCallPayload)
+              await fetchClinicRoomData()
+          
+              setTimeout(() => {
+                      setButtonLoadingAnimation(false);
+                      updateRoomOptions(false);
+              }, 1000);
+              
+      }else{
+              toast.error(checkOutPatientCallPayload) 
+
+              setTimeout(() => {
+                      setButtonLoadingAnimation(false);
+                      updateRoomOptions(false);
+              }, 1000);
+      }
+      
+
+} catch (error) {
+      if (axios.isAxiosError(error)) {
+              if (error.response && error.response.data && error.response.data.payload) {
+                      toast.error(`Error: ${error.response.data.payload}`);
+                      console.error('Unexpected error:', error);
+              } else {
+                      toast.error('Something went wrong');
+                      console.error('Unexpected error2:', error);
+              }
+              setButtonLoadingAnimation(false);
+      } else {
+              console.error('Unexpected error:', error);
+              toast.error('An unexpected error occurred');
+              setButtonLoadingAnimation(false);
+      }                
+} 
   }
 
   const checkInFunction = () =>{
-    
+       toast.success('service unavailable')
   }
 
   //if not desktop screen, display error message
@@ -88,9 +155,20 @@ const Admissions = () => {
                                   <div className="relative h-full w-full flex ">
                                           <SideNav navLinks={navLinks} setIsHovered={setIsHovered} widthClass ={`w-[25%]`}/>
 
-                                          <AllAdmissions showSelectedRoom ={displaySelectedRoom} allRooms={allRooms}/>
+                                          <AllAdmissions 
+                                              showSelectedRoom = {showSelectedRoom} 
+                                              allClinicRooms = {allClinicRoomData}
+                                              closeAdmitPatients = {closeAdmitPatients}
+                                          />
 
-                                          <RoomOptions roomOptionsCheckOutFnc = {checkOutFunction} roomOptionsCheckInFnc={checkInFunction} RoomOptions= {currentRoomOption} updateRoomOptionsActive = {updateRoomOptions} roomOptionsActive ={roomOptionsActive}/>
+                                          <RoomOptions 
+                                              roomOptionsCheckOutFnc = {checkOutFunction} 
+                                              roomOptionsCheckInFnc={checkInFunction} 
+                                              buttonLoadingAnimation = {ButtonLoadingAnimation}
+                                              RoomOptions= {currentRoomOption} 
+                                              updateRoomOptionsActive = {updateRoomOptions} 
+                                              roomOptionsActive = {roomOptionsActive}
+                                          />
                                   </div>
                 
                         </div>

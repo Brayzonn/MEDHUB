@@ -34,7 +34,6 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatie
   //component variables
   const [ButtonLoadingAnimation, setButtonLoadingAnimation] = useState<boolean>(false)
   const [roomOptionsActive, updateRoomOptions]= useState<boolean>(false)
-  const [allLocalClinicRoomData, setAllLocalClinicRoomData] = useState<AdmissionProps[]>([]);
   const [patientToBeAdmitted, setPatientToBeAdmitted] = useState<string>('');
   const [isAddNoteActive, updateIsAddNoteActive] = useState<boolean>(false); 
   const [allAvailableRooms, updateAvailableRooms] = useState<AdmissionProps[]>([]);
@@ -632,7 +631,7 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatie
         <AdmitPatients 
                 closeAdmitPatients = {closeAdmitPatients}
                 isAdmitPatientActive = {isAdmitPatientActive} 
-                allAvailableRooms = {allAvailableRooms} 
+                allClinicRooms = {allAvailableRooms} 
                 showSelectedRoom = {showSelectedRoom}
         />
 
