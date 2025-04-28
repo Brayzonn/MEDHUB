@@ -10,7 +10,7 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: {
-      '/api': 'http://localhost:3300', 
+      '/api': process.env.VITE_SERVER_URL ? process.env.VITE_SERVER_URL : 'http://localhost:3300', 
     },
   }
 })
