@@ -6,11 +6,11 @@ import sessionMiddleware from './middleware/sessionMiddleware';
 import connectToDb from './config/db';
 
 
-app.use(corsMiddleware)
+app.use(corsMiddleware);
+app.options('*', corsMiddleware);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-
 
 app.use(sessionMiddleware)
 app.use((req, res, next) => {
