@@ -5,12 +5,13 @@ import corsMiddleware from './middleware/corsMiddleware';
 import sessionMiddleware from './middleware/sessionMiddleware';
 import connectToDb from './config/db';
 
+
+app.use(corsMiddleware)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
 
-app.use(corsMiddleware)
 app.use(sessionMiddleware)
 app.use((req, res, next) => {
     console.log(`Received ${req.method} request to ${req.url}`);
