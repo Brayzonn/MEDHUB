@@ -40,7 +40,7 @@ const AppContext = createContext<AppContextProps>({
 // Define the provider component
 const AppProvider = ({ children }: { children: ReactNode }) => {
     //base url
-    const baseURL = process.env.VITE_SERVER_URL ? process.env.VITE_SERVER_URL : 'http://localhost:3300';
+    const baseURL = process.env.VITE_SERVER_URL ? process.env.VITE_SERVER_URL : 'https://medhub-server.brimble.app';
 
     const [allDashData, updateAllDashData] = useState<DashboardDataProps[]>([])
     const [allDoctorData, updateAllDoctorData] = useState<DoctorProps []>([])
