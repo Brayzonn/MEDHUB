@@ -8,7 +8,7 @@ const mongoURI = process.env.MongoURI;
 async function connectToDatabase(): Promise<void> {
   if (!mongoURI) {
     console.error('MongoURI not found in environment variables.');
-    return;
+    process.exit(1);
   }
 
   try {

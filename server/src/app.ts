@@ -7,21 +7,21 @@ import connectToDb from './config/db';
 
 
 app.use(corsMiddleware);
-app.options('*', corsMiddleware);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(sessionMiddleware)
-app.use((req, res, next) => {
-    console.log(`Received ${req.method} request to ${req.url}`);
-    next();
-});
+
+// app.use((req, res, next) => {
+//     console.log(`Received ${req.method} request to ${req.url}`);
+//     next();
+// });
 
 app.use('/api', allRoutes)
 app.use('/images', express.static('images'))
 
-//connect db
+//connect to mongo db
 connectToDb()
 
 const PORT = process.env.PORT || 3300;
