@@ -23,6 +23,7 @@ const Signin = () => {
     const navigate = useNavigate();
     const {baseURL} =  useGlobalContext();
 
+    const [googleLoading, setGoogleLoading] = useState(false);
     const [buttonLoadingAnimation, updateButtonLoadingAnimation] = useState<boolean>(false)
     const [showPassword, setShowPassword] = useState(false);
 
@@ -41,6 +42,7 @@ const Signin = () => {
 
     const googleApi = async (codeResponse: AccessTokenProps) => {
             try {
+                setGoogleLoading(true);
                 const googleApiCall = await axios.get(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${codeResponse.access_token}`, {
                     headers: {
                         Authorization: `Bearer ${codeResponse.access_token}`,
@@ -64,6 +66,7 @@ const Signin = () => {
                     }else{
                         sessionStorage.setItem('userToken', JSON.stringify(signInResponseData.token))
                         toast.success('Sign in successful, please wait.')
+                        setGoogleLoading(false);
 
                         setTimeout(()=>{
                             navigate('/user/dashboard');  
@@ -78,11 +81,11 @@ const Signin = () => {
                     } else {
                           toast.error('Something went wrong');
                     }
-                    updateButtonLoadingAnimation(false);
+                    setGoogleLoading(false);
                 } else {
-                        console.error('Unexpected error:', error);
-                        toast.error('An unexpected error occurred');
-                        updateButtonLoadingAnimation(false);
+                    console.error('Unexpected error:', error);
+                    toast.error('An unexpected error occurred');
+                    setGoogleLoading(false);
                 }
             }          
     } 
@@ -232,10 +235,24 @@ const Signin = () => {
                                                                         <div className='bg-[#e1e1e1] h-[1px] w-full'></div>
                                                                 </div>
 
-                                                                <button onClick={()=> !userToken ? googleAuthSignin() : navigate('/user/dashboard')} className='shadow-md bg-white border-[#e1e1e1] border-[1px] rounded-[5px] w-full min-h-[42px] flex items-center justify-center space-x-2 hover:bg-[#f1f1f1]'>
-                                                                    <img src={googleicon} alt='google-icon' className='w-[20px] h-[20px]'/>
-                                                                    <p className='text-black font-bold text-[14px]'> Sign in with Google</p>
+                                                                <button 
+                                                                    onClick={() => {
+                                                                        if (!userToken) googleAuthSignin();
+                                                                        else navigate('/user/dashboard');
+                                                                    }} 
+                                                                    disabled={googleLoading} 
+                                                                    className='shadow-md bg-white border-[#e1e1e1] border-[1px] rounded-[5px] w-full min-h-[42px] flex items-center justify-center space-x-2 hover:bg-[#f1f1f1] disabled:opacity-60 disabled:cursor-not-allowed'
+                                                                >
+                                                                    {googleLoading ? (
+                                                                        <img src={whiteBtnLoader} alt='loader' className='w-[25px] h-[25px]' />
+                                                                    ) : (
+                                                                        <>
+                                                                            <img src={googleicon} alt='google-icon' className='w-[20px] h-[20px]' />
+                                                                            <p className='text-black font-bold text-[14px]'>Sign in with Google</p>
+                                                                        </>
+                                                                    )}
                                                                 </button>
+
 
                                                                 <div className='py-[1rem] text-[#3c3b3b] text-[14px]'>Don't have an account? <Link className='text-black font-bold' to = '/signup'>Sign up</Link></div>
                     
