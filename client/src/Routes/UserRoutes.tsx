@@ -2,36 +2,37 @@ import { useEffect, useState } from 'react';
 import { Outlet, Navigate, useLocation } from 'react-router-dom';
 
 const UserRoutes = () => {
-    const [userToken, setUserToken] = useState(() => window.sessionStorage.getItem('userToken'));
+    const [userToken, setUserToken] = useState(() => sessionStorage.getItem('userToken'));
     const location = useLocation();
 
     useEffect(() => {
+        const token = sessionStorage.getItem('userToken');
+        const expiry = Number(sessionStorage.getItem('userTokenExpiry'));
 
-        const timeout = setTimeout(() => {
-            window.sessionStorage.clear();
+        if (!token || !expiry || Date.now() > Number(expiry)) {
+            sessionStorage.removeItem('userToken');
+            sessionStorage.removeItem('userTokenExpiry');
             setUserToken(null);
-        }, 10800000); // 3 hours
-
-
-        const handleStorageChange = () => {
-            const token = window.sessionStorage.getItem('userToken');
+        } else {
             setUserToken(token);
-        };
-
-        window.addEventListener('storage', handleStorageChange);
-        
-        return () => {
-            clearTimeout(timeout);
-            window.removeEventListener('storage', handleStorageChange);
-        };
-    }, []);
-
-    useEffect(() => {
-        const token = window.sessionStorage.getItem('userToken');
-        setUserToken(token);
+        }
     }, [location]);
 
-    return userToken ? <Outlet /> : <Navigate to = '/user/signin' replace />;
+
+    useEffect(() => {
+        const expiry = sessionStorage.getItem('userTokenExpiry');
+        if (expiry) {
+            const timeout = setTimeout(() => {
+                sessionStorage.removeItem('userToken');
+                sessionStorage.removeItem('userTokenExpiry');
+                setUserToken(null);
+            }, Number(expiry) - Date.now());
+
+            return () => clearTimeout(timeout);
+        }
+    }, [userToken]);
+
+    return userToken ? <Outlet /> : <Navigate to="/signin" replace />;
 };
 
 export default UserRoutes;

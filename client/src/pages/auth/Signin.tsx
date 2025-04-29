@@ -116,6 +116,7 @@ const Signin = () => {
                         toast.error(signInResponseData.payload)
                     }
                     else{
+                        sessionStorage.setItem('userTokenExpiry', (Date.now() + 3 * 60 * 60 * 1000).toString());
                         sessionStorage.setItem('userToken', JSON.stringify(signInResponseData.token))
                         updateSigninFormFieldData({
                             email: '',
