@@ -9,8 +9,6 @@ const UserRoutes = () => {
         const token = sessionStorage.getItem('userToken');
         const expiry = Number(sessionStorage.getItem('userTokenExpiry'));
 
-        console.log(token + "-" + expiry)
-
         if (!token || !expiry || Date.now() > Number(expiry)) {
             sessionStorage.removeItem('userToken');
             sessionStorage.removeItem('userTokenExpiry');
