@@ -10,6 +10,7 @@ import { AccessTokenProps } from '../../components/DataTypes';
 
 import googleicon from '../../images/googleimage.png'
 import whiteBtnLoader from '../../images/buttonloaderwhite.svg';
+import otherLoadingBtnAnimation from '../../images/loadingspinner.svg';
 import siginillustration from '../../../src/images/Privacy policy-rafiki.svg';
 
 import { RiEyeLine, RiEyeOffLine } from 'react-icons/ri';
@@ -244,7 +245,7 @@ const Signin = () => {
                                                                     className='shadow-md bg-white border-[#e1e1e1] border-[1px] rounded-[5px] w-full min-h-[42px] flex items-center justify-center space-x-2 hover:bg-[#f1f1f1] disabled:opacity-60 disabled:cursor-not-allowed'
                                                                 >
                                                                     {googleLoading ? (
-                                                                        <img src={whiteBtnLoader} alt='loader' className='w-[25px] h-[25px]' />
+                                                                        <img src={otherLoadingBtnAnimation} alt='loader' className='w-[25px] h-[25px]' />
                                                                     ) : (
                                                                         <>
                                                                             <img src={googleicon} alt='google-icon' className='w-[20px] h-[20px]' />
