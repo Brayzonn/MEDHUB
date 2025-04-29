@@ -121,7 +121,7 @@ const Signin = () => {
                     }
                     else{
                         sessionStorage.setItem('userTokenExpiry', (Date.now() + 3 * 60 * 60 * 1000).toString());
-                        sessionStorage.setItem('userToken', JSON.stringify(signInResponseData.token))
+                        sessionStorage.setItem('userToken', signInResponseData.token)
                         updateSigninFormFieldData({
                             email: '',
                             password: '', 
