@@ -65,6 +65,7 @@ const Signin = () => {
                     if(sininGoogleApiCall.status !==  200){
                         toast.error(signInResponseData.payload)
                     }else{
+                        sessionStorage.setItem('userTokenExpiry', (Date.now() + 3 * 60 * 60 * 1000).toString());
                         sessionStorage.setItem('userToken', JSON.stringify(signInResponseData.token))
                         toast.success('Sign in successful, please wait.')
                         setGoogleLoading(false);
