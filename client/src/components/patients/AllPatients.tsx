@@ -161,6 +161,8 @@ const AllPatients = () => {
 
                 if(deletePatientApiCall.status === 200){
                     toast.success(deletePatientPayload)
+                }else{                  
+                    toast.error(deletePatientPayload)
                 }
                 await fetchPatients()
                 updateButtonLoadingAnimation(false)

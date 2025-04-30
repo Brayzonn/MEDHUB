@@ -143,7 +143,7 @@ const AllDoctors = () => {
                   } else{                  
                         toast.error(deleteDoctorErrorResponseData)
                   }
-                      
+                  await fetchDoctors() 
                   updateButtonLoadingAnimation(false)
                   setIsConfirmationDialogOpen(false)
                   setProfileVisibility(false)
