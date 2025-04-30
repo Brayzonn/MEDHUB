@@ -40,7 +40,7 @@ const AppContext = createContext<AppContextProps>({
 // Define the provider component
 const AppProvider = ({ children }: { children: ReactNode }) => {
     //base url
-    const baseURL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000';
+    const baseURL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3300';
 
     const [allDashData, updateAllDashData] = useState<DashboardDataProps[]>([])
     const [allDoctorData, updateAllDoctorData] = useState<DoctorProps []>([])

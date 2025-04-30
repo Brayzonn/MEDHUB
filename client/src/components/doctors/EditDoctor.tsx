@@ -53,7 +53,7 @@ const EditDoctor: React.FC<EditDoctorProps> = ({fetchUpdatedActiveDoctorData, up
             updateParsedDoctorID(activeDoctorProfileToObject.doctorID)
 
             setIdImages(
-                `${baseURL}/images/doctorimages/${activeDoctorProfileToObject.profile.doctorImage}?v=${new Date(activeDoctorProfileToObject.updatedAt || Date.now()).getTime()}`
+                `${activeDoctorProfileToObject.profile.doctorImage}?v=${new Date(activeDoctorProfileToObject.updatedAt || Date.now()).getTime()}`
             );              
             setUpdateDoctorForm((prevDoctorForm) => {
                 let updatedDoctorForm = { ...prevDoctorForm };

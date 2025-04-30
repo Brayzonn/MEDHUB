@@ -5,7 +5,6 @@ import corsMiddleware from './middleware/corsMiddleware';
 import sessionMiddleware from './middleware/sessionMiddleware';
 import connectToDb from './config/db';
 
-
 app.use(corsMiddleware);
 
 app.use(express.json());

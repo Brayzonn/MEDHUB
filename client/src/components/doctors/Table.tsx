@@ -1,15 +1,9 @@
 import DataTable, {TableColumn } from 'react-data-table-component';
-
-import { useGlobalContext } from '../../context/useGlobalContext';
-
 import {DoctorProps, DoctorTableProps } from '../DataTypes'; 
-
 import userplaceholder from '../../images/userplaceholderlogo.png';
 
 
 const Table: React.FC<DoctorTableProps> = ({ columns, data }) => {
-
-    const {baseURL} =  useGlobalContext();
     
     const customColumns: TableColumn<DoctorProps>[] = columns.map((col) => {
         if (col.name === 'Doctor'){
@@ -18,7 +12,7 @@ const Table: React.FC<DoctorTableProps> = ({ columns, data }) => {
                 cell: (row: DoctorProps) => {
                     const doctorProfile = row.profile;
                     const imagePath = doctorProfile.doctorImage 
-                    ? `${baseURL}/images/doctorimages/${doctorProfile.doctorImage}?v=${new Date(row.updatedAt || Date.now()).getTime()}
+                    ? `${doctorProfile.doctorImage}?v=${new Date(row.updatedAt || Date.now()).getTime()}
                     ` 
                     : userplaceholder;
 

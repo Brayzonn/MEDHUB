@@ -17,7 +17,6 @@ const Doctors = () => {
     const screenWidth = UseScreenWidth();
     const [, setIsHovered] = useState(false);
   
-
     //navlinks for sidenav component
     const navLinks = [
         { to: '/user/dashboard', icon: homeIconImage, text: 'Dashboard' },
@@ -27,8 +26,6 @@ const Doctors = () => {
         { to: '/user/deadlink', icon: appointmentIcon, text: 'Staff', disabled: true },
         { to: '/user/admissions', icon: admissionsicon, text: 'Admissions' },
     ];
-  
-  
   
     //if not desktop screen, display error message
     if(screenWidth < 891 ){

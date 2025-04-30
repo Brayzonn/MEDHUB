@@ -1,6 +1,7 @@
 const router = require("express").Router();
 import { Request, Response, NextFunction } from 'express'
 
+import cloudinaryUpload from '../middleware/cloudinaryUpload';
 import { ensureAuthenticated } from '../config/auth';
 import {signIn, signUp, googleSignin, getDashboardData, addNewDoctor, deleteDoctor, updateDoctorProfile, getAllDoctors, getAllPatients, addNewPatient, deletePatient, updatePatientProfile, createPatientNote, updatePatientNote, deletePatientNote, addClinicRoom, checkInPatient, checkOutPatient, allClinicRooms } from '../controllers/mainController'
 
@@ -19,15 +20,15 @@ router.get('/user/getdashboarddata', ensureAuthenticated, getDashboardData)
 
 //doctor endpoints
 router.get('/user/getalldoctors',    ensureAuthenticated, getAllDoctors)
-router.post('/user/addnewdoctor',    ensureAuthenticated, addNewDoctor)
+router.post('/user/addnewdoctor',    ensureAuthenticated, cloudinaryUpload.single('doctorImage'), addNewDoctor)
 router.delete('/user/deletedoctor',  ensureAuthenticated, deleteDoctor)
-router.post('/user/updatedoctorprofile',  ensureAuthenticated, updateDoctorProfile)
+router.post('/user/updatedoctorprofile',  ensureAuthenticated, cloudinaryUpload.single('doctorImage'), updateDoctorProfile)
 
 //patient endpoints
 router.get('/user/getallpatients',    ensureAuthenticated, getAllPatients)
-router.post('/user/addnewpatient',    ensureAuthenticated, addNewPatient)
+router.post('/user/addnewpatient',    ensureAuthenticated, cloudinaryUpload.single('patientImage'), addNewPatient)
 router.delete('/user/deletepatient',  ensureAuthenticated, deletePatient)
-router.post('/user/updatepatientprofile',  ensureAuthenticated, updatePatientProfile)
+router.post('/user/updatepatientprofile',  ensureAuthenticated, cloudinaryUpload.single('patientImage'), updatePatientProfile)
 
 router.post('/user/createpatientnotes',    ensureAuthenticated, createPatientNote)
 router.post('/user/updatepatientnotes',    ensureAuthenticated, updatePatientNote)

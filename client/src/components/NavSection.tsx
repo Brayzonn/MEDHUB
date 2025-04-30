@@ -31,7 +31,7 @@ const NavSection = () => {
                             <img src = {userplaceholder} alt="profile-icon" className = 'w-[35px] h-[35px] border-inherit rounded-full' />
 
                             <div className="flex flex-col items-start text-[#ABABAB] text-[15px]">
-                                    <p className='text-[13px] text-black tracking-wide'>Good Morning</p>
+                                    <p className='text-[13px] text-black tracking-wide'>Hello</p>
                                     <p className='text-[13px] font-bold text-[#161616] tracking-wide'>{decodedUserData?.userName ? decodedUserData.userName : ''}</p>
                             </div>
                 </div>

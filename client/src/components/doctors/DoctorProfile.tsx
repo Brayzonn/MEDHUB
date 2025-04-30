@@ -54,7 +54,7 @@ const DoctorProfile: React.FC<DoctorProfileProps> = ({fetchUpdatedActiveDoctorDa
                                 <img 
                                 src={
                                 activeDoctor.profile.doctorImage 
-                                ? `${baseURL}/images/doctorimages/${activeDoctor.profile.doctorImage}?v=${new Date(activeDoctor.updatedAt || Date.now()).getTime()}`
+                                ? `${activeDoctor.profile.doctorImage}?v=${new Date(activeDoctor.updatedAt || Date.now()).getTime()}`
                                 : userplaceholder
                                 } 
                                 alt="profile" 

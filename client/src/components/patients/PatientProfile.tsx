@@ -453,7 +453,7 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ fetchUpdatedActivePatie
                                         <img 
                                         src={
                                         activePatientProfile.profile.patientImage 
-                                        ? `${baseURL}/images/patientimages/${activePatientProfile.profile.patientImage}?v=${new Date(activePatientProfile.updatedAt || Date.now()).getTime()}`
+                                        ? `${activePatientProfile.profile.patientImage}?v=${new Date(activePatientProfile.updatedAt || Date.now()).getTime()}`
                                         : userplaceholder
                                         } 
                                         alt="profile" 

@@ -143,22 +143,22 @@ const AddPatient = () => {
 
                                 if(addPatientApiCall.status === 201){
                                         updateButtonLoadingAnimation(false)
-                                        setIdImages(undefined)
-                                        setAddPatientForm({
-                                                patientName: '', 
-                                                patientImage: '',
-                                                patientAge: '',
-                                                patientBloodType: '',
-                                                patientHeight: '',
-                                                patientGenotype: '',
-                                                patientWeight: '',
-                                                patientConditions: [''],
-                                                patientJoinDate: '',
-                                                patientBirthDate: '',
-                                                patientPhoneNumber: '', 
-                                                patientEmail: '',
-                                                patientEMO: ''
-                                        })
+                                        // setIdImages(undefined)
+                                        // setAddPatientForm({
+                                        //         patientName: '', 
+                                        //         patientImage: '',
+                                        //         patientAge: '',
+                                        //         patientBloodType: '',
+                                        //         patientHeight: '',
+                                        //         patientGenotype: '',
+                                        //         patientWeight: '',
+                                        //         patientConditions: [''],
+                                        //         patientJoinDate: '',
+                                        //         patientBirthDate: '',
+                                        //         patientPhoneNumber: '', 
+                                        //         patientEmail: '',
+                                        //         patientEMO: ''
+                                        // })
                                         toast.success(addPatientResponseData)
                                         fetchDashboardData()
                                         callUpdatedAllPatientData()
@@ -175,10 +175,40 @@ const AddPatient = () => {
                                         console.error('Unexpected error2:', error);
                                 }
                                 updateButtonLoadingAnimation(false);
+                                setAddPatientForm({
+                                        patientName: '', 
+                                        patientImage: '',
+                                        patientAge: '',
+                                        patientBloodType: '',
+                                        patientHeight: '',
+                                        patientGenotype: '',
+                                        patientWeight: '',
+                                        patientConditions: [''],
+                                        patientJoinDate: '',
+                                        patientBirthDate: '',
+                                        patientPhoneNumber: '', 
+                                        patientEmail: '',
+                                        patientEMO: ''
+                                })
                         } else {
                                 console.error('Unexpected error:', error);
                                 toast.error('An unexpected error occurred');
                                 updateButtonLoadingAnimation(false);
+                                setAddPatientForm({
+                                        patientName: '', 
+                                        patientImage: '',
+                                        patientAge: '',
+                                        patientBloodType: '',
+                                        patientHeight: '',
+                                        patientGenotype: '',
+                                        patientWeight: '',
+                                        patientConditions: [''],
+                                        patientJoinDate: '',
+                                        patientBirthDate: '',
+                                        patientPhoneNumber: '', 
+                                        patientEmail: '',
+                                        patientEMO: ''
+                                })
                         }
                 }
       }

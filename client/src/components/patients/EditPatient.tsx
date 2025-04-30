@@ -59,7 +59,7 @@ const EditPatient: React.FC<EditPatientProps> = ({fetchUpdatedActivePatientData,
                     const activePatientProfileToObject = JSON.parse(activePatientProfile)
                     updateParsedPatientID(activePatientProfileToObject.patientID)
                     setIdImages(
-                        `${baseURL}/images/patientimages/${activePatientProfileToObject.profile.patientImage}?v=${new Date(activePatientProfileToObject.updatedAt || Date.now()).getTime()}`
+                        `${activePatientProfileToObject.profile.patientImage}?v=${new Date(activePatientProfileToObject.updatedAt || Date.now()).getTime()}`
                     ); 
                     
 
