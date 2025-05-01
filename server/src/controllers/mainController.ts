@@ -1,11 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
-import path from 'path';
 import cloudinary from '../utils/cloudinary';
 import generateUserToken from '../utils/jwtTokenFunc';
-import multer from 'multer';
-import fs from 'fs';
-import {patientUpload, doctorUpload} from '../middleware/multerMiddleware';
 import {generateUniqueDoctorId, generateUniquePatientId} from '../utils/genIDFuncs';
 
 
