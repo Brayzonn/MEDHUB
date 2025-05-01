@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, useLocation} from 'react-router-dom';
+import { NavLink, useNavigate, useLocation} from 'react-router-dom';
 
 import { TbLogout2 } from "react-icons/tb";
 
@@ -7,7 +7,8 @@ import {SideNavProps} from '../components/DataTypes';
 
 
 const SideNav: React.FC<SideNavProps> = ({ navLinks, setIsHovered, widthClass }) => {
-    
+  
+  const navigate = useNavigate();
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
   const [activeLink, setActiveLink] = useState<string | null>(null);
   const location = useLocation();
@@ -69,7 +70,7 @@ const SideNav: React.FC<SideNavProps> = ({ navLinks, setIsHovered, widthClass })
           </div>
 
           <div className='relative w-full flex items-end pt-4 border-t border-t-[#e8e6e6]'>
-                <button className='w-[150px] min-h-[40px] flex justify-start items-center space-x-2 transition-properties hover:border hover:bg-gradient-to-r from-slate-500 to-slate-800 hover:rounded-md hover:justify-center hover:text-white '>
+                <button onClick={()=> {sessionStorage.clear(); navigate('/signin')}} className='w-[150px] min-h-[40px] flex justify-start items-center space-x-2 transition-properties hover:border hover:bg-gradient-to-r from-slate-500 to-slate-800 hover:rounded-md hover:justify-center hover:text-white '>
                       <TbLogout2 className = 'text-[20px] font-[650] text-[#776666]' />     
                       <p className='text-[15px] font-[500]'>Log out</p>
                 </button>
