@@ -82,7 +82,7 @@ Hospital-Management-Web-App/
 
 ```     
 
- ## Technologies Used
+## 🛠️ Technologies Used
 
 - **Frontend**: React, Typescript, Tailwind CSS, Vite
 - **Backend**: Node.js, Express.js, Typescript
