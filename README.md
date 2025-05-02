@@ -25,7 +25,7 @@
 
 - Node.js >= 16.x
 - npm >= 8.x
-- MongoDB instance (local or cloud)
+- MongoDB instance (cloud)
 
 ### 📥 Installation
 
@@ -93,3 +93,21 @@ Hospital-Management-Web-App/
 
 
 ## 🗂 Folder Structure
+
+<!-- client/
+├── public/ # Static assets (favicon, index.html)
+├── src/
+│ ├── assets/ # Images, fonts, etc.
+│ ├── components/ # Reusable UI components
+│ │ └── global/ # Global components like Header, Footer
+│ ├── context/ # React context providers (e.g., AuthContext)
+│ ├── hooks/ # Custom React hooks
+│ ├── pages/ # Route-based page components
+│ ├── routes/ # React Router route definitions
+│ ├── services/ # API service calls
+│ ├── types/ # TypeScript type definitions
+│ ├── utils/ # Helper functions (formatters, validators)
+│ └── App.tsx # Root component
+├── .env # Environment variables
+├── tsconfig.json # TypeScript configuration
+└── package.json # Project metadata and scripts -->

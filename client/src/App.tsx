@@ -10,7 +10,7 @@ import Admissions from './pages/user/admissions/Admissions';
 import Patients from './pages/user/patients/Patients';
 
 
-import UserRoutes from './routes/UserRoutes';
+import UserRoutes from './protected-routes/UserRoutes';
 
 
 function App() {
