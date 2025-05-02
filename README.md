@@ -50,15 +50,14 @@ npm run dev
 cd client
 npm run dev
 
+```
 
-## 🗂 Project Structure
+### 🗂 Project Structure
 
 The project is divided into two main folders:
 
 - `client/` – The frontend built with React, Vite, and TypeScript.
 - `server/` – The backend powered by Node.js, Express, and MongoDB.
-
-Below is the high-level folder structure:
 
 ```bash
 Hospital-Management-Web-App/
@@ -80,5 +79,9 @@ Hospital-Management-Web-App/
     ├── public
     ├── src
     ├── test
-    └── tsconfig.json              
+    └── tsconfig.json  
+
+```     
+
+## Technologies Used
 
