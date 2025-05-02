@@ -78,10 +78,15 @@ Hospital-Management-Web-App/
     ├── package.json
     ├── public
     ├── src
-    ├── test
     └── tsconfig.json  
 
 ```     
 
-## Technologies Used
+ ## Technologies Used
 
+- **Frontend**: React, Typescript, Tailwind CSS, Vite
+- **Backend**: Node.js, Express.js, Typescript
+- **Database**: MongoDB, Mongoose
+- **Authentication**: JWT, bcrypt
+- **File Uploads**: Cloudinary
+- **Deployment**: Brimble (backend), Vercel (frontend)
