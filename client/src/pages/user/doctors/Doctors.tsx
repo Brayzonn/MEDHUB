@@ -1,16 +1,16 @@
 import  { useState } from 'react';
 
-import admissionsicon from '../../images/admissionsicon.png';
-import nurseicon from '../../images/nurseicon.png';
-import homeIconImage from '../../images/dashlogo.svg';
-import patientIcon from '../../images/patient-icon.svg';
-import doctorIcon from '../../images/doctor-icon.svg';
-import appointmentIcon from '../../images/stafficon.png';
+import admissionsicon from '../../../images/admissionsicon.png';
+import nurseicon from '../../../images/nurseicon.png';
+import homeIconImage from '../../../images/dashlogo.svg';
+import patientIcon from '../../../images/patient-icon.svg';
+import doctorIcon from '../../../images/doctor-icon.svg';
+import appointmentIcon from '../../../images/stafficon.png';
 
-import SideNav from '../../components/SideNav';
-import UseScreenWidth from '../../components/globalComponents/UseScreenWidth';
-import NavSection from '../../components/NavSection';
-import AllDoctors from '../../components/doctors/AllDoctors';
+import SideNav from '../../../components/SideNav';
+import UseScreenWidth from '../../../utils/UseScreenWidth';
+import NavSection from '../../../components/NavSection';
+import AllDoctors from './AllDoctors';
 
 
 const Doctors = () => {

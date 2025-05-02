@@ -5,10 +5,10 @@ import axios from 'axios';
 import AddPatient from "./AddPatient";
 import PatientTable from "./PatientTable";
 import PatientProfile from "./PatientProfile";
-import {PatientProps} from '../DataTypes'
-import { useGlobalContext } from '../../context/useGlobalContext';
+import {PatientProps} from '../../../types/DataTypes'
+import { useGlobalContext } from '../../../context/useGlobalContext';
 
-import spinner from '../../images/loadingspinner.svg'
+import spinner from '../../../images/loadingspinner.svg'
 import { CiSearch } from "react-icons/ci";
 import { FaChevronRight } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -183,21 +183,6 @@ const AllPatients = () => {
                 }
             }    
     }
-
-    // const EditPatientProfile = () =>{
-
-    //     if (activePatientProfile) {
-    //         sessionStorage.setItem('activePatientProfile', JSON.stringify(activePatientProfile));
-    //         updatePatientProfileData((prevPatientData) =>
-    //             prevPatientData.map((item) => ({
-    //                     ...item,
-    //                     data: (activePatientProfile[item.identifier as keyof PatientProps] as string) || '',
-    //             }))
-    //         );
-    //         setPatientProfileVisibility(false);         
-    //     }  
-
-    // }
   
     const columns: TableColumn<PatientProps>[] = [
             {

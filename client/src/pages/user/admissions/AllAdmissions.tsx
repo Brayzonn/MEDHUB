@@ -1,4 +1,4 @@
-import { AdmissionProps, AdmitPatientsProps } from "../DataTypes";
+import { AdmissionProps, AdmitPatientsProps } from "../../../types/DataTypes";
 
 
 

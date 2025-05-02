@@ -2,7 +2,7 @@ import { createContext, ReactNode, Dispatch, SetStateAction } from 'react';
 import axios from 'axios';
 import { useState  } from 'react';
 
-import {DoctorProps, DashboardDataProps, PatientProps, AdmissionProps} from '../components/DataTypes';
+import {DoctorProps, DashboardDataProps, PatientProps, AdmissionProps} from '../types/DataTypes';
 
 
 

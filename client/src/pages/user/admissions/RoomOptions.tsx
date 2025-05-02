@@ -1,8 +1,8 @@
 
 import { FaSignOutAlt, FaSignInAlt, FaTimes } from "react-icons/fa";
 import { TiCancel } from "react-icons/ti";
-import {RoomOptionsProps} from '../DataTypes';
-import whiteBtnLoader from '../../images/buttonloaderwhite.svg';
+import {RoomOptionsProps} from '../../../types/DataTypes';
+import whiteBtnLoader from '../../../images/buttonloaderwhite.svg';
 
 
 const RoomOptions: React.FC<RoomOptionsProps> = ({buttonLoadingAnimation, roomOptionsCheckOutFnc, roomOptionsCheckInFnc, RoomOptions, updateRoomOptionsActive, roomOptionsActive }) => {

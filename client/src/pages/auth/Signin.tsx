@@ -4,9 +4,9 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import {useGoogleLogin } from '@react-oauth/google';
 
-import UseScreenWidth from '../../components/globalComponents/UseScreenWidth';
+import UseScreenWidth from '../../utils/UseScreenWidth';
 import { useGlobalContext } from '../../context/useGlobalContext';
-import { AccessTokenProps } from '../../components/DataTypes';
+import { AccessTokenProps } from '../../types/DataTypes';
 
 import googleicon from '../../images/googleimage.png'
 import whiteBtnLoader from '../../images/buttonloaderwhite.svg';

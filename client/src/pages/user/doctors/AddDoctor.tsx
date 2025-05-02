@@ -3,12 +3,12 @@ import { useState } from "react";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-import {AddDoctorFormInterface} from '../DataTypes'
-import { useGlobalContext } from '../../context/useGlobalContext';
-import {DoctorDropDownList} from "../globalComponents/DropDownList";
-import {DoctorInputForm} from '../globalComponents/InputForm';
+import {AddDoctorFormInterface} from '../../../types/DataTypes'
+import { useGlobalContext } from '../../../context/useGlobalContext';
+import {DoctorDropDownList} from "../../../components/DropDownList";
+import {DoctorInputForm} from '../../../components/InputForm';
 
-import whiteBtnLoader from '../../images/buttonloaderwhite.svg';
+import whiteBtnLoader from '../../../images/buttonloaderwhite.svg';
 
 
 const AddDoctor = () => {

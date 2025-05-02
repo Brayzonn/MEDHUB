@@ -39,7 +39,7 @@ cd server
 npm install
 
 # Install client dependencies
-cd ../client
+cd /client
 npm install
 
 # In one terminal, run the server
@@ -90,3 +90,6 @@ Hospital-Management-Web-App/
 - **Authentication**: JWT, bcrypt
 - **File Uploads**: Cloudinary
 - **Deployment**: Brimble (backend), Vercel (frontend)
+
+
+## 🗂 Folder Structure

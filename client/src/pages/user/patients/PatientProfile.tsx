@@ -2,19 +2,19 @@ import { useEffect, useState } from "react";
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
-import { useGlobalContext } from '../../context/useGlobalContext';
-import {PatientProfileProps, PatientNotesProps, AdmissionProps} from '../DataTypes';
-import ConfirmationDialog from '../globalComponents/ConfirmationDialog';
+import { useGlobalContext } from '../../../context/useGlobalContext';
+import {PatientProfileProps, PatientNotesProps, AdmissionProps} from '../../../types/DataTypes';
+import ConfirmationDialog from '../../../components/ConfirmationDialog';
 import EditPatient from "./EditPatient";
-import { PatientInputForm } from "../globalComponents/InputForm";
+import { PatientInputForm } from "../../../components/InputForm";
 import AdmitPatients from "./AdmitPatients";
 import RoomOptions from "../admissions/RoomOptions";
 
 
-import userplaceholder from '../../images/userplaceholderlogo.png';
-import emailIcon from '../../images/mailicon.png';
-import phoneIcon from '../../images/mobileicon.png';
-import whiteBtnLoader from '../../images/buttonloaderwhite.svg';
+import userplaceholder from '../../../images/userplaceholderlogo.png';
+import emailIcon from '../../../images/mailicon.png';
+import phoneIcon from '../../../images/mobileicon.png';
+import whiteBtnLoader from '../../../images/buttonloaderwhite.svg';
 
 import { FaEdit } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";

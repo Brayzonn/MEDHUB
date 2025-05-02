@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import jwt_decode from "jwt-decode";
 
-import {DecodedDataInterface, DecodedJwt} from '../components/DataTypes'
+import {DecodedDataInterface, DecodedJwt} from '../types/DataTypes'
 import userplaceholder from '../images/userplaceholderlogo.png'
 
 const NavSection = () => {

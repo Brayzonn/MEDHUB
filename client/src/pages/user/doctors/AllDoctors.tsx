@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { TableColumn } from 'react-data-table-component';
-import spinner from '../../images/loadingspinner.svg'
 
-import {DoctorProps} from '../DataTypes';
-import { useGlobalContext } from '../../context/useGlobalContext';
+import spinner from '../../../images/loadingspinner.svg'
+
+import {DoctorProps} from '../../../types/DataTypes';
+import { useGlobalContext } from '../../../context/useGlobalContext';
 import DoctorProfile from "./DoctorProfile";
 import AddDoctor from "./AddDoctor";
-import Table from "./Table";
+import DoctorTable from "./DoctorTable";
 
 import { CiSearch } from "react-icons/ci";
 import { FaChevronRight } from "react-icons/fa";
@@ -273,9 +274,9 @@ const AllDoctors = () => {
 
                               <div className="min-h-[10rem] w-full flex flex-col justify-center items-center space-y-[2rem]">
                                     {!isInputActive ?
-                                          <Table columns={columns} data={allDoctorData} />
+                                          <DoctorTable columns={columns} data={allDoctorData} />
                                           :   
-                                          <Table columns={columns} data={searchResults} />
+                                          <DoctorTable columns={columns} data={searchResults} />
                                     }
                                     < DoctorProfile 
                                           fetchUpdatedActiveDoctorData = {fetchUpdatedActiveDoctorData}

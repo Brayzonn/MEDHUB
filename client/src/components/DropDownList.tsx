@@ -1,7 +1,7 @@
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { useState } from "react";
 
-import {AddDoctorFormInterface, AddPatientFormInterface} from '../DataTypes'
+import {AddDoctorFormInterface, AddPatientFormInterface} from '../types/DataTypes'
 
     //doctor dropdown
     interface dropdownContainer {

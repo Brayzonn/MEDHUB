@@ -2,15 +2,15 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import UserDash from './pages/user/UserDash';
+import UserDash from './pages/user/dashboard/UserDash';
 import Signin from './pages/auth/Signin';
 import Signup from './pages/auth/Signup';
-import Doctors from './pages/user/Doctors';
-import Admissions from './pages/user/Admissions';
-import Patients from './pages/user/Patients';
+import Doctors from './pages/user/doctors/Doctors';
+import Admissions from './pages/user/admissions/Admissions';
+import Patients from './pages/user/patients/Patients';
 
 
-import UserRoutes from './Routes/UserRoutes';
+import UserRoutes from './routes/UserRoutes';
 
 
 function App() {

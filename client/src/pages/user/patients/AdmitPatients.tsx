@@ -1,5 +1,5 @@
 import { FaHandPointer } from "react-icons/fa";
-import { AdmissionProps, AdmitPatientsProps } from "../DataTypes";
+import { AdmissionProps, AdmitPatientsProps } from "../../../types/DataTypes";
 
 const AdmitPatients: React.FC<AdmitPatientsProps> = ({closeAdmitPatients, allClinicRooms, showSelectedRoom, isAdmitPatientActive}) => {
     return (

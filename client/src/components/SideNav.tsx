@@ -3,11 +3,11 @@ import { NavLink, useNavigate, useLocation} from 'react-router-dom';
 
 import { TbLogout2 } from "react-icons/tb";
 
-import {SideNavProps} from '../components/DataTypes';
+import {SideNavProps} from '../types/DataTypes';
 
 
 const SideNav: React.FC<SideNavProps> = ({ navLinks, setIsHovered, widthClass }) => {
-  
+
   const navigate = useNavigate();
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
   const [activeLink, setActiveLink] = useState<string | null>(null);

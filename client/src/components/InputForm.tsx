@@ -1,4 +1,4 @@
-import  {PatientInputFormInterface, DoctorInputFormInterface, InputFormProps, AddDoctorFormInterface} from '../DataTypes'
+import  {PatientInputFormInterface, DoctorInputFormInterface, InputFormProps, AddDoctorFormInterface} from '../types/DataTypes'
 
 const DoctorInputForm: React.FC<DoctorInputFormInterface> = ({prevValues, formValue, InputFormData, onChangeFunc}) => {
         return (

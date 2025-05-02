@@ -1,7 +1,7 @@
 {
-  "name": "server",
+  "name": "medhub-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "server logic for medhub",
   "main": "app.js",
   "scripts": {
     "start": " node dist/app.js",

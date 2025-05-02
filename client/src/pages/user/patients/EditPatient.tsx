@@ -4,15 +4,15 @@ import { toast } from 'react-toastify';
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
-import whiteBtnLoader from '../../images/buttonloaderwhite.svg';
-import userplaceholder from '../../images/userplaceholderlogo.png'
+import whiteBtnLoader from '../../../images/buttonloaderwhite.svg';
+import userplaceholder from '../../../images/userplaceholderlogo.png'
 
-import {PatientDropDownList} from "../globalComponents/DropDownList";
-import ConfirmationDialog from '../globalComponents/ConfirmationDialog';
-import {PatientInputForm} from '../globalComponents/InputForm';
-import { useGlobalContext } from '../../context/useGlobalContext';
+import {PatientDropDownList} from "../../../components/DropDownList";
+import ConfirmationDialog from '../../../components/ConfirmationDialog';
+import {PatientInputForm} from '../../../components/InputForm';
+import { useGlobalContext } from '../../../context/useGlobalContext';
 
-import {AddPatientFormInterface, EditPatientProps} from '../DataTypes';
+import {AddPatientFormInterface, EditPatientProps} from '../../../types/DataTypes';
 
 import { FaChevronDown } from "react-icons/fa6";
 import { MdSave } from "react-icons/md";

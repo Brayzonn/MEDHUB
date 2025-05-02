@@ -1,14 +1,14 @@
-import { useGlobalContext } from '../../context/useGlobalContext';
+import { useGlobalContext } from '../../../context/useGlobalContext';
 
-import {DoctorProfileProps} from '../DataTypes';
+import {DoctorProfileProps} from '../../../types/DataTypes';
 import EditDoctor from './EditDoctor';
-import ConfirmationDialog from '../globalComponents/ConfirmationDialog';
+import ConfirmationDialog from '../../../components/ConfirmationDialog';
 
-import userplaceholder from '../../images/userplaceholderlogo.png';
-import emailIcon from '../../images/mailicon.png';
-import phoneIcon from '../../images/mobileicon.png';
-import addressIcon from '../../images/locationicon.png';
-import whiteBtnLoader from '../../images/buttonloaderwhite.svg';
+import userplaceholder from '../../../images/userplaceholderlogo.png';
+import emailIcon from '../../../images/mailicon.png';
+import phoneIcon from '../../../images/mobileicon.png';
+import addressIcon from '../../../images/locationicon.png';
+import whiteBtnLoader from '../../../images/buttonloaderwhite.svg';
 
 import { FaTrash } from "react-icons/fa";
 import { MdEditSquare } from "react-icons/md";

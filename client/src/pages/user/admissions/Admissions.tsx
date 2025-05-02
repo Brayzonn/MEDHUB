@@ -1,21 +1,21 @@
 import axios from 'axios';
 import { useEffect, useState } from "react";
 
-import admissionsicon from '../../images/admissionsicon.png';
-import nurseicon from '../../images/nurseicon.png';
-import homeIconImage from '../../images/dashlogo.svg';
-import patientIcon from '../../images/patient-icon.svg';
-import doctorIcon from '../../images/doctor-icon.svg';
-import appointmentIcon from '../../images/stafficon.png';
+import admissionsicon from '../../../images/admissionsicon.png';
+import nurseicon from '../../../images/nurseicon.png';
+import homeIconImage from '../../../images/dashlogo.svg';
+import patientIcon from '../../../images/patient-icon.svg';
+import doctorIcon from '../../../images/doctor-icon.svg';
+import appointmentIcon from '../../../images/stafficon.png';
 
 
-import { useGlobalContext } from '../../context/useGlobalContext';
-import { AdmissionProps } from '../../components/DataTypes';
-import AllAdmissions from '../../components/admissions/AllAdmissions';
-import SideNav from "../../components/SideNav";
-import UseScreenWidth from '../../components/globalComponents/UseScreenWidth';
-import NavSection from '../../components/NavSection';
-import RoomOptions from '../../components/admissions/RoomOptions';
+import { useGlobalContext } from '../../../context/useGlobalContext';
+import { AdmissionProps } from '../../../types/DataTypes';
+import AllAdmissions from './AllAdmissions';
+import SideNav from "../../../components/SideNav";
+import UseScreenWidth from '../../../utils/UseScreenWidth';
+import NavSection from '../../../components/NavSection';
+import RoomOptions from './RoomOptions';
 import { toast } from "react-toastify";
 
 

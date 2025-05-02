@@ -3,12 +3,12 @@ import { useState } from "react";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-import {AddPatientFormInterface} from '../DataTypes'
-import { useGlobalContext } from '../../context/useGlobalContext';
-import {PatientDropDownList} from "../globalComponents/DropDownList";
-import {PatientInputForm} from '../globalComponents/InputForm';
+import {AddPatientFormInterface} from '../../../types/DataTypes'
+import { useGlobalContext } from '../../../context/useGlobalContext';
+import {PatientDropDownList} from "../../../components/DropDownList";
+import {PatientInputForm} from '../../../components/InputForm';
 
-import whiteBtnLoader from '../../images/buttonloaderwhite.svg';
+import whiteBtnLoader from '../../../images/buttonloaderwhite.svg';
 
 
 const AddPatient = () => {

@@ -11,9 +11,9 @@ import {useGoogleLogin } from '@react-oauth/google';
 import googleicon from '../../images/googleimage.png';
 import signupillustration from '../../../src/images/sigupillustration.svg';
 
-import { AccessTokenProps , AllPasswordRequirementsProps, SignupFormFieldDataSchema} from '../../components/DataTypes';
-import UseScreenWidth from '../../components/globalComponents/UseScreenWidth';
-import { checkPasswordStrength } from '../../components/globalComponents/SignUpPasswordValidator';
+import { AccessTokenProps , AllPasswordRequirementsProps, SignupFormFieldDataSchema} from '../../types/DataTypes';
+import UseScreenWidth from '../../utils/UseScreenWidth';
+import { checkPasswordStrength } from '../../utils/SignUpPasswordValidator';
 import { useGlobalContext } from '../../context/useGlobalContext';
 
 

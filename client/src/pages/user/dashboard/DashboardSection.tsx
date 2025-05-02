@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useGlobalContext } from '../context/useGlobalContext';
-import{dahshboarddataSchema} from '../components/DataTypes';
-import spinner from '../images/loadingspinner.svg'
-import alladmittedpatients from '../images/allpatientlogo.png';
-import alldoctorlogo from '../images/alldoctorlogo.png';
-import allappntmntlogo from '../images/allappntmentlogo.png';
-import allpatientlogo from '../images/alladmittedpatients.png';
+import { useGlobalContext } from '../../../context/useGlobalContext';
+import{dahshboarddataSchema} from '../../../types/DataTypes';
+import spinner from '../../../images/loadingspinner.svg'
+import alladmittedpatients from '../../../images/allpatientlogo.png';
+import alldoctorlogo from '../../../images/alldoctorlogo.png';
+import allappntmntlogo from '../../../images/allappntmentlogo.png';
+import allpatientlogo from '../../../images/alladmittedpatients.png';
 
 const DashboardSection = () => {
 

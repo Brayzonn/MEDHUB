@@ -3,13 +3,14 @@ import { useEffect, useState } from "react";
 import axios from 'axios';
 
 import { toast } from 'react-toastify';
-import {AddDoctorFormInterface, EditDoctorProps} from '../DataTypes';
-import {DoctorDropDownList} from "../globalComponents/DropDownList";
-import ConfirmationDialog from '../globalComponents/ConfirmationDialog';
-import {DoctorInputForm} from '../globalComponents/InputForm';
-import { useGlobalContext } from '../../context/useGlobalContext';
+import {AddDoctorFormInterface, EditDoctorProps} from '../../../types/DataTypes';
+import {DoctorDropDownList} from "../../../components/DropDownList";
+import ConfirmationDialog from '../../../components/ConfirmationDialog';
+import {DoctorInputForm} from '../../../components/InputForm';
+import { useGlobalContext } from '../../../context/useGlobalContext';
 
-import whiteBtnLoader from '../../images/buttonloaderwhite.svg';
+import whiteBtnLoader from '../../../images/buttonloaderwhite.svg';
+
 import { FaChevronDown } from "react-icons/fa6";
 import { MdSave } from "react-icons/md";
 import { RiDeleteBin3Line } from "react-icons/ri";

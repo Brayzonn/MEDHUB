@@ -1,29 +1,34 @@
 import DataTable, {TableColumn } from 'react-data-table-component';
-import {DoctorProps, DoctorTableProps } from '../DataTypes'; 
-import userplaceholder from '../../images/userplaceholderlogo.png';
+
+import userplaceholder from '../../../images/userplaceholderlogo.png'
+
+import {PatientTableProps, PatientProps} from '../../../types/DataTypes'; 
 
 
-const Table: React.FC<DoctorTableProps> = ({ columns, data }) => {
-    
-    const customColumns: TableColumn<DoctorProps>[] = columns.map((col) => {
-        if (col.name === 'Doctor'){
+
+const PatientTable: React.FC<PatientTableProps> = ({ columns, data }) => {
+
+
+    const customColumns: TableColumn<PatientProps>[] = columns.map((col) => {
+        if (col.name === 'Patient'){
             return {
                 ...col,
-                cell: (row: DoctorProps) => {
-                    const doctorProfile = row.profile;
-                    const imagePath = doctorProfile.doctorImage 
-                    ? `${doctorProfile.doctorImage}?v=${new Date(row.updatedAt || Date.now()).getTime()}
+                cell: (row: PatientProps) => {
+                    const patientProfile = row.profile;
+
+                    const imagePath = patientProfile.patientImage 
+                    ? `${patientProfile.patientImage}?v=${new Date(row.updatedAt || Date.now()).getTime()}
                     ` 
                     : userplaceholder;
-
+            
                     return (
                       <div className="flex items-center">
                             <img
                                 src={imagePath }
-                                alt={doctorProfile.doctorName}
+                                alt={patientProfile.patientName}
                                 className="w-8 h-8 rounded-full mr-2"
                             />
-                            {doctorProfile.doctorName}
+                            {patientProfile.patientName}
                       </div>
                     );
                   },
@@ -32,6 +37,7 @@ const Table: React.FC<DoctorTableProps> = ({ columns, data }) => {
         return col;
     });
 
+    
 
     const paginationComponentOptions = {
         rowsPerPageText: '',
@@ -140,4 +146,4 @@ const Table: React.FC<DoctorTableProps> = ({ columns, data }) => {
   );
 };
 
-export default Table;
+export default PatientTable;
