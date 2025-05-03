@@ -135,3 +135,43 @@ server/
 
 
 
+## 🧱 Components
+
+### 🧩 Input Form Components
+
+This module exports two reusable and dynamic input form components used throughout the application:
+
+- **`DoctorInputForm`**  
+  A generic form component tailored for doctor data input. It takes in configuration via `InputFormData` and renders appropriate form fields with built-in support for change handlers and pre-filled values.
+
+- **`PatientInputForm`**  
+  A more flexible, generic version using TypeScript generics (`<T>`) to handle various patient data structures. It supports both input fields and textareas dynamically based on the configuration object.
+
+Both components rely on shared type definitions from the `types/DataTypes` file to enforce strong typing and maintain consistency across forms.
+
+#### ✅ Highlights
+- Uses `InputFormData[]` to dynamically render fields  
+- Strong TypeScript interfaces for type safety  
+- Built-in support for pre-populated values and `onChange` callbacks  
+- Shared and extendable form structure with flexible styling
+
+
+
+### ⚠️ ConfirmationDialog Component
+
+The `ConfirmationDialog` component is a reusable modal used to prompt users before performing a critical or irreversible action (e.g. delete, logout, etc).
+
+#### 📦 Props
+```ts
+interface ConfirmationDialogProps {
+  isOpen: boolean;       // Controls visibility of the dialog
+  title: string;         // Header text
+  message: string;       // Main body content/message
+  onConfirm: () => void; // Called when user confirms the action
+  onCancel: () => void;  // Called when user cancels the action
+}
+
+
+
+
+
