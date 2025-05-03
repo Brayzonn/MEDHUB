@@ -13,7 +13,6 @@
 - [Components](#components)
 - [Styles](#styles)
 - [API Integration](#api-integration)
-- [Testing](#testing)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -161,7 +160,7 @@ Both components rely on shared type definitions from the `types/DataTypes` file 
 
 ### ⚠️ ConfirmationDialog Component
 
-The `ConfirmationDialog` component is a reusable modal used to prompt users before performing a critical or irreversible action (e.g. delete, logout, etc).
+The `ConfirmationDialog` component is a reusable modal used to prompt users before performing a critical or irreversible action (e.g. delete).
 
 #### 📦 Props
 ```ts
@@ -220,6 +219,23 @@ interface dropDownPropsPatient {
   patientInitialValues?: AddPatientFormInterface;                // Initial form values (optional)
   setPatientSubmitFormDropdown: React.Dispatch<...>;             // Form state update function
 }
+
+```
+
+## 🖌️ Styles
+
+This project uses **Tailwind CSS** for styling, enhanced with custom configurations(index.css) and global styles.
+
+
+## 🔗 API Integration
+
+
+
+
+
+
+
+
 
 
 

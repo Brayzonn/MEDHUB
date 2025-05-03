@@ -25,13 +25,12 @@
     "react-icons": "^4.8.0",
     "react-router-dom": "^7.4.0",
     "react-toastify": "^9.1.2",
-    "web-vitals": "^2.1.4",
-    "tailwindcss": "^4.0.15"
+    "tailwindcss": "^4.0.15",
+    "web-vitals": "^2.1.4"
   },
-
   "devDependencies": {
-    "@types/react": "^18.2.48",
     "@tailwindcss/vite": "^4.0.15",
+    "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.17",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
     "@typescript-eslint/parser": "^6.14.0",
@@ -40,6 +39,7 @@
     "eslint": "^8.55.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "postcss": "^8.4.32",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "vite": "^6.3.4"
   }
 }
