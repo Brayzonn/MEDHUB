@@ -172,6 +172,56 @@ interface ConfirmationDialogProps {
   onConfirm: () => void; // Called when user confirms the action
   onCancel: () => void;  // Called when user cancels the action
 }
+```
+
+### 🔽 DropDown Components
+
+Reusable dropdown UI components tailored for dynamic form handling in both doctor and patient registration forms.
+
+---
+
+#### 📘 DoctorDropDownList
+
+`DoctorDropDownList` is a customizable dropdown list component for doctor form fields.
+
+**Props:**
+
+```ts
+interface dropdownContainer {
+  buttonName: string;      // The label to display on the dropdown button
+  buttonId: string;        // The form field key to update
+  listOptions: string[];   // Dropdown list items
+}
+
+interface DoctordropDownProps {
+  allDropDownContainer: dropdownContainer[];             // Array of dropdown configs
+  doctorInitialValues?: AddDoctorFormInterface;          // Default values for the form
+  setSubmitFormDropdown: React.Dispatch<...>;            // State setter for parent form data
+}
+```
+
+### 📗 PatientDropDownList
+
+`PatientDropDownList` is a reusable dropdown component designed for use in patient form interfaces. It dynamically renders a list of dropdowns based on configuration, making it easy to manage multiple form fields with selection options.
+
+---
+
+#### 🧩 Props
+
+```ts
+interface dropdownContainer {
+  buttonName: string;      // Display label for the dropdown button
+  buttonId: string;        // Key to update in form state
+  listOptions: string[];   // Available options for the dropdown
+}
+
+interface dropDownPropsPatient {
+  allPatientDropDownContainer: dropdownContainer[];              // Dropdown configurations
+  patientInitialValues?: AddPatientFormInterface;                // Initial form values (optional)
+  setPatientSubmitFormDropdown: React.Dispatch<...>;             // Form state update function
+}
+
+
 
 
 
