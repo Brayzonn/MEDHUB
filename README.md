@@ -224,7 +224,7 @@ interface dropDownPropsPatient {
 
 ## 🖌️ Styles
 
-This project uses **Tailwind CSS** for styling, enhanced with custom configurations(index.css) and global styles.
+This project uses **Tailwind CSS** for styling, enhanced with custom configurations and global styles.
 
 
 ## 🔗 API Integration
