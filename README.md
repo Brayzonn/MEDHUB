@@ -94,6 +94,7 @@ Hospital-Management-Web-App/
 
 ## 🗂 Folder Structure
 
+```bash
 client/
 ├── public/ # Static assets (vite svg)
 ├── src/
@@ -133,6 +134,7 @@ server/
 ├── package.json          # Project metadata, dependencies, and scripts for the backend
 └── tsconfig.json         # TypeScript configuration for the server
 
+``` 
 
 
 ## 🧱 Components
