@@ -2,12 +2,12 @@ const router = require("express").Router();
 import { Request, Response, NextFunction } from 'express'
 
 import cloudinaryUpload from '../middleware/cloudinaryUpload';
-import { ensureAuthenticated } from '../config/auth';
+import { ensureAuthenticated } from '../utils/auth';
 import {signIn, signUp, googleSignin, getDashboardData, addNewDoctor, deleteDoctor, updateDoctorProfile, getAllDoctors, getAllPatients, addNewPatient, deletePatient, updatePatientProfile, createPatientNote, updatePatientNote, deletePatientNote, addClinicRoom, checkInPatient, checkOutPatient, allClinicRooms } from '../controllers/mainController'
 
 //api welcome
 router.get('/', (req: Request, res: Response , next: NextFunction)=>{
-    res.send('HELLO HUMAN')
+    res.send('HELLO HUMAN!!! Welcome to MEDHUB server')
 })
 
 //auth endpoints

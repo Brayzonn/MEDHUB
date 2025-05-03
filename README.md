@@ -73,11 +73,11 @@ Hospital-Management-Web-App/
 │   ├── vercel.json
 │   └── vite.config.ts
 └── server
+    ├── src
+    ├── .env
     ├── nodemon.json
     ├── package-lock.json
     ├── package.json
-    ├── public
-    ├── src
     └── tsconfig.json  
 
 ```     
@@ -94,20 +94,44 @@ Hospital-Management-Web-App/
 
 ## 🗂 Folder Structure
 
-<!-- client/
-├── public/ # Static assets (favicon, index.html)
+client/
+├── public/ # Static assets (vite svg)
 ├── src/
-│ ├── assets/ # Images, fonts, etc.
 │ ├── components/ # Reusable UI components
-│ │ └── global/ # Global components like Header, Footer
-│ ├── context/ # React context providers (e.g., AuthContext)
-│ ├── hooks/ # Custom React hooks
+│ ├── context/ # React context providers 
+│ ├── images/ # static images
 │ ├── pages/ # Route-based page components
 │ ├── routes/ # React Router route definitions
-│ ├── services/ # API service calls
+│ ├── style/ # tailwind css config
 │ ├── types/ # TypeScript type definitions
-│ ├── utils/ # Helper functions (formatters, validators)
-│ └── App.tsx # Root component
-├── .env # Environment variables
-├── tsconfig.json # TypeScript configuration
-└── package.json # Project metadata and scripts -->
+│ ├── utils/ # Helper functions 
+│ └── App.tsx             # Root React component 
+│ └── main.tsx            # Entry point for the React app
+│ └── vite-env.d.ts       # Type declarations specific to Vite 
+├── .env                  # Environment variables
+├── .eslintrc.cjs         # ESLint configuration for linting rules
+├── index.html            # HTML entry point for the app 
+├── package-lock.json     # Auto-generated dependency tree lock file for reproducible installs
+├── package.json          # Project metadata, dependencies, and scripts
+├── tsconfig.json         # Main TypeScript configuration for the client app
+├── tsconfig.node.json    # TypeScript config for Node-related tooling 
+├── vercel.json           # Vercel deployment configuration 
+└── vite.config.ts        # Vite bundler configuration 
+
+server/
+├── src/
+│   ├── config/           # Configuration files 
+│   ├── controllers/      # Express route handlers 
+│   ├── middleware/       # Custom Express middleware 
+│   ├── models/           # Mongoose schema and model definitions
+│   ├── routes/           # Express route definitions and grouping
+│   ├── utils/            # Utility functions 
+│   ├── app.ts            # Sets up Express app
+├── .env                  # Server-side environment variables 
+├── nodemon.json          # Nodemon config for auto-restarting the server during development
+├── package-lock.json     # Lockfile for consistent installs across environments
+├── package.json          # Project metadata, dependencies, and scripts for the backend
+└── tsconfig.json         # TypeScript configuration for the server
+
+
+
