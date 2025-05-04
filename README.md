@@ -50,6 +50,7 @@ cd client
 npm run dev
 
 ```
+--- 
 
 ### 📦 Environment Configuration
 
@@ -111,6 +112,8 @@ CLOUDINARY_API_KEY=your-api-key                # Public API key for accessing Cl
 CLOUDINARY_API_SECRET=your-api-secret          # Secret key used for secure API operations
 ```
 
+---
+
 ## 🗂 Project Structure
 
 The project is divided into two main folders:
@@ -150,6 +153,7 @@ Hospital-Management-Web-App/
 - **File Uploads**: Cloudinary
 - **Deployment**: Brimble (backend), Vercel (frontend)
 
+---
 
 ## 🗂 Folder Structure
 
@@ -195,6 +199,7 @@ server/
 
 ``` 
 
+---
 
 ## 🧱 Components
 
@@ -215,7 +220,6 @@ Both components rely on shared type definitions from the `types/DataTypes` file 
 - Strong TypeScript interfaces for type safety  
 - Built-in support for pre-populated values and `onChange` callbacks  
 - Shared and extendable form structure with flexible styling
-
 
 
 ### ⚠️ ConfirmationDialog Component
@@ -263,7 +267,6 @@ interface DoctordropDownProps {
 
 `PatientDropDownList` is a reusable dropdown component designed for use in patient form interfaces. It dynamically renders a list of dropdowns based on configuration, making it easy to manage multiple form fields with selection options.
 
----
 
 #### 🧩 Props
 
@@ -281,11 +284,13 @@ interface dropDownPropsPatient {
 }
 
 ```
+---
 
 ## 🖌️ Styles
 
 This project uses **Tailwind CSS** for styling, enhanced with custom configurations and global styles.
 
+---
 
 ## 📡 API Integration
 
@@ -298,7 +303,6 @@ This project integrates with the following APIs:
 
 - **JWT Authentication**: Protected API routes(/user) require a `Bearer` token in the `Authorization` header. Tokens are stored as `userToken` in `sessionStorage`.
 
----
 
 ### 🧭 API Routes
 
@@ -617,8 +621,6 @@ Signs in via Google OAuth. Automatically registers user if new.
     payload: "success/error text"
   }
   ```
-
----
 
 ### ⚠️ Error Handling
 
