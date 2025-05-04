@@ -242,9 +242,9 @@ This project integrates with the following APIs:
 
 ### 🧭 API Routes
 
-## 👤 User Authentication
+#### 👤 User Authentication
 
-### 🔐 POST `/api/signup`  
+##### 🔐 POST `/api/signup`  
 Registers a new user.
 
 **Body:**
@@ -283,7 +283,7 @@ Registers a new user.
 
 ---
 
-### 🔓 POST `/api/signin`  
+##### 🔓 POST `/api/signin`  
 Logs in a registered user.
 
 **Body:**
@@ -303,7 +303,7 @@ Logs in a registered user.
 ```
 ---
 
-### 🔑 POST `/api/google/signin`  
+##### 🔑 POST `/api/google/signin`  
 Signs in via Google OAuth. Automatically registers user if new.
 
 **Body:**
@@ -322,7 +322,7 @@ Signs in via Google OAuth. Automatically registers user if new.
 }
 ```
 
-#### 🖥️  Dashboard
+##### 🖥️  Dashboard
 
 - **GET `/api/user/getdashboarddata`**  
   Fetches the list of doctors.  
@@ -337,7 +337,7 @@ Signs in via Google OAuth. Automatically registers user if new.
   ]
   ```
 
-#### 🩺 Doctors
+##### 🩺 Doctors
 
 - **GET `/api/user/getalldoctors`**  
   Fetches the list of doctors.  
@@ -395,7 +395,7 @@ Signs in via Google OAuth. Automatically registers user if new.
   }
   ```
 
-#### 🧑‍⚕️ Patients
+##### 🧑‍⚕️ Patients
 
 - **GET `/api/user/getallpatients`**  
   Fetches a list of patients.  
