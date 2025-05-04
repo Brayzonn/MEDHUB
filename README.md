@@ -38,7 +38,7 @@ cd server
 npm install
 
 # Install client dependencies
-cd client
+cd ../client
 npm install
 
 # In one terminal, run the server
@@ -51,7 +51,67 @@ npm run dev
 
 ```
 
-### 🗂 Project Structure
+### 📦 Environment Configuration
+
+API base URLs are managed via environment variables:
+
+#### Client-side environment variables
+
+##### Base URL for the API (Backend Server)
+
+The **base URL** for the backend API is dynamically set in the frontend using the environment variable `VITE_SERVER_URL`. If this variable is not defined in the `.env` file, the URL defaults to `http://localhost:3300`. 
+
+You can find the implementation of this logic in the `context.tsx` file, where the `baseURL` is set as follows:
+
+```javascript
+const baseURL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3300';
+```
+
+##### Google Client ID for metadata handling (Google OAuth)
+
+```bash
+VITE_METADATA_GOOGLE_CLIENT_ID=your-google-client-id
+```
+---
+
+#### Server-side environment variables
+
+##### MongoDB Cloud connection URI, including username and password.
+```bash
+MONGO_URI=mongodb+srv://your-username:your-password@cluster0.mongodb.net/your-database-name?retryWrites=true&w=majority
+```
+
+##### Secret key for signing JWT tokens
+```bash
+JWT_SECRET=your-jwt-secret-key
+```
+
+##### Port for your Express server to listen on.
+
+If this variable is not defined in the `.env` file, the URL defaults to `3300`. 
+
+You can find the implementation of this logic in the `app.ts` file.
+
+```bash
+PORT=3300
+```
+
+##### CORS settings to specify allowed origins, you can add or remove as necessary
+```bash
+CORS_ORIGINS="http://localhost:3000, https://your-frontend-url.com"
+```
+
+##### 📷 Cloudinary Environment Variables
+
+These variables are required for integrating Cloudinary, which is used to upload, store, and manage images in your application.
+
+```bash
+CLOUDINARY_CLOUD_NAME=your-cloud-name          # Found in your Cloudinary dashboard
+CLOUDINARY_API_KEY=your-api-key                # Public API key for accessing Cloudinary services
+CLOUDINARY_API_SECRET=your-api-secret          # Secret key used for secure API operations
+```
+
+## 🗂 Project Structure
 
 The project is divided into two main folders:
 
@@ -322,7 +382,7 @@ Signs in via Google OAuth. Automatically registers user if new.
 }
 ```
 
-##### 🖥️  Dashboard
+#### 🖥️  Dashboard
 
 - **GET `/api/user/getdashboarddata`**  
   Fetches the list of doctors.  
@@ -337,7 +397,7 @@ Signs in via Google OAuth. Automatically registers user if new.
   ]
   ```
 
-##### 🩺 Doctors
+#### 🩺 Doctors
 
 - **GET `/api/user/getalldoctors`**  
   Fetches the list of doctors.  
@@ -395,7 +455,7 @@ Signs in via Google OAuth. Automatically registers user if new.
   }
   ```
 
-##### 🧑‍⚕️ Patients
+#### 🧑‍⚕️ Patients
 
 - **GET `/api/user/getallpatients`**  
   Fetches a list of patients.  
@@ -500,6 +560,64 @@ Signs in via Google OAuth. Automatically registers user if new.
   }
   ```
 
+  #### 🧑‍⚕️ Rooms/Admissions
+
+- **GET `/api/user/getallclinicrooms`**  
+  Fetches a list of all clinic rooms, sorted by most recent.   
+  **Response:**
+  ```bash
+  [
+    AdmissionProps (DataTypes.tsx)
+  ]
+  ```
+
+- **POST `/api/user/createclinicroom`**  (unused route)
+  Create room  
+  **Body:**
+  ```bash
+  {
+    roomNumber: roomNumber
+  }
+  ```
+  **Response:**
+  ```bash
+  {
+    payload: "success/error text"
+  }
+  ```
+
+  - **POST `/api/user/checkinpatient`**  
+  Check-in patient   
+  **Body:**
+  ```bash
+  {
+    roomNumber: roomNumber
+    patientID: patientID
+  }
+  ```
+  **Response:**
+  ```bash
+  {
+    payload: "success/error text"
+  }
+  ```
+
+  - **POST `/api/user/checkoutpatient`**  
+  Check-out patient   
+  **Body:**
+  ```bash
+  {
+    roomNumber: roomNumber
+    patientID: patientID
+  }
+  ```
+  **Response:**
+  ```bash
+  {
+    payload: "success/error text"
+  }
+  ```
+
 ---
 
 ### ⚠️ Error Handling
@@ -532,72 +650,7 @@ if (axios.isAxiosError(error)) {
   toast.error('An unexpected error occurred');
 }
 ```
-
-This pattern ensures a consistent UX and graceful degradation when errors occur.
-
-
 ---
-
-### 📦 Environment Configuration
-
-API base URLs are managed via environment variables:
-
-#### Client-side environment variables
-
-##### Base URL for the API (Backend Server)
-
-The **base URL** for the backend API is dynamically set in the frontend using the environment variable `VITE_SERVER_URL`. If this variable is not defined in the `.env` file, the URL defaults to `http://localhost:3300`. 
-
-You can find the implementation of this logic in the `context.tsx` file, where the `baseURL` is set as follows:
-
-```javascript
-const baseURL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3300';
-```
-
-##### Google Client ID for metadata handling (Google OAuth)
-
-```bash
-VITE_METADATA_GOOGLE_CLIENT_ID=your-google-client-id
-```
-
----
-
-#### Server-side environment variables
-
-##### MongoDB Cloud connection URI, including username and password.
-```bash
-MONGO_URI=mongodb+srv://your-username:your-password@cluster0.mongodb.net/your-database-name?retryWrites=true&w=majority
-```
-
-##### Secret key for signing JWT tokens
-```bash
-JWT_SECRET=your-jwt-secret-key
-```
-
-##### Port for your Express server to listen on.
-
-If this variable is not defined in the `.env` file, the URL defaults to `3300`. 
-
-You can find the implementation of this logic in the `app.ts` file.
-
-```bash
-PORT=3300
-```
-
-##### CORS settings to specify allowed origins, you can add or remove as necessary
-```bash
-CORS_ORIGINS="http://localhost:3000, https://your-frontend-url.com"
-```
-
-##### 📷 Cloudinary Environment Variables
-
-These variables are required for integrating Cloudinary, which is used to upload, store, and manage images in your application.
-
-```bash
-CLOUDINARY_CLOUD_NAME=your-cloud-name          # Found in your Cloudinary dashboard
-CLOUDINARY_API_KEY=your-api-key                # Public API key for accessing Cloudinary services
-CLOUDINARY_API_SECRET=your-api-secret          # Secret key used for secure API operations
-```
 
 ## 🤝 Contributing
 
