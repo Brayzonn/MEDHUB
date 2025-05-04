@@ -564,7 +564,7 @@ Signs in via Google OAuth. Automatically registers user if new.
   }
   ```
 
-  #### 🧑‍⚕️ Rooms/Admissions
+#### 🧑‍⚕️ Rooms/Admissions
 
 - **GET `/api/user/getallclinicrooms`**  
   Fetches a list of all clinic rooms, sorted by most recent.   
