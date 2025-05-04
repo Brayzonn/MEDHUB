@@ -38,7 +38,7 @@ cd server
 npm install
 
 # Install client dependencies
-cd /client
+cd client
 npm install
 
 # In one terminal, run the server
@@ -227,7 +227,404 @@ interface dropDownPropsPatient {
 This project uses **Tailwind CSS** for styling, enhanced with custom configurations and global styles.
 
 
-## 🔗 API Integration
+## 📡 API Integration
+
+This project integrates with the following APIs:
+
+- **Backend API**: The frontend communicates with a **Node.js** and **Express** backend using RESTful API endpoints. All HTTP requests are handled via **Axios**, and responses are returned in **JSON** format. The backend interacts with a **MongoDB Cloud** database for data storage and retrieval.
+
+
+### 🔑 Authentication
+
+- **JWT Authentication**: Protected API routes(/user) require a `Bearer` token in the `Authorization` header. Tokens are stored as `userToken` in `sessionStorage`.
+
+---
+
+### 🧭 API Routes
+
+## 👤 User Authentication
+
+### 🔐 POST `/api/signup`  
+Registers a new user.
+
+**Body:**
+```json
+{
+  "fullName": "John Doe",
+  "email": "johndoe@example.com",
+  "password": "StrongPassw0rd"
+}
+```
+
+**Validation Rules:**
+- All fields are required.
+- Email must be valid.
+- Password must:
+  - Be 6–20 characters.
+  - Include an uppercase letter.
+  - Include a lowercase letter.
+  - Include a digit.
+  - Include a special character (e.g., `@#$%!&*?`).
+
+**Success Response:**
+```json
+{
+  "payload": "User Registered Successfully"
+}
+```
+
+**Possible Error Responses:**
+```json
+{ "payload": "Please enter all fields" }
+{ "payload": "Invalid email pattern" }
+{ "payload": "Password should contain at least 6 characters. An uppercase letter, lowercase letter, number, and a special character." }
+{ "payload": "User with this email already exists." }
+```
+
+---
+
+### 🔓 POST `/api/signin`  
+Logs in a registered user.
+
+**Body:**
+```json
+{
+  "email": "johndoe@example.com",
+  "password": "password"
+}
+```
+
+**Response:**
+```json
+{
+  "payload": "Sucess/error text",
+  "token": "JWT_TOKEN"
+}
+```
+---
+
+### 🔑 POST `/api/google/signin`  
+Signs in via Google OAuth. Automatically registers user if new.
+
+**Body:**
+```json
+{
+  "email": "johndoe@example.com",
+  "fullName": "John Doe"
+}
+```
+
+**Response:**
+```json
+{
+  "payload": "Sign in successful",
+  "token": "JWT_TOKEN"
+}
+```
+
+#### 🖥️  Dashboard
+
+- **GET `/api/user/getdashboarddata`**  
+  Fetches the list of doctors.  
+  **Response:**
+  ```bash
+  [
+    {
+      "doctorCount": '',
+      "patientCount": '',
+      "admissionsCount": ''
+    }
+  ]
+  ```
+
+#### 🩺 Doctors
+
+- **GET `/api/user/getalldoctors`**  
+  Fetches the list of doctors.  
+  **Response:**
+  ```bash
+  [
+     DoctorProps (DataTypes.tsx)
+  ]
+  ```
+
+- **POST `/api/user/addnewdoctor`**  
+  Creates a new doctor.  
+  **Body:**
+  ```bash
+  multipart/form-data{
+    doctorImage : File
+    AddDoctorFormInterface
+  }
+  ```
+  **Response:**
+  ```bash
+  {
+    payload: "success/error text"
+  }
+  ```
+
+  - **POST `/api/user/updatedoctorprofile`**  
+  Updates doctor profile.  
+  **Body:**
+  ```bash
+  multipart/form-data{
+    doctorImage : File
+    AddDoctorFormInterface
+  }
+  ```
+  **Response:**
+  ```bash
+  {
+    payload: "success/error text"
+  }
+  ```
+
+  - **DELETE `/api/user/deletedoctor`**  
+  Deletes doctor profile.  
+  **Body:**
+  ```bash
+  {
+    doctorID: 'doctorID'
+  }
+  ```
+  **Response:**
+  ```bash
+  {
+    payload: "success/error text"
+  }
+  ```
+
+#### 🧑‍⚕️ Patients
+
+- **GET `/api/user/getallpatients`**  
+  Fetches a list of patients.  
+  **Response:**
+  ```bash
+  [
+    PatientProps (DataTypes.tsx)
+  ]
+  ```
+
+- **POST `/api/user/addnewpatient`**  
+  Adds a patient profile.  
+  **Body:**
+  ```bash
+  multipart/form-data{
+    patientImage : File
+    AddPatientFormInterface
+  }
+  ```
+  **Response:**
+  ```bash
+  {
+    payload: "success/error text"
+  }
+  ```
+
+  - **POST `/api/user/updatepatientprofile`**   
+  Updates a patient profile.  
+  **Body:**
+  ```bash
+  multipart/form-data{
+    patientImage : File
+    AddPatientFormInterface
+  }
+  ```
+  **Response:**
+  ```bash
+  {
+    payload: "success/error text"
+  }
+  ```
+
+  - **DELETE `/api/user/deletepatient`**  
+  Deletes patient profile.  
+  **Body:**
+  ```bash
+  {
+    patientID: 'patientID'
+  }
+  ```
+  **Response:**
+  ```bash
+  {
+    payload: "success/error text"
+  }
+  ```
+
+  - **POST `/api/user/createpatientnotes`**   
+  Creates a patient note.  
+  **Body:**
+  ```bash
+  {
+    patientID : 'patientID'
+    PatientNotesProps
+  }
+  ```
+  **Response:**
+  ```bash
+  {
+    payload: "success/error text"
+  }
+  ```
+
+  - **POST `/api/user/updatepatientnotes`**   
+  Updates a patient note.  
+  **Body:**
+  ```bash
+  {
+    patientID : 'patientID'
+    PatientNotesProps
+  }
+  ```
+  **Response:**
+  ```bash
+  {
+    payload: "success/error text"
+  }
+  ```
+
+  - **DELETE `/api/user/deletepatientnote`**   
+  Deletes a patient note.  
+  **Body:**
+  ```bash
+  {
+    patientID : 'patientID'
+  }
+  ```
+  **Response:**
+  ```bash
+  {
+    payload: "success/error text"
+  }
+  ```
+
+---
+
+### ⚠️ Error Handling
+
+Error responses are handled using `try...catch` blocks across all async API interactions.
+
+- ✅ On **success**:
+  - Server responses are validated using `response.status === 200`.
+  - A success message is displayed using `toast.success(...)`.
+  - UI states like form visibility or loading indicators are updated accordingly.
+
+- ❌ On **failure**:
+  - If the server returns an error response in the payload, the app shows a specific error message using `toast.error(...)`.
+  - If the error object lacks a specific payload (e.g., network error), a fallback message is shown: `"Something went wrong"` or `"An unexpected error occurred"`.
+  - Axios-specific errors are checked using `axios.isAxiosError(error)` to ensure safe access to `error.response`.
+
+- ⏳ UI states:
+  - `setButtonLoadingAnimation(true/false)` is used to indicate request progress.
+  - In failure cases, loading indicators are cleared and modals/forms are closed as needed using timeouts or toggles like `updateIsAddNoteActive(false)`.
+
+**Example Error Response Handler:**
+```ts
+if (axios.isAxiosError(error)) {
+  if (error.response?.data?.payload) {
+    toast.error(`Error: ${error.response.data.payload}`);
+  } else {
+    toast.error('Something went wrong');
+  }
+} else {
+  toast.error('An unexpected error occurred');
+}
+```
+
+This pattern ensures a consistent UX and graceful degradation when errors occur.
+
+
+---
+
+### 📦 Environment Configuration
+
+API base URLs are managed via environment variables:
+
+#### Client-side environment variables
+
+##### Base URL for the API (Backend Server)
+
+The **base URL** for the backend API is dynamically set in the frontend using the environment variable `VITE_SERVER_URL`. If this variable is not defined in the `.env` file, the URL defaults to `http://localhost:3300`. 
+
+You can find the implementation of this logic in the `context.tsx` file, where the `baseURL` is set as follows:
+
+```javascript
+const baseURL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3300';
+```
+
+##### Google Client ID for metadata handling (Google OAuth)
+
+```bash
+VITE_METADATA_GOOGLE_CLIENT_ID=your-google-client-id
+```
+
+---
+
+#### Server-side environment variables
+
+##### MongoDB Cloud connection URI, including username and password.
+```bash
+MONGO_URI=mongodb+srv://your-username:your-password@cluster0.mongodb.net/your-database-name?retryWrites=true&w=majority
+```
+
+##### Secret key for signing JWT tokens
+```bash
+JWT_SECRET=your-jwt-secret-key
+```
+
+##### Port for your Express server to listen on.
+
+If this variable is not defined in the `.env` file, the URL defaults to `3300`. 
+
+You can find the implementation of this logic in the `app.ts` file.
+
+```bash
+PORT=3300
+```
+
+##### CORS settings to specify allowed origins, you can add or remove as necessary
+```bash
+CORS_ORIGINS="http://localhost:3000, https://your-frontend-url.com"
+```
+
+##### 📷 Cloudinary Environment Variables
+
+These variables are required for integrating Cloudinary, which is used to upload, store, and manage images in your application.
+
+```bash
+CLOUDINARY_CLOUD_NAME=your-cloud-name          # Found in your Cloudinary dashboard
+CLOUDINARY_API_KEY=your-api-key                # Public API key for accessing Cloudinary services
+CLOUDINARY_API_SECRET=your-api-secret          # Secret key used for secure API operations
+```
+
+## 🤝 Contributing
+
+We welcome contributions from the community!
+
+To contribute:
+
+1. Fork the repository
+2. Create your feature branch: `git checkout -b feature/YourFeature`
+3. Commit your changes: `git commit -m 'Add your message here'`
+4. Push to the branch: `git push origin feature/YourFeature`
+5. Open a pull request
+
+Please ensure your code follows the existing project structure and includes relevant documentation if applicable.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License – see the [LICENSE](./LICENSE) file for details.
+
+You are free to use, modify, and distribute this software as permitted under the license terms.
+
+
+
+
+
 
 
 
