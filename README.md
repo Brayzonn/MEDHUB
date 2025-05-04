@@ -1,18 +1,18 @@
 # 🏥 MEDHUB
 
-[MEDHUB](https://med-hub-hazel.vercel.app) 🔗 is a web application designed to streamline and enhance the management of healthcare facilities. This application provides a centralized platform for managing data related to doctors, room admissions and patients.
+[MEDHUB](https://med-hub-hazel.vercel.app) 🔗 is a simple desktop web application designed to streamline the management of healthcare facilities. This application provides a centralized platform for managing data related to doctors, room admissions and patients.
 
 ---
 
 ## 📚 Table of Contents
 
-- [Getting Started](#getting-started)
+- [Getting Started](#-getting-started)
 - [Project Structure](#project-structure)
 - [Technologies Used](#technologies-used)
 - [Folder Structure](#folder-structure)
 - [Components](#components)
-- [Styles](#styles)
-- [API Integration](#api-integration)
+- [Styles](#-styles)
+- [API Integration](#-api-integration)
 - [Contributing](#contributing)
 - [License](#license)
 
