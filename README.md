@@ -428,7 +428,7 @@ Signs in via Google OAuth. Automatically registers user if new.
   }
   ```
 
-  - **POST `/api/user/updatedoctorprofile`**  
+- **POST `/api/user/updatedoctorprofile`**  
   Updates doctor profile.  
   **Body:**
   ```bash
@@ -444,7 +444,7 @@ Signs in via Google OAuth. Automatically registers user if new.
   }
   ```
 
-  - **DELETE `/api/user/deletedoctor`**  
+- **DELETE `/api/user/deletedoctor`**  
   Deletes doctor profile.  
   **Body:**
   ```bash
@@ -486,7 +486,7 @@ Signs in via Google OAuth. Automatically registers user if new.
   }
   ```
 
-  - **POST `/api/user/updatepatientprofile`**   
+- **POST `/api/user/updatepatientprofile`**   
   Updates a patient profile.  
   **Body:**
   ```bash
@@ -502,7 +502,7 @@ Signs in via Google OAuth. Automatically registers user if new.
   }
   ```
 
-  - **DELETE `/api/user/deletepatient`**  
+- **DELETE `/api/user/deletepatient`**  
   Deletes patient profile.  
   **Body:**
   ```bash
@@ -517,7 +517,7 @@ Signs in via Google OAuth. Automatically registers user if new.
   }
   ```
 
-  - **POST `/api/user/createpatientnotes`**   
+- **POST `/api/user/createpatientnotes`**   
   Creates a patient note.  
   **Body:**
   ```bash
@@ -533,7 +533,7 @@ Signs in via Google OAuth. Automatically registers user if new.
   }
   ```
 
-  - **POST `/api/user/updatepatientnotes`**   
+- **POST `/api/user/updatepatientnotes`**   
   Updates a patient note.  
   **Body:**
   ```bash
@@ -549,7 +549,7 @@ Signs in via Google OAuth. Automatically registers user if new.
   }
   ```
 
-  - **DELETE `/api/user/deletepatientnote`**   
+- **DELETE `/api/user/deletepatientnote`**   
   Deletes a patient note.  
   **Body:**
   ```bash
@@ -590,7 +590,7 @@ Signs in via Google OAuth. Automatically registers user if new.
   }
   ```
 
-  - **POST `/api/user/checkinpatient`**  
+- **POST `/api/user/checkinpatient`**  
   Check-in patient   
   **Body:**
   ```bash
@@ -606,7 +606,7 @@ Signs in via Google OAuth. Automatically registers user if new.
   }
   ```
 
-  - **POST `/api/user/checkoutpatient`**  
+- **POST `/api/user/checkoutpatient`**  
   Check-out patient   
   **Body:**
   ```bash
