@@ -7,14 +7,14 @@
 ## 📚 Table of Contents
 
 - [Getting Started](#-getting-started)
-- [Project Structure](#project-structure)
-- [Technologies Used](#technologies-used)
-- [Folder Structure](#folder-structure)
-- [Components](#components)
+- [Project Structure](#-project-structure)
+- [Technologies Used](#-technologies-used)
+- [Folder Structure](#-folder-structure)
+- [Components](#-components)
 - [Styles](#-styles)
 - [API Integration](#-api-integration)
-- [Contributing](#contributing)
-- [License](#license)
+- [Contributing](#-contributing)
+- [License](#-license)
 
 ---
 
