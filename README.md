@@ -25,6 +25,7 @@
 - Node.js >= 16.x
 - npm >= 8.x
 - MongoDB instance (cloud)
+- Cloudinary account (for image uploads)
 
 ### 📥 Installation
 
