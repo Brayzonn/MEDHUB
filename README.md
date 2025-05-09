@@ -98,14 +98,14 @@ You can find the implementation of this logic in the `app.ts` file.
 PORT=3300
 ```
 
-##### CORS settings to specify allowed origins, you can add or remove as necessary
+##### CORS settings to specify allowed origins
 ```bash
 CORS_ORIGINS="http://localhost:3000, https://your-frontend-url.com"
 ```
 
 ##### 📷 Cloudinary Environment Variables
 
-These variables are required for integrating Cloudinary, which is used to upload, store, and manage images in your application.
+These variables are required for integrating Cloudinary, which is used to upload, store, and manage images in the application.
 
 ```bash
 CLOUDINARY_CLOUD_NAME=your-cloud-name          # Found in your Cloudinary dashboard
@@ -152,7 +152,7 @@ Hospital-Management-Web-App/
 - **Database**: MongoDB, Mongoose
 - **Authentication**: JWT, bcrypt
 - **File Uploads**: Cloudinary
-- **Deployment**: Brimble (backend), Vercel (frontend)
+- **Deployment**: KVM VPS (backend), Vercel (frontend)
 
 ---
 
