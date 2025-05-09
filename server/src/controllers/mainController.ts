@@ -137,8 +137,8 @@ const getDashboardData = async (req: Request, res: Response , next: NextFunction
     try {
         const doctorCount = await doctorModel.countDocuments({});
         const patientCount = await patientModel.countDocuments({});
-        const admissionsCount = await admissionsModel.countDocuments({ isRoomAvailable: { $eq: false } });
-
+        const admissionsCount = await admissionsModel.countDocuments({ isRoomAvailable: false });
+        console.log(admissionsCount)
         res.status(200).json([
             {
                 doctorCount,
