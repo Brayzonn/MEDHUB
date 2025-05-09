@@ -138,7 +138,7 @@ const admissionsSchema = new Schema<admissionsProp>({
     occupantID:   String,
     roomType: String,
     occupantName: String,
-    isRoomAvailable: { type: Boolean, default: true },
+    isRoomAvailable: { type: Boolean, default: true , required: true},
     checkInDate: { type: Date },
 });
 
