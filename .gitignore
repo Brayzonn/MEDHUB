@@ -37,5 +37,4 @@ lerna-debug.log*
 /client/src/components/Notification.tsx
 /server/.env
 /client/.env
-/server/dist/
 /client/dist/
