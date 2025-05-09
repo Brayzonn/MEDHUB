@@ -143,22 +143,22 @@ const AddPatient = () => {
 
                                 if(addPatientApiCall.status === 201){
                                         updateButtonLoadingAnimation(false)
-                                        // setIdImages(undefined)
-                                        // setAddPatientForm({
-                                        //         patientName: '', 
-                                        //         patientImage: '',
-                                        //         patientAge: '',
-                                        //         patientBloodType: '',
-                                        //         patientHeight: '',
-                                        //         patientGenotype: '',
-                                        //         patientWeight: '',
-                                        //         patientConditions: [''],
-                                        //         patientJoinDate: '',
-                                        //         patientBirthDate: '',
-                                        //         patientPhoneNumber: '', 
-                                        //         patientEmail: '',
-                                        //         patientEMO: ''
-                                        // })
+                                        setIdImages(undefined)
+                                        setAddPatientForm({
+                                                patientName: '', 
+                                                patientImage: '',
+                                                patientAge: '',
+                                                patientBloodType: '',
+                                                patientHeight: '',
+                                                patientGenotype: '',
+                                                patientWeight: '',
+                                                patientConditions: [''],
+                                                patientJoinDate: '',
+                                                patientBirthDate: '',
+                                                patientPhoneNumber: '', 
+                                                patientEmail: '',
+                                                patientEMO: ''
+                                        })
                                         toast.success(addPatientResponseData)
                                         fetchDashboardData()
                                         callUpdatedAllPatientData()
