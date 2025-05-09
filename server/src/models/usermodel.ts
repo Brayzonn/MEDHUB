@@ -129,7 +129,7 @@ interface admissionsProp {
     occupantID: string,
     occupantName: string,
     roomType: string,
-    isRoomAvailable: boolean,
+    isRoomAvailable: Boolean,
     checkInDate: Date,
 }
 
