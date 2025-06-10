@@ -177,7 +177,7 @@ const Signin = () => {
                                             <div className='w-[50%] flex flex-col justify-center items-center space-y-6'>
                                                     
                                                     <div>
-                                                        <p className='text-[25px] font-[550]'>medata</p>
+                                                        <p className='text-[25px] font-[550]'>medhub</p>
                                                     </div>
 
                                                     <div className="shadow-lg flex flex-col justify-center items-center space-y-2 w-[370px] min-h-[420px] py-3 px-6 bg-white border border-white rounded-[15px] shadow-[0_35px_60px_-15px_rgba(231, 231, 231, 0.3)]">
@@ -267,7 +267,7 @@ const Signin = () => {
                                                     
                                                     <div className='bg-purpleSubColor px-[1rem] w-full h-full flex flex-col justify-center items-center border border-purpleSubColor rounded-[15px]'>
                                                                 <h3 className='text-white font-bold text-[35px] text-center tracking-wider'>Welcome back! </h3>
-                                                                <h3 className='text-white font-bold text-[35px] text-center tracking-wider max-w-[500px]'>Please sign in to your <span className='underline'>medata</span> account</h3>
+                                                                <h3 className='text-white font-bold text-[35px] text-center tracking-wider max-w-[500px]'>Please sign in to your <span className='underline'>medhub</span> account</h3>
                                                                 <p className='py-[2rem] text-[#dcdcdc] font-[450] text-[15px] text-center max-w-[500px]'>Access and manage your hospital data with ease. Stay connected and in control of your medical information.</p>
 
                                                                 <img src = {siginillustration}  className = 'w-[400px] h-auto object-cover' alt='logo' />

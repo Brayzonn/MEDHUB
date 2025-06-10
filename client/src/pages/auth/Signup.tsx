@@ -213,7 +213,7 @@ const Signup = () => {
                                     <div className='w-[50%] flex justify-start items-center  min-h-screen'>
                                             
                                             <div className='bg-purpleSubColor px-[1rem] w-full h-full flex flex-col justify-center items-center border border-purpleSubColor rounded-[15px]'>
-                                                        <h3 className='text-white font-bold text-[35px] text-center tracking-wider'>Welcome to Medata!</h3>
+                                                        <h3 className='text-white font-bold text-[35px] text-center tracking-wider'>Welcome to Medhub!</h3>
                                                         <h3 className='text-white font-bold text-[35px] text-center tracking-wider max-w-[500px]'>Create your <span className='underline'>Medata</span> account</h3>
                                                         <p className='py-[2rem] text-[#dcdcdc] font-[450] text-[15px] text-center max-w-[500px]'>Join us to access and manage your hospital data with ease. Stay connected and in control of your medical information.</p>
 
@@ -228,7 +228,7 @@ const Signup = () => {
                                     <div className='w-[50%] flex flex-col justify-center items-center space-y-4'>
                                             
                                             <div>
-                                                <p className='text-[25px] font-[550]'>medata</p>
+                                                <p className='text-[25px] font-[550]'>medhub</p>
                                             </div>
 
                                             <div className=" flex flex-col justify-center items-center space-y-2 w-[400px] min-h-[420px] pb-3 px-6">
