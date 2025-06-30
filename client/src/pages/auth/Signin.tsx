@@ -162,7 +162,7 @@ const Signin = () => {
                             
                             <p className='text-center text-[20px] font-[550]'>Please load app on desktop</p>
                             <div className='text-[25px]'>🙂</div>
-
+                        
                     </div>
             )
     }else{
